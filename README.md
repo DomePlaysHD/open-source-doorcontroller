@@ -13,6 +13,7 @@
 
 - Drop the client-plugins files into client-plugins.
 - Drop the plugins files into plugins.
+- Add “doors” to your MONGO_COLLECTIONS= in the .env file.
 
 imports.ts (Clientside)
 ```typescript 
