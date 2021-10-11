@@ -6,7 +6,7 @@
 * Add Doors Ingame
 * Remove Doors Ingame
 * Bind to factions
-* Database over hardcoding json-lists.
+* Database over hardcoded JSON-List files.
 * Interface has options to expand it with keys, player binding and whatever you want.
 
 ### SETUP
