@@ -33,6 +33,7 @@ imports.ts (Serverside)
 
 ### KNOWN ISSUES
 * Sometimes native call of taskEnterVehicle fails. Hopefully its fixed, but i am not sure. If this happen to you let me know, you need to unload the plugin and restart your whole GTA client. So i keep branch at Development for now. If you find something else, let me know.
+* Needs some Refactoring, Thanks to alt:V Discord. - Missing some Streamer and some more stuff.
 
 ### OTHER
 * Its hard to test stuff when you are alone but it should be synced for everyone.
