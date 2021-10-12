@@ -1,4 +1,5 @@
 import * as alt from 'alt-server';
+
 import Database from '@stuyk/ezmongodb';
 import Doorsystem from './interface';
 import { InteractionController } from '../../server/systems/interaction';
