@@ -4,6 +4,7 @@ import * as native from 'natives';
 import { WheelMenu } from '../../client/utility/wheelMenu';
 import { InputView } from '../../client/views/input';
 import { InputOptionType, InputResult } from '../../shared/interfaces/InputMenus';
+
 const player = alt.Player.local;
 
 alt.on('keydown', (key) => {

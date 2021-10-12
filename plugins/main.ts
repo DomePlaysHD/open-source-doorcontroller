@@ -1,5 +1,4 @@
 import * as alt from 'alt-server';
-
 import Database from '@stuyk/ezmongodb';
 import Doorsystem from './interface';
 import { InteractionController } from '../../server/systems/interaction';
@@ -20,12 +19,11 @@ alt.onClient('Doorsystem:Serverside:AddDoor', (player: alt.Player, name: string,
 alt.on(ATHENA_EVENTS_PLAYER.SELECTED_CHARACTER, async (player: alt.Player) => {
 	const lockedDoors = await Database.fetchAllData<Doorsystem>('doors');
 	lockedDoors.forEach((door, index) => {
-		alt.emitClient(player, 'Doorsystem:Clientside:Setlockstates', door.data);
-	});
+		alt.emitClient(player, 'Doorsystem:Clientside:Setlockstates', door);
+	}); 
 });
 
 export async function createDoor(player: alt.Player, name: string, prop: string, faction: string, doorData: any) {
-	alt.log(JSON.stringify('SERVER ' + doorData));
 	const newDocument = {
 		name: name,
 		data: {
@@ -33,8 +31,8 @@ export async function createDoor(player: alt.Player, name: string, prop: string,
 			faction: faction,
 			prop: prop,
 			hash: alt.hash(prop),
-			position: { x: doorData.x, y: doorData.y, z: doorData.z - 1 },
-			rotation: player.rot
+			position: { x: doorData.x, y: doorData.y, z: doorData.z - 1 } as alt.Vector3,
+			rotation: player.rot as alt.Vector3
 		}
 	};
 	const inserted = await Database.insertData<Doorsystem>(newDocument, 'doors', true);
@@ -65,7 +63,7 @@ export async function createDoor(player: alt.Player, name: string, prop: string,
 				uid: `door-${inserted._id.toString()}`
 			});
 			updateLockstate(inserted._id.toString(), inserted.data.lockstate);
-			alt.emitAllClients('Doorsystem:Clientside:Setlockstate', inserted.data, inserted._id.toString());
+			alt.emitAllClients('Doorsystem:Clientside:Setlockstate', inserted);
 		}
 	});
 }
@@ -121,7 +119,7 @@ export async function buildDoorInteractions() {
 					uid: `door-${door._id.toString()}`
 				});
 				updateLockstate(door._id.toString(), door.data.lockstate);
-				alt.emitAllClients('Doorsystem:Clientside:Setlockstate', door.data);
+				alt.emitAllClients('Doorsystem:Clientside:Setlockstate', door);
 			}
 		});
 	});
