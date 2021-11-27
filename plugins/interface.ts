@@ -1,5 +1,18 @@
 import * as alt from 'alt-server';
+
 export default interface Doorsystem {
+    _id?: string;
+    name?: string;
+    prop?: string;
+    hash?: number;
+    faction?: string;
+    pos?: alt.Vector3;
+    rotation?: alt.Vector3;
+    lockstate?: boolean;
+    maxDistance?: number;
+}
+
+/* export default interface Doorsystem {
 	_id?: string;
 	name?: string;
 	data: {
@@ -12,4 +25,4 @@ export default interface Doorsystem {
 		// player?: string | number < SCRIPT YOURSELF >
 		// keys?: string; < SCRIPT YOURSELF >
 	};
-}
+} */

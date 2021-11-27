@@ -63,6 +63,7 @@ alt.on('keydown', (key) => {
 									0
 								);
 								alt.emitServer('Doorsystem:Serverside:AddDoor', name.value, prop.value, faction.value, doorFound[1]);
+								alt.log(JSON.stringify(doorFound[1]));
 							}
 						};
 						InputView.show(InputMenu);
