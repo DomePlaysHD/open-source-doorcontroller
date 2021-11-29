@@ -54,7 +54,6 @@ export async function createDoor(player: alt.Player, name: string, prop: string,
 			});
 			DoorController.append(doorData);
 			updateLockstate(inserted._id.toString(), inserted.lockstate);
-			// alt.emitClient(player, 'Doorsystem:Clientside:Setlockstate', inserted);
 		}
 	}); 
 }
@@ -111,7 +110,6 @@ export async function buildDoorInteractions(player: alt.Player) {
 					uid: `door-${door._id.toString()}`
 				});
 				updateLockstate(door._id.toString(), door.lockstate);
-				// alt.emitClient(player, 'Doorsystem:Clientside:Setlockstate', door);
 			}
 		});
 	});
