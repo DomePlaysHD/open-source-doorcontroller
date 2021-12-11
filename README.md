@@ -23,6 +23,7 @@ import './AthenaDoorlock/wheelmenu';
 imports.ts (Serverside)
 ```typescript
 './AthenaDoorlock/main',
+'./AthenaDoorlock/streamer',
 './AthenaDoorlock/interface',
 ```
 
