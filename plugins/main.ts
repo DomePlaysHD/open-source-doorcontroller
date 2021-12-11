@@ -5,11 +5,16 @@ import { InteractionController } from '../../server/systems/interaction';
 import { playerFuncs } from '../../server/extensions/Player';
 import { ServerTextLabelController } from '../../server/streamers/textlabel';
 import { DoorController } from './streamer';
-import { SYSTEM_EVENTS } from '../../shared/enums/System';
+import { PluginSystem } from '../../server/systems/plugins';
+
+const ATHENA_DOORLOCK = 'AthenaDoorlock';
+
+PluginSystem.registerPlugin(ATHENA_DOORLOCK, () => {
+    alt.log(`~lg~${ATHENA_DOORLOCK} was Loaded`);
+	buildDoorInteractions();
+});
 
 let doorInteraction: any;
-
-alt.on(SYSTEM_EVENTS.BOOTUP_ENABLE_ENTRY, buildDoorInteractions);
 
 alt.onClient('Doorsystem:Serverside:AddDoor', (player: alt.Player, name: string, faction: string, prop: string, data: any) => {
 	createDoor(player, name, faction, prop, data);
@@ -54,6 +59,7 @@ export async function createDoor(player: alt.Player, name: string, prop: string,
 			});
 			DoorController.append(doorData);
 			updateLockstate(inserted._id.toString(), inserted.lockstate);
+			// alt.emitClient(player, 'Doorsystem:Clientside:Setlockstate', inserted);
 		}
 	}); 
 }
@@ -75,7 +81,7 @@ export async function updateLockstate(doorId: string, lockstate: boolean) {
 	);
 	DoorController.refresh();
 } 
-export async function buildDoorInteractions(player: alt.Player) {
+export async function buildDoorInteractions() {
 	const dbDoors = await Database.fetchAllData<Doorsystem>('doors');
 	dbDoors.forEach((door, index) => {
 		DoorController.append(door);
@@ -110,6 +116,7 @@ export async function buildDoorInteractions(player: alt.Player) {
 					uid: `door-${door._id.toString()}`
 				});
 				updateLockstate(door._id.toString(), door.lockstate);
+				// alt.emitClient(player, 'Doorsystem:Clientside:Setlockstate', door);
 			}
 		});
 	});
