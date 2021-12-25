@@ -1,9 +1,8 @@
 import * as alt from 'alt-server';
-import { StreamerService } from '../../server/systems/streamer';
-import { sha256Random } from '../../server/utility/encryption';
+import { StreamerService } from '../../../server/systems/streamer';
+import { sha256Random } from '../../../server/utility/encryption';
 
 import Doorsystem from './interface';
-
 
 const globalDoors: Array<Doorsystem> = [];
 const STREAM_RANGE = 25;

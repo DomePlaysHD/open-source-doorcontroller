@@ -1,14 +1,13 @@
 import * as alt from 'alt-client';
 import * as native from 'natives';
-
-import { WheelMenu } from '../../client/utility/wheelMenu';
-import { InputView } from '../../client/views/input';
-import { InputOptionType, InputResult } from '../../shared/interfaces/InputMenus';
+import { WheelMenu } from '../../../client/utility/wheelMenu';
+import { InputView } from '../../../client/views/input';
+import { InputOptionType, InputResult } from '../../../shared/interfaces/inputMenus';
 
 const player = alt.Player.local;
 
 alt.on('keydown', (key) => {
-	if (key === 104) {
+	if (key === 190) {
 		WheelMenu.create(
 			'Doorlocksystem',
 			[
@@ -33,23 +32,23 @@ alt.on('keydown', (key) => {
 									error: 'Must specify prop (codewalker or mlo files).'
 								},
 								{
-									id: 'faction',
-									desc: 'Put in FactionID here (Name in 2.0.4) || "0" returns in everyone can use it.',
-									placeholder: '<ObjectID>',
+									id: 'keyname',
+									desc: 'Put in a name for the doorkeys here if you want to add a double door just add same key',
+									placeholder: 'General Key LSPD',
 									type: InputOptionType.TEXT,
-									error: 'Must specify FactionID.'
+									error: 'Must specify Keyname.'
 								}
 							],
 							callback: (results: InputResult[]) => {
 								if (results.length <= 0) {
-									InputView.show(InputMenu);
+									InputView.setMenu(InputMenu);
 									return;
 								}
 								const name = results.find((x) => x && x.id === 'name');
 								const prop = results.find((x) => x && x.id === 'prop');
-								const faction = results.find((x) => x && x.id === 'faction');
-								if (!prop && !faction && !name) {
-									InputView.show(InputMenu);
+								const keyname = results.find((x) => x && x.id === 'keyname');
+								if (!prop && !keyname && !name) {
+									InputView.setMenu(InputMenu);
 									return;
 								}
 								const doorFound = native.getCoordsAndRotationOfClosestObjectOfType(
@@ -62,11 +61,13 @@ alt.on('keydown', (key) => {
 									{ x: 0, y: 0, z: 0 } as alt.Vector3,
 									0
 								);
-								alt.emitServer('Doorsystem:Serverside:AddDoor', name.value, prop.value, faction.value, doorFound[1]);
-								alt.log(JSON.stringify(doorFound[1]));
+								const door = native.getClosestObjectOfType(player.pos.x, player.pos.y, player.pos.z, 2, alt.hash(prop.value), false, false, false);
+								const doorRot = native.getEntityRotation(door, 2);
+								alt.emitServer('Doorsystem:Serverside:AddDoor', name.value, prop.value, keyname.value, doorFound[1], doorRot, getEntityCenter(door));
+								alt.log(JSON.stringify(door));
 							}
 						};
-						InputView.show(InputMenu);
+						InputView.setMenu(InputMenu);
 					}
 				},
 				{
@@ -80,3 +81,7 @@ alt.on('keydown', (key) => {
 		);
 	}
 });
+function getEntityCenter(entity: number) {
+	const [, min, max] = native.getModelDimensions(native.getEntityModel(entity));
+	return native.getOffsetFromEntityInWorldCoords(entity, (min.x + max.x) / 2, (min.y + max.y) / 2, (min.z + max.z) / 2);
+}
