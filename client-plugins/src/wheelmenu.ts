@@ -3,40 +3,49 @@ import * as native from 'natives';
 import { WheelMenu } from '../../../client/utility/wheelMenu';
 import { InputView } from '../../../client/views/input';
 import { InputOptionType, InputResult } from '../../../shared/interfaces/inputMenus';
+import { clientTranslations } from './client-translations';
 
 const player = alt.Player.local;
 
 alt.on('keydown', (key) => {
 	if (key === 190) {
+		alt.emitServer('doorController:server:checkPermissions', player);
 		WheelMenu.create(
-			'Doorlocksystem',
+			'DoorController v3',
 			[
 				{
-					name: 'Add Door',
+					name: clientTranslations.addDoor,
 					callback: () => {
 						const InputMenu = {
-							title: 'Add a new door to the database.',
+							title: 'DoorController v3 by Der Lord!',
 							options: [
 								{
 									id: 'name',
-									desc: 'Name of Door',
-									placeholder: '<Mission Row LSPD Door - Left/Right>',
+									desc: 'Database name for this door.',
+									placeholder: '<Mission Row - Police Department - Left/Right>',
 									type: InputOptionType.TEXT,
-									error: 'Must specify door name'
+									error: 'Please specify a database name for this door.'
 								},
 								{
 									id: 'prop',
-									desc: 'Name of Prop/Object (Codewalker/MLO_Files)',
-									placeholder: 'Prop/Objname',
+									desc: 'Name of prop for this door. (Codewalker / MLO Files)',
+									placeholder: 'v_ilev_ph_door01',
 									type: InputOptionType.TEXT,
-									error: 'Must specify prop (codewalker or mlo files).'
+									error: 'Please specify a prop for this door.'
 								},
 								{
 									id: 'keyname',
-									desc: 'Put in a name for the doorkeys here if you want to add a double door just add same key',
+									desc: 'Database key name for this door. Use same name and null as description for double doors.',
 									placeholder: 'General Key LSPD',
 									type: InputOptionType.TEXT,
-									error: 'Must specify Keyname.'
+									error: 'Please specify key name for this door.'
+								}, 
+								{
+									id: 'keydescription',
+									desc: 'Data key description for this door.',
+									placeholder: 'This key is used to unlock all doors bound to the Mission Row Police Department',
+									type: InputOptionType.TEXT,
+									error: 'Must specify key description'
 								}
 							],
 							callback: (results: InputResult[]) => {
@@ -44,36 +53,52 @@ alt.on('keydown', (key) => {
 									InputView.setMenu(InputMenu);
 									return;
 								}
-								const name = results.find((x) => x && x.id === 'name');
-								const prop = results.find((x) => x && x.id === 'prop');
-								const keyname = results.find((x) => x && x.id === 'keyname');
-								if (!prop && !keyname && !name) {
+
+								const result = {
+									name: results.find((x) => x && x.id === 'name'),
+									prop: results.find((x) => x && x.id === 'prop'),
+									keyName: results.find((x) => x && x.id === 'keyname'),
+									keyDescription: results.find((x) => x && x.id === 'keydescription')
+								}
+
+								if (!result.name || !result.prop || !result.keyName || !result.keyDescription) {
 									InputView.setMenu(InputMenu);
 									return;
 								}
+
 								const doorFound = native.getCoordsAndRotationOfClosestObjectOfType(
 									player.pos.x,
 									player.pos.y,
 									player.pos.z,
 									2,
-									alt.hash(prop.value),
+									alt.hash(result.prop.value),
 									{ x: 0, y: 0, z: 0 } as alt.Vector3,
 									{ x: 0, y: 0, z: 0 } as alt.Vector3,
 									0
 								);
-								const door = native.getClosestObjectOfType(player.pos.x, player.pos.y, player.pos.z, 2, alt.hash(prop.value), false, false, false);
+
+								const door = native.getClosestObjectOfType(player.pos.x, player.pos.y, player.pos.z, 2, alt.hash(result.prop.value), false, false, false);
 								const doorRot = native.getEntityRotation(door, 2);
-								alt.emitServer('Doorsystem:Serverside:AddDoor', name.value, prop.value, keyname.value, doorFound[1], doorRot, getEntityCenter(door));
-								alt.log(JSON.stringify(door));
+
+								const doorDatas = {
+									name: result.name.value,
+									prop: result.prop.value, 
+									keyName: result.keyName.value,
+									keyDescription: result.keyDescription.value,
+									pos: doorFound[1],
+									rotation: doorRot,
+									center: getEntityCenter(door),
+								}
+								alt.emitServer('doorController:serverSide:addDoor', doorDatas);
 							}
 						};
 						InputView.setMenu(InputMenu);
 					}
 				},
 				{
-					name: 'Remove Door',
+					name: clientTranslations.removeDoor,
 					callback: () => {
-						alt.emitServer('Doorsystem:Serverside:Removedoor');
+						alt.emitServer('doorController:serverSide:removeDoor');
 					}
 				}
 			],

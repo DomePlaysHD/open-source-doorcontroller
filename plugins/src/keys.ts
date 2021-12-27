@@ -1,22 +1,57 @@
 // *** Door Keys can be created here. *** //
-
+import Database from '@stuyk/ezmongodb';
+import * as alt from 'alt-server';
+import { ItemFactory } from "../../../server/systems/item";
+import { sha256 } from '../../../server/utility/encryption';
 import { ITEM_TYPE } from "../../../shared/enums/itemTypes";
 import { Item } from "../../../shared/interfaces/item";
-import { appendToItemRegistry } from "../../../shared/items/itemRegistry";
-import { deepCloneObject } from "../../../shared/utility/deepCopy";
+import { appendToItemRegistry } from '../../../shared/items/itemRegistry';
+import { deepCloneObject } from '../../../shared/utility/deepCopy';
 
-// Just some Example Key which can be used if database keyname equals "LSPD Master Key"
-const someKey: Item = {
-    name: `LSPD Master Key`,
-    uuid: `LSPD-MasterKey`,
-    description: `Probably used to unlock/lock all doors of the Mission Row Police Department.`,
-    icon: 'crate',
-    quantity: 1,
-    behavior: ITEM_TYPE.CAN_DROP | ITEM_TYPE.CAN_TRADE | ITEM_TYPE.CONSUMABLE,
-    data: {
-        
-    },
-    rarity: 3
-};
-const registerLSPDKey: Item = deepCloneObject<Item>(someKey);
-appendToItemRegistry(registerLSPDKey);
+export async function loadItems() {
+    const allItems = await Database.fetchAllData<Item>('items');
+    allItems.forEach((item, i) => {
+        const dbItem: Item = {
+            name: item.name,
+            uuid: item.uuid,
+            description: item.description,
+            icon: 'keys',
+            quantity: 1,
+            behavior: ITEM_TYPE.CAN_DROP | ITEM_TYPE.CAN_TRADE,
+            model: 'bkr_prop_jailer_keys_01a',
+            data: {},
+            rarity: 3,
+            dbName: item.name
+        };
+        const registerKey: Item = deepCloneObject<Item>(dbItem);
+        appendToItemRegistry(registerKey);
+    });
+} 
+
+alt.on('doorController:serverSide:createKey', async (keyName: string, keyDescription: string) => {
+    const keyItem: Item = {
+        name: keyName,
+        uuid: sha256(keyName),
+        description: keyDescription,
+        icon: 'keys',
+        quantity: 1,
+        behavior: ITEM_TYPE.CAN_DROP | ITEM_TYPE.CAN_TRADE,
+        model: 'bkr_prop_jailer_keys_01a',
+        data: {
+            
+        },
+        rarity: 3,
+        dbName: keyName
+    };
+    ItemFactory.add(keyItem);
+    const registerKey: Item = deepCloneObject<Item>(keyItem);
+    appendToItemRegistry(registerKey);
+    const keyExists = ItemFactory.doesExist(keyItem.dbName);
+    alt.log("Key EXISTS? -> " + keyExists);
+    if(keyExists) {
+        alt.log("Key is already existing. Aborting.");
+        return;
+    } else if(!keyExists) {
+        alt.log("Key didn't exist. Key was succesfully added >> Doorlock System.");
+    }
+});

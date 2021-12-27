@@ -2,6 +2,13 @@ import * as alt from 'alt-client';
 import * as native from 'natives';
 import Doorsystem from '../../plugins/AthenaDoorlock/src/interface';
 
+alt.setInterval(() => {
+
+	const entity = native.getEntityPlayerIsFreeAimingAt(alt.Player.local);
+	if(!entity) return;
+	alt.log(entity);
+	alt.log("" + native.getEntityModel(entity[1]).toString());
+}, 1000);
 
 alt.onServer('populate:Doors', (doors: Array<Doorsystem>) => {
 	doors.forEach(async (door, index) => {
