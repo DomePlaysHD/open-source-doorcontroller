@@ -21,3 +21,5 @@ Serverside ->
 ```typescript
 import './AthenaDoorController/index';
 ```
+
+Join my plugin discord -> https://discord.gg/Pk6gQ2agbQ
