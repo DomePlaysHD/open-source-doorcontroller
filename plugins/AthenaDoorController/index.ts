@@ -26,6 +26,7 @@ import DoorControl_Props from './src/interfaces/interface-props';
 export let doorInteraction: any;
 
 const settings = {
+	collectionName: 'doors', // Used to Create Collection, Insert Datas, Update Datas
 	doorTextEnabled: false, // If false doors won't have textlabels attached to center - Interaction is still possible.
 }
 
@@ -41,7 +42,7 @@ PluginSystem.registerPlugin(ATHENA_DOORLOCK, async () => {
 	loadDoors();
 	loadItems();
 
-	await Database.createCollection('doors');
+	await Database.createCollection(settings.collectionName);
 	await Database.createCollection('doors-props');
 });
 
@@ -62,15 +63,15 @@ export async function createDoor(doorData: DoorControl_Main) {
 			keyName: doorData.keyData.keyName,
 			keyDescription: doorData.keyData.keyDescription,
 			data: {
-				faction: 'Los Santos Police Department',
-				lockHash: 'Some Doorlock Hash'
+				faction: doorData.data.faction,
+				lockHash: alt.hash(doorData.keyData.keyName)
 			}
 		},
 		pos: doorData.pos,
 		rotation: doorData.rotation,
 		center: doorData.center
 	};
-	const inserted = await Database.insertData<DoorControl_Main>(newDocument, 'doors', true);
+	const inserted = await Database.insertData<DoorControl_Main>(newDocument, settings.collectionName, true);
 
 	doorInteraction = InteractionController.add({
 		identifier: `door-${inserted._id}`,
@@ -140,7 +141,7 @@ export async function createDoor(doorData: DoorControl_Main) {
 }
 
 export async function updateLockstate(doorId: string, lockstate: boolean) {
-	const door = await Database.fetchData<DoorControl_Main>('_id', doorId, 'doors');
+	const door = await Database.fetchData<DoorControl_Main>('_id', doorId, settings.collectionName);
 	await Database.updatePartialData(
 		doorId,
 		{
@@ -151,23 +152,21 @@ export async function updateLockstate(doorId: string, lockstate: boolean) {
 				hash: door.data.hash,
 				lockstate: lockstate,
 			},
-			posData: {
-				pos: { x: door.pos.x, y: door.pos.y, z: door.pos.z } as alt.Vector3,
-				rotation: { x: door.rotation.x, y: door.rotation.y, z: door.rotation.z } as alt.Vector3,
-				center: { x: door.center.x, y: door.center.y, z: door.center.z } as alt.Vector3
-			},
 			keyData: {
 				keyName: door.keyData.keyName,
 				keyDescription: door.keyData.keyDescription,
-			}
+			},
+			pos: { x: door.pos.x, y: door.pos.y, z: door.pos.z } as alt.Vector3,
+			rotation: { x: door.rotation.x, y: door.rotation.y, z: door.rotation.z } as alt.Vector3,
+			center: { x: door.center.x, y: door.center.y, z: door.center.z } as alt.Vector3
 		},
-		'doors'
+		settings.collectionName
 	);
 	DoorController.refresh();
 } 
 
 export async function loadDoors() {
-	const dbDoors = await Database.fetchAllData<DoorControl_Main>('doors');
+	const dbDoors = await Database.fetchAllData<DoorControl_Main>(settings.collectionName);
 	dbDoors.forEach((door, index) => {
 		switch (door.data.lockState) {
 			case false: {

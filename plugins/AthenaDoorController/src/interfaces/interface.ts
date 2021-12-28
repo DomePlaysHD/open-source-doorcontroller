@@ -10,20 +10,13 @@ export default interface DoorControl_Main {
         lockState?: boolean;
         faction?: string;
     }
-    /* posData: {
-        pos?: alt.Vector3,
-        rotation?: alt.Vector3,
-        center?: alt.Vector3,
-    } */
-
     keyData: {
         keyName?: string;
         keyDescription?: string;
         keyHash?: string;
-        
-        keyData?: {
+        data?: {
             faction?: string;
-            lockHash?: string;
+            lockHash?: number;
         }
     }
     pos: alt.Vector3,

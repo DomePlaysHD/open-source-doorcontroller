@@ -1,6 +1,6 @@
 import * as alt from 'alt-client';
 import * as native from 'natives';
-import DoorControl_Main from '../../plugins/AthenaDoorlock/src/interfaces/interface';
+import DoorControl_Main from '../../plugins/AthenaDoorController/src/interfaces/interface';
 
 alt.onServer('populate:Doors', (doors: Array<DoorControl_Main>) => {
 	doors.forEach(async (door, index) => {

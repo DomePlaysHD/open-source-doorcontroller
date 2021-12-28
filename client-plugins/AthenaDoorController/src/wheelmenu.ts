@@ -35,6 +35,13 @@ alt.on('keydown', (key) => {
 									error: 'Please specify a prop for this door.'
 								},
 								{
+									id: 'faction',
+									desc: 'Name of faction for this door.',
+									placeholder: 'Los Santos Police Department',
+									type: InputOptionType.TEXT,
+									error: ''
+								},
+								{
 									id: 'keyname',
 									desc: 'Database key name for this door. Use same name and null as description for double doors.',
 									placeholder: 'General Key LSPD',
@@ -58,6 +65,7 @@ alt.on('keydown', (key) => {
 								const result = {
 									name: results.find((x) => x && x.id === 'name'),
 									prop: results.find((x) => x && x.id === 'prop'),
+									faction: results.find((x) => x && x.id === 'faction'),
 									keyName: results.find((x) => x && x.id === 'keyname'),
 									keyDescription: results.find((x) => x && x.id === 'keydescription')
 								}
@@ -89,6 +97,7 @@ alt.on('keydown', (key) => {
 									keyData: {
 										keyName: result.keyName.value,
 										keyDescription: result.keyDescription.value,
+										faction: result.faction
 									},
 									pos: doorFound[1],
 									rotation: doorRot,
