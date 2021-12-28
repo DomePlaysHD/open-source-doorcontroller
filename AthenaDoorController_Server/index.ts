@@ -27,7 +27,8 @@ export let doorInteraction: any;
 
 const settings = {
 	collectionName: 'doors', // Used to Create Collection, Insert Datas, Update Datas
-	doorTextEnabled: false, // If false doors won't have textlabels attached to center - Interaction is still possible.
+	collectionPropsName: 'doors-props', // Used to store props. Unnecessary for now.
+	doorTextEnabled: true, // If false doors won't have textlabels attached to center - Interaction is still possible.
 }
 
 const ATHENA_DOORLOCK = "Athena DoorController";
@@ -52,18 +53,17 @@ alt.on(ATHENA_EVENTS_PLAYER.SELECTED_CHARACTER, (player: alt.Player) => {
 
 export async function createDoor(doorData: DoorControl_Main) {
 	const newDocument = {
+		name: doorData.name,
 		data: {
-			name: doorData.data.name,
 			prop: doorData.data.prop,
 			hash: alt.hash(doorData.data.prop),
-			lockState: false,
-			faction: 'string',
+			isLocked: false,
+			faction: doorData.keyData.data.faction,
 		},
 		keyData: {
 			keyName: doorData.keyData.keyName,
-			keyDescription: doorData.keyData.keyDescription,
 			data: {
-				faction: doorData.data.faction,
+				faction: doorData.keyData.data.faction,
 				lockHash: alt.hash(doorData.keyData.keyName)
 			}
 		},
@@ -90,9 +90,9 @@ export async function createDoor(doorData: DoorControl_Main) {
 				return;
 			}
 
-			switch (inserted.data.lockState) {
+			switch (inserted.data.isLocked) {
 				case false: {
-					inserted.data.lockState = true;
+					inserted.data.isLocked = true;
 					if(settings.doorTextEnabled) {
 						ServerTextLabelController.remove(`door-${inserted._id.toString()}`);
 						ServerTextLabelController.append({
@@ -102,11 +102,11 @@ export async function createDoor(doorData: DoorControl_Main) {
 							maxDistance: 3,
 						});
 					}
-					updateLockstate(inserted._id, inserted.data.lockState);
+					updateLockstate(inserted._id, inserted.data.isLocked);
 					break;
 				}
 				case true: {
-					inserted.data.lockState = false;
+					inserted.data.isLocked = false;
 					if(settings.doorTextEnabled) {
 						ServerTextLabelController.remove(`door-${inserted._id.toString()}`);
 						ServerTextLabelController.append({
@@ -116,13 +116,13 @@ export async function createDoor(doorData: DoorControl_Main) {
 							maxDistance: 3
 						});
 					}
-					updateLockstate(inserted._id, inserted.data.lockState);
+					updateLockstate(inserted._id, inserted.data.isLocked);
 					break;
 				}
 				default:
 					break;
 			}
-			updateLockstate(inserted._id.toString(), inserted.data.lockState);
+			updateLockstate(inserted._id.toString(), inserted.data.isLocked);
 		}
 	});
 
@@ -135,26 +135,29 @@ export async function createDoor(doorData: DoorControl_Main) {
 		});
 	}
 
-	alt.emit('doorController:serverSide:createKey', inserted.keyData.keyName, inserted.keyData.keyDescription);
+	alt.emit('doorController:serverSide:createKey', inserted.keyData.keyName, doorData.keyData.keyDescription, doorData.keyData.data.lockHash, inserted.keyData.data.faction);
 	DoorController.append(inserted);
-	alt.log(JSON.stringify(inserted));
 }
 
-export async function updateLockstate(doorId: string, lockstate: boolean) {
+export async function updateLockstate(doorId: string, isLocked: boolean) {
 	const door = await Database.fetchData<DoorControl_Main>('_id', doorId, settings.collectionName);
 	await Database.updatePartialData(
 		doorId,
 		{
 			_id: door._id,
+			name: door.name,
 			data: {
-				name: door.data.name,
 				prop: door.data.prop,
 				hash: door.data.hash,
-				lockstate: lockstate,
+				isLocked: isLocked,
+				faction: door.keyData.data.faction,
 			},
 			keyData: {
 				keyName: door.keyData.keyName,
-				keyDescription: door.keyData.keyDescription,
+				data: {
+					faction: door.keyData.data.faction,
+					lockHash: door.keyData.data.lockHash,
+				}
 			},
 			pos: { x: door.pos.x, y: door.pos.y, z: door.pos.z } as alt.Vector3,
 			rotation: { x: door.rotation.x, y: door.rotation.y, z: door.rotation.z } as alt.Vector3,
@@ -165,10 +168,10 @@ export async function updateLockstate(doorId: string, lockstate: boolean) {
 	DoorController.refresh();
 } 
 
-export async function loadDoors() {
+async function loadDoors() {
 	const dbDoors = await Database.fetchAllData<DoorControl_Main>(settings.collectionName);
 	dbDoors.forEach((door, index) => {
-		switch (door.data.lockState) {
+		switch (door.data.isLocked) {
 			case false: {
 				if(settings.doorTextEnabled) {
 					ServerTextLabelController.append({
@@ -214,9 +217,9 @@ export async function loadDoors() {
 					return;
 				}
 
-				switch (door.data.lockState) {
+				switch (door.data.isLocked) {
 					case false: {
-						door.data.lockState = true;
+						door.data.isLocked = true;
 						if(settings.doorTextEnabled) {
 							ServerTextLabelController.remove(`door-${door._id.toString()}`);
 							ServerTextLabelController.append({
@@ -227,11 +230,11 @@ export async function loadDoors() {
 							});
 						}
 
-						updateLockstate(door._id, door.data.lockState);
+						updateLockstate(door._id, door.data.isLocked);
 						break;
 					}
 					case true: {
-						door.data.lockState = false;
+						door.data.isLocked = false;
 						if(settings.doorTextEnabled) {
 							ServerTextLabelController.remove(`door-${door._id.toString()}`);
 							ServerTextLabelController.append({
@@ -241,7 +244,7 @@ export async function loadDoors() {
 								maxDistance: 3
 							});
 						}
-						updateLockstate(door._id, door.data.lockState);
+						updateLockstate(door._id, door.data.isLocked);
 						break;
 					}
 					default:
@@ -250,7 +253,6 @@ export async function loadDoors() {
 			}
 		});
 		DoorController.append(door);
-		alt.log(JSON.stringify(door));
 	});
 	alt.log(`~lg~${ATHENA_DOORLOCK} ${VERSION_STRING.version} | DATABASE | ==> found ${dbDoors.length} doors to load.`);
 }

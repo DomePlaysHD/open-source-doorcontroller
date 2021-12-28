@@ -70,7 +70,7 @@ alt.on('keydown', (key) => {
 									keyDescription: results.find((x) => x && x.id === 'keydescription')
 								}
 
-								if (!result.name || !result.prop || !result.keyName || !result.keyDescription) {
+								if (!result.name || !result.prop || !result.keyName) {
 									InputView.setMenu(InputMenu);
 									return;
 								}
@@ -90,14 +90,17 @@ alt.on('keydown', (key) => {
 								const doorRot = native.getEntityRotation(door, 2);
 								
 								const doorDatas = {
+									name: result.name.value,
 									data: {
-										name: result.name.value,
 										prop: result.prop.value, 
 									},
 									keyData: {
 										keyName: result.keyName.value,
 										keyDescription: result.keyDescription.value,
-										faction: result.faction
+										data: {
+											lockHash: alt.hash(result.keyName.value),
+											faction: result.faction.value
+										}
 									},
 									pos: doorFound[1],
 									rotation: doorRot,
@@ -107,6 +110,30 @@ alt.on('keydown', (key) => {
 							}
 						};
 						InputView.setMenu(InputMenu);
+					}
+				},
+				{
+					name: clientTranslations.changeLock,
+					callback: () => {
+
+					}
+				},
+				{
+					name: clientTranslations.changeLockAll,
+					callback: () => {
+
+					}
+				},
+				{
+					name: clientTranslations.createKey,
+					callback: () => {
+
+					}
+				},
+				{
+					name: clientTranslations.removeKey,
+					callback: () => {
+
 					}
 				},
 				{

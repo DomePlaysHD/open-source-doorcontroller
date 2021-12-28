@@ -7,13 +7,15 @@ alt.onServer('populate:Doors', (doors: Array<DoorControl_Main>) => {
 		const closestDoor = native.getClosestObjectOfType(door.pos.x, door.pos.y, door.pos.z, 2, door.data.hash, false, false, false);
 		const defaultRotation = doors[index].rotation;
 		if(!closestDoor) return;
+
 		const isDoorClosed = await waitUntilDoorIsClosed(closestDoor, defaultRotation.z);
 		if(!isDoorClosed) {
 			return;
 		}
-		if(doors[index].data.lockState === true) {
+		
+		if(doors[index].data.isLocked === true) {
 			native.freezeEntityPosition(closestDoor, true);
-		} else if(doors[index].data.lockState === false) {
+		} else if(doors[index].data.isLocked === false) {
 			native.freezeEntityPosition(closestDoor, false);
 		}
 	});

@@ -2,18 +2,16 @@ import * as alt from 'alt-server';
 
 export default interface DoorControl_Main {
     _id?: string;
-
+    name?: string;
     data: {
-        name?: string;
         prop?: string;
         hash?: number;
-        lockState?: boolean;
+        isLocked?: boolean;
         faction?: string;
     }
     keyData: {
         keyName?: string;
         keyDescription?: string;
-        keyHash?: string;
         data?: {
             faction?: string;
             lockHash?: number;

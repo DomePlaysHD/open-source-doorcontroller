@@ -1,12 +1,14 @@
 // *** Door Keys can be created here. *** //
 import Database from '@stuyk/ezmongodb';
 import * as alt from 'alt-server';
+import { StringifyOptions } from 'querystring';
 import { ItemFactory } from "../../../server/systems/item";
 import { sha256 } from '../../../server/utility/encryption';
 import { ITEM_TYPE } from "../../../shared/enums/itemTypes";
 import { Item } from "../../../shared/interfaces/item";
 import { appendToItemRegistry } from '../../../shared/items/itemRegistry';
 import { deepCloneObject } from '../../../shared/utility/deepCopy';
+import DoorControl_Main from './interfaces/interface';
 
 export async function loadItems() {
     const allItems = await Database.fetchAllData<Item>('items');
@@ -19,7 +21,10 @@ export async function loadItems() {
             quantity: 1,
             behavior: ITEM_TYPE.CAN_DROP | ITEM_TYPE.CAN_TRADE,
             model: 'bkr_prop_jailer_keys_01a',
-            data: {},
+            data: {
+                lockHash: item.data.lockHash,
+                faction: item.data.faction
+            },
             rarity: 3,
             dbName: item.name
         };
@@ -28,7 +33,7 @@ export async function loadItems() {
     });
 } 
 
-alt.on('doorController:serverSide:createKey', async (keyName: string, keyDescription: string) => {
+alt.on('doorController:serverSide:createKey', async (keyName: string, keyDescription: string, lockHash: number, faction: StringifyOptions) => {
     const keyItem: Item = {
         name: keyName,
         uuid: sha256(keyName),
@@ -37,7 +42,10 @@ alt.on('doorController:serverSide:createKey', async (keyName: string, keyDescrip
         quantity: 1,
         behavior: ITEM_TYPE.CAN_DROP | ITEM_TYPE.CAN_TRADE,
         model: 'bkr_prop_jailer_keys_01a',
-        data: {},
+        data: {
+            lockHash: lockHash,
+            faction: faction
+        },
         rarity: 3,
         dbName: keyName
     };
