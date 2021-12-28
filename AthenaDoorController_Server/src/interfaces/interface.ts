@@ -1,6 +1,6 @@
 import * as alt from 'alt-server';
 
-export default interface DoorControl_Main {
+export default interface IDoorControl {
     _id?: string;
     name?: string;
     data: {

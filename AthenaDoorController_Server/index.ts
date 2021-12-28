@@ -20,8 +20,8 @@ import './src/interfaces/interface-props';
 import './src/translations';
 
 // Interface Imports
-import DoorControl_Main from './src/interfaces/interface';
 import DoorControl_Props from './src/interfaces/interface-props';
+import IDoorControl from './src/interfaces/interface';
 
 export let doorInteraction: any;
 
@@ -31,14 +31,13 @@ const settings = {
 	doorTextEnabled: true, // If false doors won't have textlabels attached to center - Interaction is still possible.
 }
 
-const ATHENA_DOORLOCK = "Athena DoorController";
-const VERSION_STRING = {
-	version: "v3.0",
-	release: "Stable"
+const ATHENA_DOORLOCK = {
+	name: "Athena DoorController",
+	version: 'v3.0'
 }
 
-PluginSystem.registerPlugin(ATHENA_DOORLOCK, async () => {
-    alt.log(`~lg~${ATHENA_DOORLOCK} ${VERSION_STRING.version} - ${VERSION_STRING.release} ==> successfully loaded.`);
+PluginSystem.registerPlugin(ATHENA_DOORLOCK.name, async () => {
+    alt.log(`~lg~${ATHENA_DOORLOCK.name} ${ATHENA_DOORLOCK.version} - ${ATHENA_DOORLOCK.version} ==> successfully loaded.`);
 	
 	loadDoors();
 	loadItems();
@@ -51,7 +50,7 @@ alt.on(ATHENA_EVENTS_PLAYER.SELECTED_CHARACTER, (player: alt.Player) => {
 	DoorController.refresh();
 });
 
-export async function createDoor(doorData: DoorControl_Main) {
+export async function createDoor(doorData: IDoorControl) {
 	const newDocument = {
 		name: doorData.name,
 		data: {
@@ -71,7 +70,7 @@ export async function createDoor(doorData: DoorControl_Main) {
 		rotation: doorData.rotation,
 		center: doorData.center
 	};
-	const inserted = await Database.insertData<DoorControl_Main>(newDocument, settings.collectionName, true);
+	const inserted = await Database.insertData<IDoorControl>(newDocument, settings.collectionName, true);
 
 	doorInteraction = InteractionController.add({
 		identifier: `door-${inserted._id}`,
@@ -140,7 +139,7 @@ export async function createDoor(doorData: DoorControl_Main) {
 }
 
 export async function updateLockstate(doorId: string, isLocked: boolean) {
-	const door = await Database.fetchData<DoorControl_Main>('_id', doorId, settings.collectionName);
+	const door = await Database.fetchData<IDoorControl>('_id', doorId, settings.collectionName);
 	await Database.updatePartialData(
 		doorId,
 		{
@@ -169,7 +168,7 @@ export async function updateLockstate(doorId: string, isLocked: boolean) {
 } 
 
 async function loadDoors() {
-	const dbDoors = await Database.fetchAllData<DoorControl_Main>(settings.collectionName);
+	const dbDoors = await Database.fetchAllData<IDoorControl>(settings.collectionName);
 	dbDoors.forEach((door, index) => {
 		switch (door.data.isLocked) {
 			case false: {
@@ -254,5 +253,5 @@ async function loadDoors() {
 		});
 		DoorController.append(door);
 	});
-	alt.log(`~lg~${ATHENA_DOORLOCK} ${VERSION_STRING.version} | DATABASE | ==> found ${dbDoors.length} doors to load.`);
+	alt.log(`~lg~${ATHENA_DOORLOCK.name} ${ATHENA_DOORLOCK.version} | DATABASE | ==> found ${dbDoors.length} doors to load.`);
 }

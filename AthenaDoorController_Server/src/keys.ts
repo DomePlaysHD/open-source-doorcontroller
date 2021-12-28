@@ -8,7 +8,6 @@ import { ITEM_TYPE } from "../../../shared/enums/itemTypes";
 import { Item } from "../../../shared/interfaces/item";
 import { appendToItemRegistry } from '../../../shared/items/itemRegistry';
 import { deepCloneObject } from '../../../shared/utility/deepCopy';
-import DoorControl_Main from './interfaces/interface';
 
 export async function loadItems() {
     const allItems = await Database.fetchAllData<Item>('items');
@@ -33,7 +32,7 @@ export async function loadItems() {
     });
 } 
 
-alt.on('doorController:serverSide:createKey', async (keyName: string, keyDescription: string, lockHash: number, faction: StringifyOptions) => {
+alt.on('doorController:serverSide:createKey', async (keyName: string, keyDescription: string, lockHash: number, faction: string) => {
     const keyItem: Item = {
         name: keyName,
         uuid: sha256(keyName),
@@ -49,7 +48,7 @@ alt.on('doorController:serverSide:createKey', async (keyName: string, keyDescrip
         rarity: 3,
         dbName: keyName
     };
-    ItemFactory.add(keyItem);
+    await ItemFactory.add(keyItem);
 
     const registerKey: Item = deepCloneObject<Item>(keyItem);
     appendToItemRegistry(registerKey);
