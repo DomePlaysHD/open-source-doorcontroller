@@ -1,4 +1,5 @@
 export enum Translations {
     LOCKED = 'LOCKED',
-    UNLOCKED = 'UNLOCKED'
+    UNLOCKED = 'UNLOCKED',
+    KEY_MISSING = ''
 }

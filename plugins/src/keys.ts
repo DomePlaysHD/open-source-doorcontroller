@@ -37,21 +37,17 @@ alt.on('doorController:serverSide:createKey', async (keyName: string, keyDescrip
         quantity: 1,
         behavior: ITEM_TYPE.CAN_DROP | ITEM_TYPE.CAN_TRADE,
         model: 'bkr_prop_jailer_keys_01a',
-        data: {
-            
-        },
+        data: {},
         rarity: 3,
         dbName: keyName
     };
     ItemFactory.add(keyItem);
+
     const registerKey: Item = deepCloneObject<Item>(keyItem);
     appendToItemRegistry(registerKey);
+
     const keyExists = ItemFactory.doesExist(keyItem.dbName);
-    alt.log("Key EXISTS? -> " + keyExists);
     if(keyExists) {
-        alt.log("Key is already existing. Aborting.");
         return;
-    } else if(!keyExists) {
-        alt.log("Key didn't exist. Key was succesfully added >> Doorlock System.");
     }
 });

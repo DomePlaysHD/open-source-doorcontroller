@@ -1,27 +1,19 @@
 import * as alt from 'alt-client';
 import * as native from 'natives';
-import Doorsystem from '../../plugins/AthenaDoorlock/src/interface';
+import DoorControl_Main from '../../plugins/AthenaDoorlock/src/interfaces/interface';
 
-alt.setInterval(() => {
-
-	const entity = native.getEntityPlayerIsFreeAimingAt(alt.Player.local);
-	if(!entity) return;
-	alt.log(entity);
-	alt.log("" + native.getEntityModel(entity[1]).toString());
-}, 1000);
-
-alt.onServer('populate:Doors', (doors: Array<Doorsystem>) => {
+alt.onServer('populate:Doors', (doors: Array<DoorControl_Main>) => {
 	doors.forEach(async (door, index) => {
-		const closestDoor = native.getClosestObjectOfType(door.pos.x, door.pos.y, door.pos.z, 2, door.hash, false, false, false);
+		const closestDoor = native.getClosestObjectOfType(door.pos.x, door.pos.y, door.pos.z, 2, door.data.hash, false, false, false);
 		const defaultRotation = doors[index].rotation;
 		if(!closestDoor) return;
 		const isDoorClosed = await waitUntilDoorIsClosed(closestDoor, defaultRotation.z);
 		if(!isDoorClosed) {
-			console.log("Door seems to be unclosed. " + isDoorClosed);
+			return;
 		}
-		if(doors[index].lockstate === true) {
+		if(doors[index].data.lockState === true) {
 			native.freezeEntityPosition(closestDoor, true);
-		} else if(doors[index].lockstate === false) {
+		} else if(doors[index].data.lockState === false) {
 			native.freezeEntityPosition(closestDoor, false);
 		}
 	});

@@ -10,14 +10,15 @@ const player = alt.Player.local;
 alt.on('keydown', (key) => {
 	if (key === 190) {
 		alt.emitServer('doorController:server:checkPermissions', player);
+		
 		WheelMenu.create(
-			'DoorController v3',
+			'Athena DoorController',
 			[
 				{
 					name: clientTranslations.addDoor,
 					callback: () => {
 						const InputMenu = {
-							title: 'DoorController v3 by Der Lord!',
+							title: 'Athena DoorController',
 							options: [
 								{
 									id: 'name',
@@ -79,12 +80,16 @@ alt.on('keydown', (key) => {
 
 								const door = native.getClosestObjectOfType(player.pos.x, player.pos.y, player.pos.z, 2, alt.hash(result.prop.value), false, false, false);
 								const doorRot = native.getEntityRotation(door, 2);
-
+								
 								const doorDatas = {
-									name: result.name.value,
-									prop: result.prop.value, 
-									keyName: result.keyName.value,
-									keyDescription: result.keyDescription.value,
+									data: {
+										name: result.name.value,
+										prop: result.prop.value, 
+									},
+									keyData: {
+										keyName: result.keyName.value,
+										keyDescription: result.keyDescription.value,
+									},
 									pos: doorFound[1],
 									rotation: doorRot,
 									center: getEntityCenter(door),

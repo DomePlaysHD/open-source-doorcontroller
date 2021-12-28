@@ -1,10 +1,9 @@
 import * as alt from 'alt-server';
 import { StreamerService } from '../../../server/systems/streamer';
 import { sha256Random } from '../../../server/utility/encryption';
+import DoorControl_Main from './interfaces/interface';
 
-import Doorsystem from './interface';
-
-const globalDoors: Array<Doorsystem> = [];
+const globalDoors: Array<DoorControl_Main> = [];
 const STREAM_RANGE = 25;
 const KEY = 'doors';
 
@@ -19,7 +18,7 @@ export class DoorController {
     /**
      * Called when stream data is updated for this type.
      */
-    static update(player: alt.Player, doors: Array<Doorsystem>) {
+    static update(player: alt.Player, doors: Array<DoorControl_Main>) {
         alt.emitClient(player, 'populate:Doors', doors);
     }
 
@@ -33,7 +32,7 @@ export class DoorController {
     /**
      * Call this when you want to add new stream data.
      */
-    static append(doorData: Doorsystem): string {
+    static append(doorData: DoorControl_Main): string {
         if (!doorData._id) {
             doorData._id = sha256Random(JSON.stringify(doorData));
         }
