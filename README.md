@@ -13,8 +13,10 @@ DoorController: shallowRef(DoorController)
 Imports Clientside ->
 ```typescript
 import './AthenaDoorController/index';
-import './AthenaDoorController/src/wheelmenu';
-import './AthenaDoorController/src/client-translations';
+import './AthenaDoorController/src/doors-vue';
+import './AthenaDoorController/src/client-events-vue';
+import './AthenaDoorController/src/client-functions';
+import './AthenaDoorController/src/client-streamer';
 ```
 
 Serverside -> 
