@@ -1,4 +1,6 @@
 # Athena Framework - DoorController V2
+
+# OUTDATED PRETTY MUCH - Switch to DEVELOPMENT BRANCH
  
 ![image](https://user-images.githubusercontent.com/82890183/147381214-0e993fe0-1d9c-48dc-8751-65a46696c4d1.png)
 
@@ -7,11 +9,6 @@
 ![image](https://user-images.githubusercontent.com/82890183/147381230-4340e69b-ce00-48c8-92ea-fec27845489d.png)
 
 ![image](https://user-images.githubusercontent.com/82890183/147381159-b57320c1-1f3a-495e-8055-bd5b3e8cf860.png)
-
-## READ First!
-- Do not Reupload this Plugin or claim it is yours.
-- This is the development branch, so there will be still a few bugs left which will be fixed in the next few days.
-- Permission to use this plugin is only granted to people which have a legal license of the Athena Framework by Stuyk!
 
 ## Features
 * Add / Remove Doors In-Game by Pressing "."-Key (DOT)
