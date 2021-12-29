@@ -14,7 +14,7 @@ export default interface IDoorControl {
         keyDescription?: string;
         data?: {
             faction?: string;
-            lockHash?: number;
+            lockHash?: string;
         }
     }
     pos: alt.Vector3,

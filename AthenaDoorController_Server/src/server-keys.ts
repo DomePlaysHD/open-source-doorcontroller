@@ -6,8 +6,7 @@ import { ItemFactory } from "../../../server/systems/item";
 import { sha256 } from '../../../server/utility/encryption';
 import { ITEM_TYPE } from "../../../shared/enums/itemTypes";
 import { Item } from "../../../shared/interfaces/item";
-import { appendToItemRegistry } from '../../../shared/items/itemRegistry';
-import { deepCloneObject } from '../../../shared/utility/deepCopy';
+import { playerFuncs } from '../../../server/extensions/Player';
 
 export async function loadItems() {
     const allItems = await Database.fetchAllData<Item>('items');
@@ -28,13 +27,11 @@ export async function loadItems() {
                 rarity: 3,
                 dbName: item.name
             };
-            const registerKey: Item = deepCloneObject<Item>(dbItem);
-            appendToItemRegistry(registerKey);
         }
     });
 } 
 
-alt.on('doorController:serverSide:createKey', async (keyName: string, keyDescription: string, lockHash: number, faction: string) => {
+alt.on('doorController:serverSide:createKey', async (player: alt.Player, keyName: string, keyDescription: string, lockHash: string, faction: string) => {
     const keyItem: Item = {
         name: keyName,
         uuid: sha256(keyName),
@@ -50,13 +47,11 @@ alt.on('doorController:serverSide:createKey', async (keyName: string, keyDescrip
         rarity: 3,
         dbName: keyName
     };
+
     await ItemFactory.add(keyItem);
-
-    const registerKey: Item = deepCloneObject<Item>(keyItem);
-    appendToItemRegistry(registerKey);
-
-    const keyExists = ItemFactory.doesExist(keyItem.dbName);
-    if(keyExists) {
-        return;
+    if(!await ItemFactory.doesExist(keyName)) {
+        playerFuncs.emit.message(player, `==> Key Created: {01DF01}${keyName}`);
+        playerFuncs.emit.message(player, `==> Key Description: {01DF01}${keyDescription}`);
+        playerFuncs.emit.message(player, `==> Key Lockhash: {01DF01}${lockHash}`);
     }
 });

@@ -1,11 +1,11 @@
 // Core-Imports
 import * as alt from 'alt-server';
 import Database from '@stuyk/ezmongodb';
-import { ATHENA_EVENTS_PLAYER } from '../../shared/enums/athenaEvents';
+import { ATHENA_EVENTS_PLAYER, ATHENA_EVENTS_PLAYER_CLIENT } from '../../shared/enums/athenaEvents';
 import { DoorController } from './src/server-streamer';
 import { PluginSystem } from '../../server/systems/plugins';
 import { loadItems } from './src/server-keys';
-import { loadDoors } from './src/server-functions';
+import { doorObjects, loadDoors, pushObjectArray } from './src/server-functions';
 
 // Serverside Imports
 import './src/server-events';
@@ -13,15 +13,20 @@ import './src/server-functions';
 import './src/server-streamer';
 import './src/server-keys';
 import './src/interfaces/IDoorControl';
-import './src/interfaces/IDoorControlProps';
+import './src/interfaces/IDoorObjects';
+import { PlayerEvents } from '../../server/events/playerEvents';
+
 
 export const settings = {
 	collectionName: 'doors', // Used to Create Collection, Insert Datas, Update Datas
-	collectionPropsName: 'doors-props', // Used to store props. Unnecessary for now.
+	collectionDoorProps: 'doors-props', // Used to store props. Used to find default doors. Better don't change it if you've no clue what you are doing here.
 	doorTextEnabled: true, // If false doors won't have textlabels attached to center - Interaction is still possible.
 	textLabelDistance: 3,
 	requiredPermissionLevel: 4,
 	keyIconName: 'keys', // Used to search through items database for the keys, all keys should use the same icon.
+	animDict: 'anim@heists@keycard@',
+	animName: 'idle_a',
+	animDuration: 3000
 }
 
 export enum Translations {
@@ -42,9 +47,21 @@ PluginSystem.registerPlugin(ATHENA_DOORCONTROLLER.name, async () => {
 	loadItems();
 
 	await Database.createCollection(settings.collectionName);
-	await Database.createCollection('doors-props');
+	await Database.createCollection(settings.collectionDoorProps);
 });
 
-alt.on(ATHENA_EVENTS_PLAYER.SELECTED_CHARACTER, (player: alt.Player) => {
+PlayerEvents.on(ATHENA_EVENTS_PLAYER.SELECTED_CHARACTER, (player: alt.Player) => {
 	DoorController.refresh();
+	if(!player.hasMeta('DoorController:ArrayObjects')) {
+		pushObjectArray(player);
+		player.setMeta('DoorController:ArrayObjects', doorObjects)
+	} else {
+		return;
+	};
 });
+
+alt.on('playerDisconnect', (player: alt.Player) => {
+	player.deleteMeta('DoorController:ArrayObjects');
+});
+
+

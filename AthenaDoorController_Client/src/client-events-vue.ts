@@ -1,14 +1,20 @@
 import * as alt from 'alt-client';
 import * as native from 'natives';
 import { WebViewController } from '../../../client/extensions/view2';
-import { isAnyMenuOpen } from '../../../client/utility/menus';
 import { InputView } from '../../../client/views/input';
+import IDoorControl from '../../../plugins/AthenaDoorController/src/interfaces/IDoorControl';
 import { InputOptionType, InputResult } from '../../../shared/interfaces/inputMenus';
+import { clientDoorList } from './client-events';
 import { getEntityCenter } from './client-functions';
 
 const player = alt.Player.local;
 const PAGE_NAME = 'DoorController';
 const doorsView = await WebViewController.get();
+
+let doorProp: any;
+let door: any;
+let doorRot: alt.Vector3;
+let doorCenter: alt.Vector3;
 
 doorsView.on(`${PAGE_NAME}:Vue:OpenInputMenu`, () => {
 	// Timeout here to ensure the IPM is getting opened.
@@ -19,17 +25,10 @@ doorsView.on(`${PAGE_NAME}:Vue:OpenInputMenu`, () => {
 			options: [
 				{
 					id: 'name',
-					desc: 'Database name for this door.',
-					placeholder: '<Mission Row - Police Department - Left/Right>',
+					desc: 'Name of this door.',
+					placeholder: 'Some Name.',
 					type: InputOptionType.TEXT,
-					error: 'Please specify a database name for this door.'
-				},
-				{
-					id: 'prop',
-					desc: 'Name of prop for this door. (Codewalker / MLO Files)',
-					placeholder: 'v_ilev_ph_door01',
-					type: InputOptionType.TEXT,
-					error: 'Please specify a prop for this door.'
+					error: 'Please specify name for this door.'
 				},
 				{
 					id: 'faction',
@@ -61,49 +60,54 @@ doorsView.on(`${PAGE_NAME}:Vue:OpenInputMenu`, () => {
 	
 				const result = {
 					name: results.find((x) => x && x.id === 'name'),
-					prop: results.find((x) => x && x.id === 'prop'),
 					faction: results.find((x) => x && x.id === 'faction'),
 					keyName: results.find((x) => x && x.id === 'keyname'),
 					keyDescription: results.find((x) => x && x.id === 'keydescription')
 				}
 	
-				if (!result.name || !result.prop || !result.keyName) {
+				if (!result.keyName) {
 					InputView.setMenu(InputMenu);
 					return;
 				}
-	
+				
+				clientDoorList.forEach((obj, i) => {
+					door = native.getClosestObjectOfType(player.pos.x, player.pos.y, player.pos.z, 0.5, alt.hash(obj.name), false, false, false);
+					if(door) {
+						console.log(`Found Door ==> ${obj.name}`)
+						doorProp = obj.name;
+						doorRot = native.getEntityRotation(door, 2);
+						doorCenter = getEntityCenter(door);
+					}
+				});
 				const doorFound = native.getCoordsAndRotationOfClosestObjectOfType(
 					player.pos.x,
 					player.pos.y,
 					player.pos.z,
 					2,
-					alt.hash(result.prop.value),
+					alt.hash(doorProp),
 					{ x: 0, y: 0, z: 0 } as alt.Vector3,
 					{ x: 0, y: 0, z: 0 } as alt.Vector3,
 					0
 				);
-	
-				const door = native.getClosestObjectOfType(player.pos.x, player.pos.y, player.pos.z, 2, alt.hash(result.prop.value), false, false, false);
-				const doorRot = native.getEntityRotation(door, 2);
-				
-				const doorDatas = {
+				const doorDatas: IDoorControl  = {
 					name: result.name.value,
 					data: {
-						prop: result.prop.value, 
+						prop: doorProp, 
 					},
 					keyData: {
 						keyName: result.keyName.value,
 						keyDescription: result.keyDescription.value,
 						data: {
-							lockHash: alt.hash(result.keyName.value),
+							lockHash: result.keyName.value,
 							faction: result.faction.value
 						}
 					},
 					pos: doorFound[1],
 					rotation: doorRot,
-					center: getEntityCenter(door),
+					center: doorCenter,
 				}
 				alt.emitServer('DoorController:Server:AddDoor', doorDatas);
+				alt.log(JSON.stringify(doorDatas));
 			}
 		};
 		InputView.setMenu(InputMenu);

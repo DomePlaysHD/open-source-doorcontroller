@@ -5,9 +5,14 @@ import { ATHENA_DOORCONTROLLER, settings, Translations } from '../index';
 import { playerFuncs } from '../../../server/extensions/Player';
 import { ServerTextLabelController } from '../../../server/streamers/textlabel';
 import { InteractionController } from '../../../server/systems/interaction';
-import { getFromRegistry } from '../../../shared/items/itemRegistry';
-import IDoorControl from './interfaces/IDoorControl';
 import { DoorController } from './server-streamer';
+import { ANIMATION_FLAGS } from '../../../shared/flags/animationFlags';
+import { ItemFactory } from '../../../server/systems/item';
+
+import IDoorControl from './interfaces/IDoorControl';
+import IDoorObjects from './interfaces/IDoorObjects';
+import { SYSTEM_EVENTS } from '../../../shared/enums/system';
+import { sha256, sha256Random } from '../../../server/utility/encryption';
 
 export let doorInteraction: any;
 
@@ -24,7 +29,7 @@ export async function createDoor(player: alt.Player, doorData: IDoorControl) {
 			keyName: doorData.keyData.keyName,
 			data: {
 				faction: doorData.keyData.data.faction,
-				lockHash: alt.hash(doorData.keyData.keyName)
+				lockHash: sha256(JSON.stringify(doorData.keyData.keyName)).substring(0, 40)
 			}
 		},
 		pos: doorData.pos as alt.Vector3,
@@ -38,7 +43,7 @@ export async function createDoor(player: alt.Player, doorData: IDoorControl) {
             range: 1,
             position: { x: inserted.pos.x, y: inserted.pos.y, z: inserted.pos.z - 1 },
             callback: (player: alt.Player) => {
-                const keyExists = getFromRegistry(inserted.keyData.keyName);
+                const keyExists = ItemFactory.get(inserted.keyData.keyName);
                 if(!keyExists) {
                     alt.log("Key does not exist. " + inserted.keyData.keyName);
                     return;
@@ -94,9 +99,11 @@ export async function createDoor(player: alt.Player, doorData: IDoorControl) {
 		});
 	}
 
-	alt.emit('doorController:serverSide:createKey', inserted.keyData.keyName, doorData.keyData.keyDescription, doorData.keyData.data.lockHash, inserted.keyData.data.faction);
+	alt.emit('doorController:serverSide:createKey', player, inserted.keyData.keyName, doorData.keyData.keyDescription, inserted.keyData.data.lockHash, inserted.keyData.data.faction);
 	DoorController.append(inserted);
     DoorController.refresh();
+	playerFuncs.emit.message(player, `==> {01DF01} ${ATHENA_DOORCONTROLLER.name} ${ATHENA_DOORCONTROLLER.version}{FFFFFF} <==`);
+	playerFuncs.emit.message(player, `==> {FFFFFF} Auto filled door prop by database ==> {01DF01}${inserted.data.prop}`);
 }
 export async function updateLockstate(doorId: string, isLocked: boolean) {
 	const door = await Database.fetchData<IDoorControl>('_id', doorId, settings.collectionName);
@@ -128,6 +135,7 @@ export async function updateLockstate(doorId: string, isLocked: boolean) {
 } 
 
 export async function loadDoors() {
+	const doorProps = await Database.fetchAllData<IDoorObjects>(settings.collectionDoorProps);
 	const dbDoors = await Database.fetchAllData<IDoorControl>(settings.collectionName);
 	dbDoors.forEach((door, index) => {
 		switch (door.data.isLocked) {
@@ -164,7 +172,7 @@ export async function loadDoors() {
 			range: 1,
 			position: { x: door.pos.x, y: door.pos.y, z: door.pos.z - 1 },
 			callback: (player: alt.Player) => {
-                const keyExists = getFromRegistry(door.keyData.keyName);
+                const keyExists = ItemFactory.get(door.keyData.keyName);
 
                 if(!keyExists) {
                     alt.log("Key does not exist. " + door.keyData.keyName);
@@ -188,6 +196,7 @@ export async function loadDoors() {
                                 maxDistance: settings.textLabelDistance
                             });
                         }
+						playerFuncs.emit.animation(player, settings.animDict, settings.animName, ANIMATION_FLAGS.NORMAL, settings.animDuration);
                         updateLockstate(door._id, door.data.isLocked);
                         break;
                     }
@@ -202,6 +211,7 @@ export async function loadDoors() {
                                 maxDistance: settings.textLabelDistance
                             });
                         }
+						playerFuncs.emit.animation(player, settings.animDict, settings.animName, ANIMATION_FLAGS.NORMAL, settings.animDuration);
                         updateLockstate(door._id, door.data.isLocked);
                         break;
                     }
@@ -213,4 +223,14 @@ export async function loadDoors() {
 		DoorController.append(door);
 	});
 	alt.log(`~lg~${ATHENA_DOORCONTROLLER.name} ${ATHENA_DOORCONTROLLER.version} | DATABASE | ==> found ${dbDoors.length} doors to load.`);
+	alt.log(`~lg~${ATHENA_DOORCONTROLLER.name} ${ATHENA_DOORCONTROLLER.version} | DATABASE | ==> default doors ${doorProps.length}`);
+}
+
+export const doorObjects = Array<IDoorObjects>();
+export async function pushObjectArray(player: alt.Player) {
+	const objects = await Database.fetchAllData<IDoorObjects>(settings.collectionDoorProps);
+	objects.forEach(async (obj, i) => {
+		doorObjects.push(obj);
+	});
+	alt.emitClient(player, 'DoorController:Client:SendDatabaseObjects', doorObjects);
 }

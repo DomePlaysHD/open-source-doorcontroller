@@ -11,7 +11,7 @@
             <div class="buttons">
                 <br />
                 <Button class="mt-2" color="green" pageName="DoorController" style="width: 49%; float: right">
-                    {{ TRANSLATIONS.ADD_KEY_TO_DATABASE }}
+                    {{ TRANSLATIONS.ADD_CUSTOMDOOR_TO_DATABASE }}
                 </Button>
                 <Button
                     v-on:click="addDoorDatabase()"
@@ -21,6 +21,9 @@
                     style="width: 49%"
                 >
                     {{ TRANSLATIONS.ADD_DOOR_TO_DATABASE }}
+                </Button>
+                <Button class="mt-2" color="green" pageName="DoorController" style="width: 49%; float: right">
+                    {{ TRANSLATIONS.ADD_KEY_TO_DATABASE }}
                 </Button>
                 <Button
                     v-on:click="readDoorData()"
@@ -58,6 +61,7 @@
                 <Button class="mt-2" color="red" pageName="DoorController" style="width: 49%">
                     {{ TRANSLATIONS.REMOVE_KEY }} </Button
                 ><br />
+                <hr />
             </div>
         </template>
     </Frame>
@@ -94,7 +98,8 @@ export default defineComponent({
     data() {
         return {
             TRANSLATIONS: {
-                ADD_DOOR_TO_DATABASE: 'Add a new door to the database.',
+                ADD_DOOR_TO_DATABASE: 'Add a new default door to the database.',
+                ADD_CUSTOMDOOR_TO_DATABASE: 'Add a new custom door to the database.',
                 ADD_KEY_TO_DATABASE: 'Add a new key to the database.',
                 READ_DOOR_DATA: 'Read data of a close door.',
                 UPDATE_LOCKSTATE: 'Update Lockstate of this door.',
