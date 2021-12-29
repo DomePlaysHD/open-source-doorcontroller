@@ -1,42 +1,63 @@
 <template>
-    <Frame maxWidth="400" minWidth="400">
+    <Frame maxWidth="25%" minWidth="15%" padding="20%" class="DoorController-Main">
         <template v-slot:toolbar>
             <div class="toolbar">
-                <Toolbar>Athena DoorController</Toolbar>
+                <Toolbar :size="28" @close-page="relayClosePage" pageName="DoorController">
+                    <span id="Headline">Athena DoorController</span>
+                </Toolbar>
             </div>
         </template>
         <template v-slot:content>
             <div class="buttons">
+                <br />
+                <Button class="mt-2" color="green" pageName="DoorController" style="width: 49%; float: right">
+                    {{ TRANSLATIONS.ADD_KEY_TO_DATABASE }}
+                </Button>
                 <Button
                     v-on:click="addDoorDatabase()"
                     class="mt-2"
                     color="green"
-                    pageName="VehicleDealer"
-                    style="width: 100%"
+                    pageName="DoorController"
+                    style="width: 49%"
                 >
-                    Add a new door to the database.
+                    {{ TRANSLATIONS.ADD_DOOR_TO_DATABASE }}
                 </Button>
-                <Button class="mt-2" color="green" pageName="VehicleDealer" style="width: 100%">
-                    Add a new key to the database.
+                <Button
+                    v-on:click="readDoorData()"
+                    class="mt-2"
+                    color="green"
+                    pageName="DoorController"
+                    style="width: 49%"
+                >
+                    {{ TRANSLATIONS.READ_DOOR_DATA }}
                 </Button>
-                <Button class="mt-2" color="green" pageName="VehicleDealer" style="width: 100%">
-                    Read Data's of a close door.
-                </Button>
+                <br />
                 <hr />
-                <Button class="mt-2" color="yellow" pageName="VehicleDealer" style="width: 100%">
-                    Change a single lock by Keyname
+                <br />
+                <Button
+                    v-on:click="updateLockstate()"
+                    class="mt-2"
+                    color="yellow"
+                    pageName="DoorController"
+                    style="width: 49%; float: right"
+                >
+                    {{ TRANSLATIONS.UPDATE_LOCKSTATE }}
                 </Button>
-                <Button class="mt-2" color="yellow" pageName="VehicleDealer" style="width: 100%">
-                    Change all locks by Keyname
+                <Button class="mt-2" color="yellow" pageName="DoorController" style="width: 49%">
+                    {{ TRANSLATIONS.CHANGE_SINGLE_LOCK }}
                 </Button>
+                <Button class="mt-2" color="yellow" pageName="DoorController" style="width: 49%">
+                    {{ TRANSLATIONS.CHANGE_ALL_LOCKS }}
+                </Button>
+                <br />
                 <hr />
-                <span id="doorController-removingText">Stuff related to removing stuff.</span>
-                <Button class="mt-2" color="red" pageName="VehicleDealer" style="width: 100%">
-                    Remove a door from the database.
+                <br />
+                <Button class="mt-2" color="red" pageName="DoorController" style="width: 49%">
+                    {{ TRANSLATIONS.REMOVE_DOOR_FROM_DATABASE }}
                 </Button>
-                <Button class="mt-2" color="red" pageName="VehicleDealer" style="width: 100%">
-                    Remove a key from the database.
-                </Button>
+                <Button class="mt-2" color="red" pageName="DoorController" style="width: 49%">
+                    {{ TRANSLATIONS.REMOVE_KEY }} </Button
+                ><br />
             </div>
         </template>
     </Frame>
@@ -72,10 +93,16 @@ export default defineComponent({
     // Used to define state
     data() {
         return {
-            DoorController: {
-                TRANSLATIONS: {
-                    ADD_DOOR_TO_DATABASE: 'Testing.',
-                },
+            TRANSLATIONS: {
+                ADD_DOOR_TO_DATABASE: 'Add a new door to the database.',
+                ADD_KEY_TO_DATABASE: 'Add a new key to the database.',
+                READ_DOOR_DATA: 'Read data of a close door.',
+                UPDATE_LOCKSTATE: 'Update Lockstate of this door.',
+                REMOVE_KEY: 'Remove a key from the database.',
+                CHANGE_SINGLE_LOCK: 'Change a single lock by keyname.',
+                CHANGE_ALL_LOCKS: 'Change all locks by keyname.',
+                REMOVE_DOOR_FROM_DATABASE: 'Remove a door from the database.',
+                REMOVE_KEY_FROM_DATABASE: 'Remove a key from the database.',
             },
         };
     },
@@ -106,10 +133,22 @@ export default defineComponent({
     },
     // Used to define functions you can call with 'this.x'
     methods: {
+        relayClosePage(pageName: string) {
+            this.$emit('close-page', pageName);
+        },
         addDoorDatabase() {
-            console.log('DoorDB-Func');
             if ('alt' in window) {
                 alt.emit(`${ComponentName}:Vue:OpenInputMenu`);
+            }
+        },
+        readDoorData() {
+            if ('alt' in window) {
+                alt.emit(`${ComponentName}:Vue:ReadDoorData`);
+            }
+        },
+        updateLockstate() {
+            if ('alt' in window) {
+                alt.emit(`${ComponentName}:Vue:UpdateLockstate`);
             }
         },
         handleKeyPress(e) {
@@ -126,8 +165,18 @@ export default defineComponent({
 </script>
 
 <style scoped>
-#doorController-removingText {
+.DoorController-Main {
+    position: relative;
+    width: 20%;
+    margin-right: 78%;
+}
+#Headline {
     position: absolute;
+    margin-left: 25%;
     text-align: center;
+}
+.DoorController-Mainbuttons {
+    position: relative;
+    margin-left: 30%;
 }
 </style>

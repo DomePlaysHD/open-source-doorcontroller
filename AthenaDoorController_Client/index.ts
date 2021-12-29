@@ -2,6 +2,6 @@
 export const settings = {
 	keys: {
 		openDoorInterface: 188,
-		closeDoorInterface: 13
+		// closeDoorInterface: 13
 	}
 };

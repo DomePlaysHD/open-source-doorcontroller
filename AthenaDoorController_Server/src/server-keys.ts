@@ -1,7 +1,7 @@
 // *** Door Keys can be created here. *** //
 import Database from '@stuyk/ezmongodb';
 import * as alt from 'alt-server';
-import { StringifyOptions } from 'querystring';
+import { settings } from '../index';
 import { ItemFactory } from "../../../server/systems/item";
 import { sha256 } from '../../../server/utility/encryption';
 import { ITEM_TYPE } from "../../../shared/enums/itemTypes";
@@ -12,23 +12,25 @@ import { deepCloneObject } from '../../../shared/utility/deepCopy';
 export async function loadItems() {
     const allItems = await Database.fetchAllData<Item>('items');
     allItems.forEach((item, i) => {
-        const dbItem: Item = {
-            name: item.name,
-            uuid: item.uuid,
-            description: item.description,
-            icon: 'keys',
-            quantity: 1,
-            behavior: ITEM_TYPE.CAN_DROP | ITEM_TYPE.CAN_TRADE,
-            model: 'bkr_prop_jailer_keys_01a',
-            data: {
-                lockHash: item.data.lockHash,
-                faction: item.data.faction
-            },
-            rarity: 3,
-            dbName: item.name
-        };
-        const registerKey: Item = deepCloneObject<Item>(dbItem);
-        appendToItemRegistry(registerKey);
+        if(item.icon === settings.keyIconName) {
+            const dbItem: Item = {
+                name: item.name,
+                uuid: item.uuid,
+                description: item.description,
+                icon: 'keys',
+                quantity: 1,
+                behavior: ITEM_TYPE.CAN_DROP | ITEM_TYPE.CAN_TRADE,
+                model: 'bkr_prop_jailer_keys_01a',
+                data: {
+                    lockHash: item.data.lockHash,
+                    faction: item.data.faction
+                },
+                rarity: 3,
+                dbName: item.name
+            };
+            const registerKey: Item = deepCloneObject<Item>(dbItem);
+            appendToItemRegistry(registerKey);
+        }
     });
 } 
 

@@ -75,14 +75,24 @@ class InternalFunctions implements ViewModel {
     }
 }
 
+alt.onServer(`${PAGE_NAME}:Vue:OpenUI`, () => {
+    InternalFunctions.open();
+});
+
+alt.onServer(`${PAGE_NAME}:Vue:CloseUI`, () => {
+    InternalFunctions.close();
+});
+
+alt.onServer(`${PAGE_NAME}:Client:PermissionGranted`, () => {
+    InternalFunctions.open();
+});
+
 alt.on(`${PAGE_NAME}:Vue:CloseUI`, () => {
     InternalFunctions.close();
 });
 
 alt.on('keydown', (key) => {
-    if(key === settings.keys.openDoorInterface) {
-        InternalFunctions.open();
-    } else if(key === settings.keys.closeDoorInterface) {
-        InternalFunctions.close();
+    if(key === settings.keys.openDoorInterface && !isAnyMenuOpen(true)) {
+        alt.emitServer(`${PAGE_NAME}:Server:CheckPermissions`);
     }
 });

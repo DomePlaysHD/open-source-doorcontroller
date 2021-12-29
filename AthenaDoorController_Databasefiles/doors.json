@@ -1,0 +1,931 @@
+[{
+  "_id": {
+    "$oid": "61cbeb10237c6475000ccb9a"
+  },
+  "name": "MRPD - Entrance Left",
+  "data": {
+    "prop": "v_ilev_ph_door01",
+    "hash": 3079744621,
+    "isLocked": false,
+    "faction": "LSPD"
+  },
+  "keyData": {
+    "keyName": "General Key LSPD",
+    "data": {
+      "faction": "LSPD",
+      "lockHash": 1745785638
+    }
+  },
+  "pos": {
+    "x": 434.74786376953125,
+    "y": -980.618408203125,
+    "z": 30.839263916015625
+  },
+  "rotation": {
+    "x": 0,
+    "y": 0,
+    "z": -90
+  },
+  "center": {
+    "x": 434.74786376953125,
+    "y": -981.2684326171875,
+    "z": 30.839263916015625
+  }
+},{
+  "_id": {
+    "$oid": "61cbeb3e237c6475000ccb9b"
+  },
+  "name": "MRPD - Entrance Right",
+  "data": {
+    "prop": "v_ilev_ph_door002",
+    "hash": 320433149,
+    "isLocked": false,
+    "faction": "LSPD"
+  },
+  "keyData": {
+    "keyName": "General Key LSPD",
+    "data": {
+      "faction": "LSPD",
+      "lockHash": 1745785638
+    }
+  },
+  "pos": {
+    "x": 434.74786376953125,
+    "y": -983.215087890625,
+    "z": 30.839263916015625
+  },
+  "rotation": {
+    "x": 0,
+    "y": 0,
+    "z": -90
+  },
+  "center": {
+    "x": 434.74786376953125,
+    "y": -982.5650634765625,
+    "z": 30.839263916015625
+  }
+},{
+  "_id": {
+    "$oid": "61cbec3092607a73c8c742b5"
+  },
+  "name": "MRPD - Captain's Office",
+  "data": {
+    "prop": "v_ilev_ph_gendoor002",
+    "hash": 2974090917,
+    "isLocked": false,
+    "faction": "LSPD"
+  },
+  "keyData": {
+    "keyName": "General Key LSPD",
+    "data": {
+      "faction": "LSPD",
+      "lockHash": 1745785638
+    }
+  },
+  "pos": {
+    "x": 446.57281494140625,
+    "y": -980.0105590820312,
+    "z": 30.83930206298828,
+    "length": 1077.403841420987
+  },
+  "rotation": {
+    "x": 0,
+    "y": 0,
+    "z": -179.9998779296875,
+    "length": 179.9998779296875
+  },
+  "center": {
+    "x": 447.2291259765625,
+    "y": -980.0105590820312,
+    "z": 30.83930206298828,
+    "length": 1077.6760411115056
+  }
+},{
+  "_id": {
+    "$oid": "61cbec6a92607a73c8c742b6"
+  },
+  "name": "MRPD - Locker Rooms Outer",
+  "data": {
+    "prop": "v_ilev_ph_gendoor004",
+    "hash": 1557126584,
+    "isLocked": false,
+    "faction": "LSPD"
+  },
+  "keyData": {
+    "keyName": "General Key LSPD",
+    "data": {
+      "faction": "LSPD",
+      "lockHash": 1745785638
+    }
+  },
+  "pos": {
+    "x": 450.1041259765625,
+    "y": -985.7384033203125,
+    "z": 30.83930206298828,
+    "length": 1084.0779430250097
+  },
+  "rotation": {
+    "x": 0,
+    "y": 0,
+    "z": 90,
+    "length": 90
+  },
+  "center": {
+    "x": 450.1041259765625,
+    "y": -986.3897094726562,
+    "z": 30.83930206298828,
+    "length": 1084.670201363718
+  }
+},{
+  "_id": {
+    "$oid": "61cbec8f92607a73c8c742b7"
+  },
+  "name": "MRPD - Locker Rooms Inner",
+  "data": {
+    "prop": "v_ilev_rc_door2",
+    "hash": 2271212864,
+    "isLocked": false,
+    "faction": "LSPD"
+  },
+  "keyData": {
+    "keyName": "General Key LSPD",
+    "data": {
+      "faction": "LSPD",
+      "lockHash": 1745785638
+    }
+  },
+  "pos": {
+    "x": 452.624755859375,
+    "y": -987.3626098632812,
+    "z": 30.83930206298828,
+    "length": 1086.602574782759
+  },
+  "rotation": {
+    "x": 0,
+    "y": 0,
+    "z": 179.99998474121094,
+    "length": 179.99998474121094
+  },
+  "center": {
+    "x": 451.9747619628906,
+    "y": -987.3624267578125,
+    "z": 30.83930206298828,
+    "length": 1086.3318138470495
+  }
+},{
+  "_id": {
+    "$oid": "61cbecaf92607a73c8c742b8"
+  },
+  "name": "MRPD - Cells/Briefing Left",
+  "data": {
+    "prop": "v_ilev_ph_gendoor005",
+    "hash": 185711165,
+    "isLocked": false,
+    "faction": "LSPD"
+  },
+  "keyData": {
+    "keyName": "General Key LSPD",
+    "data": {
+      "faction": "LSPD",
+      "lockHash": 1745785638
+    }
+  },
+  "pos": {
+    "x": 446.0079345703125,
+    "y": -989.4454345703125,
+    "z": 30.83930206298828,
+    "length": 1085.7607509223396
+  },
+  "rotation": {
+    "x": 0,
+    "y": 0,
+    "z": 0,
+    "length": 0
+  },
+  "center": {
+    "x": 445.3568420410156,
+    "y": -989.4456176757812,
+    "z": 30.83930206298828,
+    "length": 1085.4936248740878
+  }
+},{
+  "_id": {
+    "$oid": "61cbecc592607a73c8c742b9"
+  },
+  "name": "MRPD - Cells/Briefing Right",
+  "data": {
+    "prop": "v_ilev_ph_gendoor005",
+    "hash": 185711165,
+    "isLocked": false,
+    "faction": "LSPD"
+  },
+  "keyData": {
+    "keyName": "General Key LSPD",
+    "data": {
+      "faction": "LSPD",
+      "lockHash": 1745785638
+    }
+  },
+  "pos": {
+    "x": 443.40777587890625,
+    "y": -989.4454345703125,
+    "z": 30.83930206298828,
+    "length": 1084.6952504061428
+  },
+  "rotation": {
+    "x": 0,
+    "y": 0,
+    "z": 179.99998474121094,
+    "length": 179.99998474121094
+  },
+  "center": {
+    "x": 444.0588684082031,
+    "y": -989.4452514648438,
+    "z": 30.83930206298828,
+    "length": 1084.961403373426
+  }
+},{
+  "_id": {
+    "$oid": "61cbed2792607a73c8c742ba"
+  },
+  "name": "MRPD - Roof Access Inner",
+  "data": {
+    "prop": "v_ilev_arm_secdoor",
+    "hash": 749848321,
+    "isLocked": false,
+    "faction": "LSPD"
+  },
+  "keyData": {
+    "keyName": "General Key LSPD",
+    "data": {
+      "faction": "LSPD",
+      "lockHash": 1745785638
+    }
+  },
+  "pos": {
+    "x": 461.2864990234375,
+    "y": -985.320556640625,
+    "z": 30.839263916015625,
+    "length": 1088.3900466830687
+  },
+  "rotation": {
+    "x": 0,
+    "y": 0,
+    "z": 90,
+    "length": 90
+  },
+  "center": {
+    "x": 461.2815246582031,
+    "y": -985.9305419921875,
+    "z": 30.819263458251953,
+    "length": 1088.9396244163927
+  }
+},{
+  "_id": {
+    "$oid": "61cbed5a92607a73c8c742bb"
+  },
+  "name": "MRPD - Roof Access Outer",
+  "data": {
+    "prop": "v_ilev_gtdoor02",
+    "hash": 3954737168,
+    "isLocked": false,
+    "faction": "LSPD"
+  },
+  "keyData": {
+    "keyName": "General Key LSPD",
+    "data": {
+      "faction": "LSPD",
+      "lockHash": 1745785638
+    }
+  },
+  "pos": {
+    "x": 464.361328125,
+    "y": -984.6780395507812,
+    "z": 43.834434509277344,
+    "length": 1089.561261370985
+  },
+  "rotation": {
+    "x": 0,
+    "y": 0,
+    "z": 90,
+    "length": 90
+  },
+  "center": {
+    "x": 464.3617858886719,
+    "y": -984.0280151367188,
+    "z": 43.834434509277344,
+    "length": 1088.974040285798
+  }
+},{
+  "_id": {
+    "$oid": "61cbed9b92607a73c8c742bc"
+  },
+  "name": "MRPD - Briefing Left",
+  "data": {
+    "prop": "v_ilev_ph_gendoor006",
+    "hash": 4163671155,
+    "isLocked": false,
+    "faction": "LSPD"
+  },
+  "keyData": {
+    "keyName": "General Key LSPD",
+    "data": {
+      "faction": "LSPD",
+      "lockHash": 1745785638
+    }
+  },
+  "pos": {
+    "x": 443.0298156738281,
+    "y": -994.5411987304688,
+    "z": 30.83930206298828,
+    "length": 1089.1917535952778
+  },
+  "rotation": {
+    "x": 0,
+    "y": 0,
+    "z": -90,
+    "length": 90
+  },
+  "center": {
+    "x": 443.02685546875,
+    "y": -993.89013671875,
+    "z": 30.84122657775879,
+    "length": 1088.5961509164752
+  }
+},{
+  "_id": {
+    "$oid": "61cbedaf92607a73c8c742bd"
+  },
+  "name": "MRPD - Briefing Right",
+  "data": {
+    "prop": "v_ilev_ph_gendoor006",
+    "hash": 4163671155,
+    "isLocked": false,
+    "faction": "LSPD"
+  },
+  "keyData": {
+    "keyName": "General Key LSPD",
+    "data": {
+      "faction": "LSPD",
+      "lockHash": 1745785638
+    }
+  },
+  "pos": {
+    "x": 443.0298156738281,
+    "y": -991.9410400390625,
+    "z": 30.83930206298828,
+    "length": 1086.8180652903666
+  },
+  "rotation": {
+    "x": 0,
+    "y": 0,
+    "z": 90,
+    "length": 90
+  },
+  "center": {
+    "x": 443.03277587890625,
+    "y": -992.5921020507812,
+    "z": 30.84122657775879,
+    "length": 1087.4135840669724
+  }
+},{
+  "_id": {
+    "$oid": "61cbee1592607a73c8c742be"
+  },
+  "name": "MRPD - Cells Entrance",
+  "data": {
+    "prop": "v_ilev_ph_cellgate",
+    "hash": 631614199,
+    "isLocked": false,
+    "faction": "LSPD"
+  },
+  "keyData": {
+    "keyName": "General Key Cells",
+    "data": {
+      "faction": "LSPD",
+      "lockHash": 3016402647
+    }
+  },
+  "pos": {
+    "x": 464.57012939453125,
+    "y": -992.6640625,
+    "z": 25.06442642211914,
+    "length": 1096.2826148290983
+  },
+  "rotation": {
+    "x": 0,
+    "y": 0,
+    "z": 0,
+    "length": 0
+  },
+  "center": {
+    "x": 463.9201354980469,
+    "y": -992.6640625,
+    "z": 25.06442642211914,
+    "length": 1096.0073259661178
+  }
+},{
+  "_id": {
+    "$oid": "61cbee9392607a73c8c742c0"
+  },
+  "name": "MRPD - Cells 1",
+  "data": {
+    "prop": "v_ilev_ph_cellgate",
+    "hash": 631614199,
+    "isLocked": false,
+    "faction": "LSPD"
+  },
+  "keyData": {
+    "keyName": "General Key Cells",
+    "data": {
+      "faction": "LSPD",
+      "lockHash": 3016402647
+    }
+  },
+  "pos": {
+    "x": 461.8065185546875,
+    "y": -994.4085693359375,
+    "z": 25.06442642211914,
+    "length": 1096.6958962356962
+  },
+  "rotation": {
+    "x": 0,
+    "y": 0,
+    "z": -90,
+    "length": 90
+  },
+  "center": {
+    "x": 461.8065185546875,
+    "y": -993.758544921875,
+    "z": 25.06442642211914,
+    "length": 1096.106532986969
+  }
+},{
+  "_id": {
+    "$oid": "61cbeea792607a73c8c742c1"
+  },
+  "name": "MRPD - Cells 2",
+  "data": {
+    "prop": "v_ilev_ph_cellgate",
+    "hash": 631614199,
+    "isLocked": false,
+    "faction": "LSPD"
+  },
+  "keyData": {
+    "keyName": "General Key Cells",
+    "data": {
+      "faction": "LSPD",
+      "lockHash": 3016402647
+    }
+  },
+  "pos": {
+    "x": 461.8064880371094,
+    "y": -997.6583251953125,
+    "z": 25.06442642211914,
+    "length": 1099.643392967263
+  },
+  "rotation": {
+    "x": 0,
+    "y": 0,
+    "z": 90,
+    "length": 90
+  },
+  "center": {
+    "x": 461.8064880371094,
+    "y": -998.308349609375,
+    "z": 25.06442642211914,
+    "length": 1100.233165635736
+  }
+},{
+  "_id": {
+    "$oid": "61cbeeb692607a73c8c742c2"
+  },
+  "name": "MRPD - Cells 3",
+  "data": {
+    "prop": "v_ilev_ph_cellgate",
+    "hash": 631614199,
+    "isLocked": false,
+    "faction": "LSPD"
+  },
+  "keyData": {
+    "keyName": "General Key Cells",
+    "data": {
+      "faction": "LSPD",
+      "lockHash": 3016402647
+    }
+  },
+  "pos": {
+    "x": 461.8065185546875,
+    "y": -1001.301513671875,
+    "z": 25.06442642211914,
+    "length": 1102.949775526093
+  },
+  "rotation": {
+    "x": 0,
+    "y": 0,
+    "z": 90,
+    "length": 90
+  },
+  "center": {
+    "x": 461.8065185546875,
+    "y": -1001.9515380859375,
+    "z": 25.06442642211914,
+    "length": 1103.5399271092308
+  }
+},{
+  "_id": {
+    "$oid": "61cbeed592607a73c8c742c3"
+  },
+  "name": "MRPD - Cells Exit",
+  "data": {
+    "prop": "v_ilev_gtdoor",
+    "hash": 3261965677,
+    "isLocked": false,
+    "faction": "LSPD"
+  },
+  "keyData": {
+    "keyName": "General Key LSPD",
+    "data": {
+      "faction": "LSPD",
+      "lockHash": 1745785638
+    }
+  },
+  "pos": {
+    "x": 463.4782409667969,
+    "y": -1003.5381469726562,
+    "z": 25.00598907470703,
+    "length": 1105.6790636385376
+  },
+  "rotation": {
+    "x": 0,
+    "y": 0,
+    "z": 0,
+    "length": 0
+  },
+  "center": {
+    "x": 464.1282958984375,
+    "y": -1003.53857421875,
+    "z": 25.00598907470703,
+    "length": 1105.952098640892
+  }
+},{
+  "_id": {
+    "$oid": "61cbeef592607a73c8c742c4"
+  },
+  "name": "MRPD - Exit Left",
+  "data": {
+    "prop": "v_ilev_rc_door2",
+    "hash": 2271212864,
+    "isLocked": false,
+    "faction": "LSPD"
+  },
+  "keyData": {
+    "keyName": "General Key LSPD",
+    "data": {
+      "faction": "LSPD",
+      "lockHash": 1745785638
+    }
+  },
+  "pos": {
+    "x": 469.9678955078125,
+    "y": -1014.4520263671875,
+    "z": 26.536231994628906,
+    "length": 1118.3411412520813
+  },
+  "rotation": {
+    "x": 0,
+    "y": 0,
+    "z": 179.99998474121094,
+    "length": 179.99998474121094
+  },
+  "center": {
+    "x": 469.3179016113281,
+    "y": -1014.4518432617188,
+    "z": 26.536231994628906,
+    "length": 1118.067979453142
+  }
+},{
+  "_id": {
+    "$oid": "61cbef0d92607a73c8c742c5"
+  },
+  "name": "MRPD - Exit Right",
+  "data": {
+    "prop": "v_ilev_rc_door2",
+    "hash": 2271212864,
+    "isLocked": false,
+    "faction": "LSPD"
+  },
+  "keyData": {
+    "keyName": "General Key LSPD",
+    "data": {
+      "faction": "LSPD",
+      "lockHash": 1745785638
+    }
+  },
+  "pos": {
+    "x": 467.37164306640625,
+    "y": -1014.4520263671875,
+    "z": 26.536231994628906,
+    "length": 1117.2525847593988
+  },
+  "rotation": {
+    "x": 0,
+    "y": 0,
+    "z": 0,
+    "length": 0
+  },
+  "center": {
+    "x": 468.0216369628906,
+    "y": -1014.4522094726562,
+    "z": 26.536231994628906,
+    "length": 1117.524813853299
+  }
+},{
+  "_id": {
+    "$oid": "61cbef9a92607a73c8c742c6"
+  },
+  "name": "Ammunation - Los Santos LCN",
+  "data": {
+    "prop": "v_ilev_gc_door04",
+    "hash": 97297972,
+    "isLocked": false,
+    "faction": "LCN"
+  },
+  "keyData": {
+    "keyName": "General Key LCN",
+    "data": {
+      "faction": "LCN",
+      "lockHash": 1658313880
+    }
+  },
+  "pos": {
+    "x": 16.12786865234375,
+    "y": -1114.6055908203125,
+    "z": 29.946937561035156,
+    "length": 1115.1244550741633
+  },
+  "rotation": {
+    "x": 0,
+    "y": 0,
+    "z": 160.00001525878906,
+    "length": 160.00001525878906
+  },
+  "center": {
+    "x": 16.739479064941406,
+    "y": -1114.828125,
+    "z": 29.946935653686523,
+    "length": 1115.3558971939976
+  }
+},{
+  "_id": {
+    "$oid": "61cbefb292607a73c8c742c8"
+  },
+  "name": "Ammunation - Los Santos LCN",
+  "data": {
+    "prop": "v_ilev_gc_door03",
+    "hash": 4286093708,
+    "isLocked": false,
+    "faction": "LCN"
+  },
+  "keyData": {
+    "keyName": "General Key LCN",
+    "data": {
+      "faction": "LCN",
+      "lockHash": 1658313880
+    }
+  },
+  "pos": {
+    "x": 18.572002410888672,
+    "y": -1115.4951171875,
+    "z": 29.946937561035156,
+    "length": 1116.0515645847145
+  },
+  "rotation": {
+    "x": 0,
+    "y": 0,
+    "z": -19.999971389770508,
+    "length": 19.999971389770508
+  },
+  "center": {
+    "x": 17.958433151245117,
+    "y": -1115.27197265625,
+    "z": 29.946935653686523,
+    "length": 1115.8184875995096
+  }
+},{
+  "_id": {
+    "$oid": "61cbf02392607a73c8c742c9"
+  },
+  "name": "Premium Deluxe Motorsports - Entrace (1) Left",
+  "data": {
+    "prop": "v_ilev_csr_door_l",
+    "hash": 2059227086,
+    "isLocked": false,
+    "faction": "none"
+  },
+  "keyData": {
+    "keyName": "Premium Deluxe Motorsports Key",
+    "data": {
+      "faction": "none",
+      "lockHash": 3166939581
+    }
+  },
+  "pos": {
+    "x": -39.133663177490234,
+    "y": -1108.2181396484375,
+    "z": 26.719799041748047,
+    "length": 1109.2307407840644
+  },
+  "rotation": {
+    "x": 0,
+    "y": 0,
+    "z": -19.999971389770508,
+    "length": 19.999971389770508
+  },
+  "center": {
+    "x": -38.684574127197266,
+    "y": -1108.3798828125,
+    "z": 26.72515106201172,
+    "length": 1109.376714465443
+  }
+},{
+  "_id": {
+    "$oid": "61cbf04692607a73c8c742cb"
+  },
+  "name": "Premium Deluxe Motorsports - Entrance (1) Right",
+  "data": {
+    "prop": "v_ilev_csr_door_r",
+    "hash": 1417577297,
+    "isLocked": false,
+    "faction": "none"
+  },
+  "keyData": {
+    "keyName": "Premium Deluxe Motorsports Key",
+    "data": {
+      "faction": "none",
+      "lockHash": 3166939581
+    }
+  },
+  "pos": {
+    "x": -37.33112716674805,
+    "y": -1108.873291015625,
+    "z": 26.719799041748047,
+    "length": 1109.8232004441943
+  },
+  "rotation": {
+    "x": 0,
+    "y": 0,
+    "z": -19.999971389770508,
+    "length": 19.999971389770508
+  },
+  "center": {
+    "x": -37.7810173034668,
+    "y": -1108.7095947265625,
+    "z": 26.719799041748047,
+    "length": 1109.6748705670752
+  }
+},{
+  "_id": {
+    "$oid": "61cbf0a892607a73c8c742cc"
+  },
+  "name": "Premium Deluxue Motorsports - Entrance (2) - Left",
+  "data": {
+    "prop": "v_ilev_csr_door_l",
+    "hash": 2059227086,
+    "isLocked": false,
+    "faction": "none"
+  },
+  "keyData": {
+    "keyName": "Premium Deluxe Motorsports Key",
+    "data": {
+      "faction": "none",
+      "lockHash": 3166939581
+    }
+  },
+  "pos": {
+    "x": -59.89302444458008,
+    "y": -1092.9517822265625,
+    "z": 26.883617401123047,
+    "length": 1094.9216873977373
+  },
+  "rotation": {
+    "x": 0.00002301404128957074,
+    "y": -0.0000581464046263136,
+    "z": -109.84660339355469,
+    "length": 109.8466033935725
+  },
+  "center": {
+    "x": -60.05360412597656,
+    "y": -1093.4012451171875,
+    "z": 26.88896942138672,
+    "length": 1095.3792653089977
+  }
+},{
+  "_id": {
+    "$oid": "61cbf0c692607a73c8c742cd"
+  },
+  "name": "Premium Deluxe Motorsports - Entrance (2) - Right",
+  "data": {
+    "prop": "v_ilev_csr_door_r",
+    "hash": 1417577297,
+    "isLocked": false,
+    "faction": "none"
+  },
+  "keyData": {
+    "keyName": "Premium Deluxe Motorsports Key",
+    "data": {
+      "faction": "none",
+      "lockHash": 3166939581
+    }
+  },
+  "pos": {
+    "x": -60.54581832885742,
+    "y": -1094.7489013671875,
+    "z": 26.888715744018555,
+    "length": 1096.7515471592176
+  },
+  "rotation": {
+    "x": 0.000031787061743671075,
+    "y": -0.00007897307659732178,
+    "z": -110.20915985107422,
+    "length": 110.2091598511071
+  },
+  "center": {
+    "x": -60.380428314208984,
+    "y": -1094.299560546875,
+    "z": 26.888715744018555,
+    "length": 1096.2939055613024
+  }
+},{
+  "_id": {
+    "$oid": "61cbf11e92607a73c8c742ce"
+  },
+  "name": "Premium Deluxe Motorsports - Office (1)",
+  "data": {
+    "prop": "v_ilev_fib_door1",
+    "hash": 2243315674,
+    "isLocked": false,
+    "faction": "none"
+  },
+  "keyData": {
+    "keyName": "Premium Deluxe Motorsports Key",
+    "data": {
+      "faction": "none",
+      "lockHash": 3166939581
+    }
+  },
+  "pos": {
+    "x": -31.723529815673828,
+    "y": -1101.8465576171875,
+    "z": 26.572254180908203,
+    "length": 1102.6233734004857
+  },
+  "rotation": {
+    "x": 0,
+    "y": 0,
+    "z": 70.0000228881836,
+    "length": 70.0000228881836
+  },
+  "center": {
+    "x": -31.94586944580078,
+    "y": -1102.4573974609375,
+    "z": 26.572254180908203,
+    "length": 1103.2401989064967
+  }
+},{
+  "_id": {
+    "$oid": "61cbf13c92607a73c8c742cf"
+  },
+  "name": "Premium Deluxe Motorsports - Office (2)",
+  "data": {
+    "prop": "v_ilev_fib_door1",
+    "hash": 2243315674,
+    "isLocked": false,
+    "faction": "none"
+  },
+  "keyData": {
+    "keyName": "Premium Deluxe Motorsports Key",
+    "data": {
+      "faction": "none",
+      "lockHash": 3166939581
+    }
+  },
+  "pos": {
+    "x": -33.80989456176758,
+    "y": -1107.5787353515625,
+    "z": 26.572254180908203,
+    "length": 1108.4132120583458
+  },
+  "rotation": {
+    "x": -0.0008382764644920826,
+    "y": 0.0022916344460099936,
+    "z": 70.4337158203125,
+    "length": 70.4337158625813
+  },
+  "center": {
+    "x": -34.02760314941406,
+    "y": -1108.1912841796875,
+    "z": 26.572280883789062,
+    "length": 1109.0319590612733
+  }
+}]

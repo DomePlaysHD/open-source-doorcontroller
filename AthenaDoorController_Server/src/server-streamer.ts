@@ -1,7 +1,7 @@
 import * as alt from 'alt-server';
 import { StreamerService } from '../../../server/systems/streamer';
 import { sha256Random } from '../../../server/utility/encryption';
-import IDoorControl from './interfaces/interface';
+import IDoorControl from './interfaces/IDoorControl';
 
 const globalDoors: Array<IDoorControl> = [];
 const STREAM_RANGE = 25;

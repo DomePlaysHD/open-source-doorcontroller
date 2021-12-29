@@ -1,6 +1,7 @@
 import * as alt from 'alt-client';
 import * as native from 'natives';
 import { WebViewController } from '../../../client/extensions/view2';
+import { isAnyMenuOpen } from '../../../client/utility/menus';
 import { InputView } from '../../../client/views/input';
 import { InputOptionType, InputResult } from '../../../shared/interfaces/inputMenus';
 import { getEntityCenter } from './client-functions';
@@ -10,8 +11,8 @@ const PAGE_NAME = 'DoorController';
 const doorsView = await WebViewController.get();
 
 doorsView.on(`${PAGE_NAME}:Vue:OpenInputMenu`, () => {
-	alt.emit(`${PAGE_NAME}Vue:CloseUI`);
 	// Timeout here to ensure the IPM is getting opened.
+	alt.emit(`${PAGE_NAME}:Vue:CloseUI`);
 	alt.setTimeout(() => {
 		const InputMenu = {
 			title: 'Athena DoorController',
@@ -42,14 +43,14 @@ doorsView.on(`${PAGE_NAME}:Vue:OpenInputMenu`, () => {
 					desc: 'Database key name for this door. Use same name and null as description for double doors.',
 					placeholder: 'General Key LSPD',
 					type: InputOptionType.TEXT,
-					error: 'Please specify key name for this door.'
+					error: ''
 				}, 
 				{
 					id: 'keydescription',
 					desc: 'Data key description for this door.',
 					placeholder: 'This key is used to unlock all doors bound to the Mission Row Police Department',
 					type: InputOptionType.TEXT,
-					error: 'Must specify key description'
+					error: ''
 				}
 			],
 			callback: (results: InputResult[]) => {
@@ -102,9 +103,17 @@ doorsView.on(`${PAGE_NAME}:Vue:OpenInputMenu`, () => {
 					rotation: doorRot,
 					center: getEntityCenter(door),
 				}
-				alt.emitServer('doorController:serverSide:addDoor', doorDatas);
+				alt.emitServer('DoorController:Server:AddDoor', doorDatas);
 			}
 		};
 		InputView.setMenu(InputMenu);
-	}, 150);
+	}, 250);
+});
+
+doorsView.on(`${PAGE_NAME}:Vue:ReadDoorData`, () => {
+	alt.emitServer(`${PAGE_NAME}:Server:ReadDoorData`);
+});
+
+doorsView.on(`${PAGE_NAME}:Vue:UpdateLockstate`, () => {
+	alt.emitServer(`${PAGE_NAME}:Server:UpdateLockstate`);
 });
