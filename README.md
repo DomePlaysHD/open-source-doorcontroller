@@ -1,6 +1,6 @@
 # Athena Framework - DoorController v3 - Development Branch
 
-![Fichier 16mdpi](https://user-images.githubusercontent.com/82890183/147709273-bbe8831e-de63-4433-bb2f-c9d83b473884.png)
+![Fichier 22mdpi](https://user-images.githubusercontent.com/82890183/147709903-28af3180-38fe-4aa0-b11e-70813c11df79.png)
 
 <h4> Guys, it's finally in a very good state for now. So you can go ahead and test AthenaDoorController v3! ;)
 <br><br>
