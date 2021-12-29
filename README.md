@@ -18,17 +18,27 @@
 - Configurable to your likings for example disableTextlabel, set range for all Labels, custom collection and more.
 
 # Images (Not yet.)
+  
+![image](https://user-images.githubusercontent.com/82890183/147631180-c26ff168-ab1c-4ae8-83ab-fa152e2e665d.png)
+  
+![image](https://user-images.githubusercontent.com/82890183/147631218-c2468894-1b0a-4a6b-ac0a-a5f7cb6a5f5f.png)
+
+![image](https://user-images.githubusercontent.com/82890183/147631061-fcc7dfba-0d12-42cb-bc4e-39684e2c6986.png)
+  
+![image](https://user-images.githubusercontent.com/82890183/147631128-2b3d89e6-242e-4f97-a10f-6e801a4228fd.png)
 
 # Setup (Vue3 / Athena Pages)
 - Go to /src/src-webivews/pages and create a new Folder called "DoorController" in there.
 - Copy the DoorController.vue file of the repos Webview folder inside of that folder.
 - Please add the 2 lines there (Don't forget it.)
+  
 ```typescript
 import DoorController from './DoorController/DoorController.vue';
 
 // Components ->    
 DoorController: shallowRef(DoorController)
 ```
+  
 Imports Clientside ->
 ```typescript
 import './AthenaDoorController/index';
