@@ -2,39 +2,32 @@
 
 ![Fichier 22mdpi](https://user-images.githubusercontent.com/82890183/147709903-28af3180-38fe-4aa0-b11e-70813c11df79.png)
 
-<h4> Guys, it's finally in a very good state for now. So you can go ahead and test AthenaDoorController v3! ;)
-<br><br>
-<h4>It's just missing some stuff on vue/backend site, has a few bugs left, but i consider this good enough to make it available to everyone as the Development Branch. <br><br> If you find / want anything just let me know, i'll give my best to make it accessible as an OpenSource Project for anyone who's interested to learn a bit more about the AthenaFramework.<br><br>
-
-# AthenaDoorController is looking for your help!
-- So i've added somewhat example database json files.
-
-- If you want to contribute to this plugin fork this repository and import the database files.
-
-- Add new doors to the database and start a pull request, so we can have a full database list of all default doors. Please be careful about the namings i've made inside the example files.
-
 # Features
-- Build on the AthenaFramework
+- Build on the Athena Framework <3
 - Completly manage doors ingame
-- Default Database Export Files with > 20 doors, 3 keys
-- Full Database Integration. No Hardcoded .ts files.
+- GTA V default doors will be automatically found. No need to search through Codewalker.
+- Full Database Integration. No Hardcoded .ts files or either JSON Lists.
 - Configurable to your likings for example disableTextlabel, set range for all Labels, custom collection and more.
 
-# Images (Not yet.)
-  
-![image](https://user-images.githubusercontent.com/82890183/147631180-c26ff168-ab1c-4ae8-83ab-fa152e2e665d.png)
-  
-![image](https://user-images.githubusercontent.com/82890183/147631218-c2468894-1b0a-4a6b-ac0a-a5f7cb6a5f5f.png)
+# Setup - General
+- Just import the stuff from AthenaDoorController_Client in a new folder here -> src/core/client-plugins/newFolderName
 
-![image](https://user-images.githubusercontent.com/82890183/147631061-fcc7dfba-0d12-42cb-bc4e-39684e2c6986.png)
-  
-![image](https://user-images.githubusercontent.com/82890183/147631128-2b3d89e6-242e-4f97-a10f-6e801a4228fd.png)
+- Import the stuff from AthenaDoorController_Server in a new folder here -> src/core/plugins/newFolderName
+
+# Setup (MongoDB) 
+- Add a new collection in your MongoDB Compass call it 'doors-props', add "doors-props" there. Just import the Database File i've added here. Key to open the Vue Menu is ","
 
 # Setup (Vue3 / Athena Pages)
 - Go to /src/src-webivews/pages and create a new Folder called "DoorController" in there.
 - Copy the DoorController.vue file of the repos Webview folder inside of that folder.
 - Please add the 2 lines there (Don't forget it.)
+
+# Images
   
+![image](https://user-images.githubusercontent.com/82890183/147631180-c26ff168-ab1c-4ae8-83ab-fa152e2e665d.png)
+  
+![image](https://user-images.githubusercontent.com/82890183/147631218-c2468894-1b0a-4a6b-ac0a-a5f7cb6a5f5f.png)
+
 ```typescript
 import DoorController from './DoorController/DoorController.vue';
 
@@ -42,25 +35,21 @@ import DoorController from './DoorController/DoorController.vue';
 DoorController: shallowRef(DoorController)
 ```
   
-Imports Clientside ->
+# Imports Server/Client
 ```typescript
+// Imports on plugin/imports.ts
+import './AthenaDoorController/index';
+
+// Imports on client-plugins/import.ts
 import './AthenaDoorController/index';
 import './AthenaDoorController/src/doors-vue';
 import './AthenaDoorController/src/client-events-vue';
 import './AthenaDoorController/src/client-functions';
 import './AthenaDoorController/src/client-streamer';
+import './AthenaDoorController/src/client-events';
 ```
 
-Serverside -> 
-```typescript
-import './AthenaDoorController/index';
-```
-# Setup (Client-Plugins/Plugins Folder)
-- Just import the stuff from AthenaDoorController_Client in a new folder here -> src/core/client-plugins/newFolderName
-
-- Import the stuff from AthenaDoorController_Server in a new folder here -> src/core/plugins/newFolderName 
-
-# Events (Scripting) - Not yet.
+# Events - Scripting (Follow soon)
 ```typescript
 // Clientside Events
 
