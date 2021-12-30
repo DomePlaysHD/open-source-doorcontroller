@@ -2,7 +2,7 @@
 
 ![Fichier 22mdpi](https://user-images.githubusercontent.com/82890183/147709903-28af3180-38fe-4aa0-b11e-70813c11df79.png)
 
-# Features
+### Features
 - Build on the Athena Framework <3
 - Completly manage doors ingame, add, remove, read data, change lockstates
 - GTA V default doors will be automatically found. No need to search through Codewalker. All door props should be inside of the doors-props.json.
@@ -10,21 +10,21 @@
 - Integrated database Keys (changeable locks soon.)
 - Configurable to your likings for example disableTextlabel, set range for all Labels, custom collection and more.
 
-# Setup - General
+## Setup - General
 - Just import the stuff from AthenaDoorController_Client in a new folder here -> src/core/client-plugins/newFolderName
 
 - Import the stuff from AthenaDoorController_Server in a new folder here -> src/core/plugins/newFolderName
 
-# Setup (MongoDB) 
+## Setup (MongoDB) 
 - Add a new collection in your MongoDB Compass call it 'doors-props', add "doors-props" there. Just import the Database File i've added here. Key to open the Vue Menu is ","
 
-# Setup Vue / Athena Page
+##Setup Vue / Athena Page
 - Go to /src-webivews/pages and create a new Folder called "DoorController" in there.
 - Copy the DoorController.vue file of the repos Webview folder inside of that folder.
 - Add to components.ts (src-webviews/) -> import DoorController from './DoorController/DoorController.vue';
 - Add to components.ts (src-webviews/) -> DoorController: shallowRef(DoorController)
 
-# Imports Server/Client
+##Imports Server/Client
 ```typescript
 // Imports on plugin/imports.ts
 import './AthenaDoorController/index';
@@ -38,7 +38,7 @@ import './AthenaDoorController/src/client-streamer';
 import './AthenaDoorController/src/client-events';
 ```
 
-# Events - Scripting (Follow soon)
+## Events - Scripting - Not available yet.
 ```typescript
 // Clientside Events
 
@@ -51,7 +51,7 @@ import './AthenaDoorController/src/client-events';
 // Server To Server Events
 ```
 
-# Images
+## Images
   
 ![image](https://user-images.githubusercontent.com/82890183/147631180-c26ff168-ab1c-4ae8-83ab-fa152e2e665d.png)
   
