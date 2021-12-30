@@ -12,9 +12,9 @@
 - Configurable to your likings for example disableTextlabel, set range for all Labels, custom collection and more.
 
 ## Setup - General
-- Just import the stuff from AthenaDoorController_Client in a new folder here -> src/core/client-plugins/newFolderName
+- Just import the stuff from AthenaDoorController_Client in a new folder here -> src/core/client-plugins/AthenaDoorController
 
-- Import the stuff from AthenaDoorController_Server in a new folder here -> src/core/plugins/newFolderName
+- Import the stuff from AthenaDoorController_Server in a new folder here -> src/core/plugins/AthenaDoorController
 
 ## Setup (MongoDB) 
 - Add a new collection in your MongoDB Compass call it 'doors-props', add "doors-props" there. Just import the Database File i've added here. Key to open the Vue Menu is ","
