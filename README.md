@@ -1,70 +1,61 @@
-# Athena Framework - DoorController V2
-
-# OUTDATED PRETTY MUCH - Switch to DEVELOPMENT BRANCH
- 
-![image](https://user-images.githubusercontent.com/82890183/147381214-0e993fe0-1d9c-48dc-8751-65a46696c4d1.png)
-
-![image](https://user-images.githubusercontent.com/82890183/147381220-b48ebfc4-b6a7-4759-b995-382c99c7c59b.png)
-
-![image](https://user-images.githubusercontent.com/82890183/147381230-4340e69b-ce00-48c8-92ea-fec27845489d.png)
-
-![image](https://user-images.githubusercontent.com/82890183/147381159-b57320c1-1f3a-495e-8055-bd5b3e8cf860.png)
-
-## Features
-* Add / Remove Doors In-Game by Pressing "."-Key (DOT)
-* Full Database Integration (Collection will be auto-created)
-* Full integrated Key System (Keys with names)
-* Automatically hashes every submitted door prop name 
-
-## SETUP
-
-- Drop the client-plugins files into client-plugins.
-- Drop the plugins files into plugins.
-
-## CHANGELOG
-- Added Keys, removed faction option from input menu.
-- Fixed lot of bugs
-- doors are waiting to be closed before they are locking now
-- Textlabels are now in center of the door. Boolean Status is gone also.
-
-## HOW TO CREATE KEY 
-- Keys have actually still be created inside of src/keys.ts - Hopefully we will have database based items soon. <3
-- Just copy the example key and make changes to your likings for example name, quantity and so on.
-- Be careful that the key must have the exact equal name which is stored inside of the doors-collection.
+# Athena Framework - DoorController v3
 
 
+![Fichier 22mdpi](https://user-images.githubusercontent.com/82890183/147709903-28af3180-38fe-4aa0-b11e-70813c11df79.png)
+
+### Features
+- Build on the Athena Framework <3
+- Completly manage doors ingame, add, remove, read data, change lockstates
+- GTA V default doors will be automatically found. No need to search through Codewalker. All door props should be inside of the doors-props.json.
+- Full Database Integration. No Hardcoded .ts files or either JSON Lists.
+- Integrated database Keys (changeable locks soon.)
+- Configurable to your likings for example disableTextlabel, set range for all Labels, custom collection and more.
+
+## Setup - General
+- Just import the stuff from AthenaDoorController_Client in a new folder here -> src/core/client-plugins/newFolderName
+
+- Import the stuff from AthenaDoorController_Server in a new folder here -> src/core/plugins/newFolderName
+
+## Setup (MongoDB) 
+- Add a new collection in your MongoDB Compass call it 'doors-props', add "doors-props" there. Just import the Database File i've added here. Key to open the Vue Menu is ","
+
+## Setup Vue / Athena Page
+- Go to /src-webivews/pages and create a new Folder called "DoorController" in there.
+- Copy the DoorController.vue file of the repos Webview folder inside of that folder.
+- Add to components.ts (src-webviews/) -> import DoorController from './DoorController/DoorController.vue';
+- Add to components.ts (src-webviews/) -> DoorController: shallowRef(DoorController)
+
+##Imports Server/Client
 ```typescript
-// *** Door Keys can be created here. *** //
+// Imports on plugin/imports.ts
+import './AthenaDoorController/index';
 
-import { ITEM_TYPE } from "../../../shared/enums/itemTypes";
-import { Item } from "../../../shared/interfaces/item";
-import { appendToItemRegistry } from "../../../shared/items/itemRegistry";
-import { deepCloneObject } from "../../../shared/utility/deepCopy";
-
-// Just some Example Key which can be used if database keyname equals "LSPD Master Key"
-const someKey: Item = {
-    name: `LSPD Master Key`,
-    uuid: `LSPD-MasterKey`,
-    description: `Probably used to unlock/lock all doors of the Mission Row Police Department.`,
-    icon: 'crate',
-    quantity: 1,
-    behavior: ITEM_TYPE.CAN_DROP | ITEM_TYPE.CAN_TRADE | ITEM_TYPE.CONSUMABLE,
-    data: {
-        
-    },
-    rarity: 3
-};
-const registerLSPDKey: Item = deepCloneObject<Item>(someKey);
-appendToItemRegistry(registerLSPDKey);
+// Imports on client-plugins/import.ts
+import './AthenaDoorController/index';
+import './AthenaDoorController/src/doors-vue';
+import './AthenaDoorController/src/client-events-vue';
+import './AthenaDoorController/src/client-functions';
+import './AthenaDoorController/src/client-streamer';
+import './AthenaDoorController/src/client-events';
 ```
 
-imports.ts (Clientside)
-```typescript 
-import './AthenaDoorlock/index';
-import './AthenaDoorlock/src/wheelmenu';
-```
-imports.ts (Serverside)
+## Events - Scripting - Not available yet.
 ```typescript
-import './AthenaDoorlock/index';
-import './AthenaDoorlock/src/keys';
+// Clientside Events
+
+// Serverside Events
+
+// Vue To Client Events
+
+// Client To Client Events
+
+// Server To Server Events
 ```
+
+## Images
+  
+![image](https://user-images.githubusercontent.com/82890183/147631180-c26ff168-ab1c-4ae8-83ab-fa152e2e665d.png)
+  
+![image](https://user-images.githubusercontent.com/82890183/147631218-c2468894-1b0a-4a6b-ac0a-a5f7cb6a5f5f.png)
+
+Join my plugin discord -> https://discord.gg/Pk6gQ2agbQ
