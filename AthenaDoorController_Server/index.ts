@@ -15,8 +15,6 @@ import './src/server-keys';
 import './src/interfaces/IDoorControl';
 import './src/interfaces/IDoorObjects';
 import { PlayerEvents } from '../../server/events/playerEvents';
-import IDoorProps from './src/interfaces/IDoorProps';
-import { doorProps } from './src/doorProps';
 
 
 export const settings = {
@@ -50,20 +48,6 @@ PluginSystem.registerPlugin(ATHENA_DOORCONTROLLER.name, async () => {
 
 	await Database.createCollection(settings.collectionName);
 	await Database.createCollection(settings.collectionDoorProps);
-	const propsExisting = await Database.fetchAllData('doors-props');
-	let props: IDoorProps = JSON.parse('{ "name": "string", "hashr": 4 }');
-	if(propsExisting.length === 0) {
-		for(let i = 0; i < doorProps.length; i++) {
-			const propDoc: IDoorProps = {
-				name: props.name,
-				hash: props.hash
-			}
-			await Database.insertData(propDoc, 'doors-props', false);
-		}
-		alt.log(`Builded Door Props Database.`)
-	} else {
-		alt.log(`Door Props Database already exists.`);
-	}
 });
 
 PlayerEvents.on(ATHENA_EVENTS_PLAYER.SELECTED_CHARACTER, (player: alt.Player) => {
