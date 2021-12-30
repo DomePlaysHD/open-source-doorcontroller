@@ -4,7 +4,7 @@ import * as alt from 'alt-server';
 import { settings } from '../index';
 import { ItemFactory } from "../../../server/systems/item";
 import { sha256 } from '../../../server/utility/encryption';
-import { ITEM_TYPE } from "../../../shared/enums/itemTypes";
+import { ITEM_TYPE } from "../../../shared/enums/ItemTypes";
 import { Item } from "../../../shared/interfaces/item";
 import { playerFuncs } from '../../../server/extensions/Player';
 
