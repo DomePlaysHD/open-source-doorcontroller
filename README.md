@@ -3,7 +3,7 @@
 ![Fichier 22mdpi](https://user-images.githubusercontent.com/82890183/147709903-28af3180-38fe-4aa0-b11e-70813c11df79.png)
 
 <h4> Guys, it's finally in a very good state for now. So you can go ahead and test AthenaDoorController v3! ;)
-<br><br>
+<br>
 <h4>It's just missing some stuff on vue/backend site, has a few bugs left, but i consider this good enough to make it available to everyone as the Development Branch. <br><br> If you find / want anything just let me know, i'll give my best to make it accessible as an OpenSource Project for anyone who's interested to learn a bit more about the AthenaFramework.<br><br>
 
 # AthenaDoorController is looking for your help!
@@ -30,8 +30,11 @@
   
 ![image](https://user-images.githubusercontent.com/82890183/147631128-2b3d89e6-242e-4f97-a10f-6e801a4228fd.png)
 
+# Setup (MongoDB) 
+- Add a new collection in your MongoDB Compass, add "doors-props" there. Just import the Database File i've added here. Key to open the Vue Menu is ","
+  
 # Setup (Vue3 / Athena Pages)
-- Go to /src/src-webivews/pages and create a new Folder called "DoorController" in there.
+- Go to /src-webivews/pages and create a new Folder called "DoorController" in there.
 - Copy the DoorController.vue file of the repos Webview folder inside of that folder.
 - Please add the 2 lines there (Don't forget it.)
   
