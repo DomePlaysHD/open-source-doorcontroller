@@ -4,9 +4,10 @@
 
 # Features
 - Build on the Athena Framework <3
-- Completly manage doors ingame
-- GTA V default doors will be automatically found. No need to search through Codewalker.
+- Completly manage doors ingame, add, remove, read data, change lockstates
+- GTA V default doors will be automatically found. No need to search through Codewalker. All door props should be inside of the doors-props.json.
 - Full Database Integration. No Hardcoded .ts files or either JSON Lists.
+- Integrated database Keys (changeable locks soon.)
 - Configurable to your likings for example disableTextlabel, set range for all Labels, custom collection and more.
 
 # Setup - General
@@ -17,24 +18,12 @@
 # Setup (MongoDB) 
 - Add a new collection in your MongoDB Compass call it 'doors-props', add "doors-props" there. Just import the Database File i've added here. Key to open the Vue Menu is ","
 
-# Setup (Vue3 / Athena Pages)
+# Setup Vue / Athena Page
 - Go to /src-webivews/pages and create a new Folder called "DoorController" in there.
 - Copy the DoorController.vue file of the repos Webview folder inside of that folder.
-- Please add the 2 lines there (Don't forget it.)
+- Add to components.ts (src-webviews/) -> import DoorController from './DoorController/DoorController.vue';
+- Add to components.ts (src-webviews/) -> DoorController: shallowRef(DoorController)
 
-# Images
-  
-![image](https://user-images.githubusercontent.com/82890183/147631180-c26ff168-ab1c-4ae8-83ab-fa152e2e665d.png)
-  
-![image](https://user-images.githubusercontent.com/82890183/147631218-c2468894-1b0a-4a6b-ac0a-a5f7cb6a5f5f.png)
-
-```typescript
-import DoorController from './DoorController/DoorController.vue';
-
-// Components ->    
-DoorController: shallowRef(DoorController)
-```
-  
 # Imports Server/Client
 ```typescript
 // Imports on plugin/imports.ts
@@ -61,4 +50,11 @@ import './AthenaDoorController/src/client-events';
 
 // Server To Server Events
 ```
+
+# Images
+  
+![image](https://user-images.githubusercontent.com/82890183/147631180-c26ff168-ab1c-4ae8-83ab-fa152e2e665d.png)
+  
+![image](https://user-images.githubusercontent.com/82890183/147631218-c2468894-1b0a-4a6b-ac0a-a5f7cb6a5f5f.png)
+
 Join my plugin discord -> https://discord.gg/Pk6gQ2agbQ
