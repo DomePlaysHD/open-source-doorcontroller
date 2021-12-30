@@ -51,7 +51,7 @@ PluginSystem.registerPlugin(ATHENA_DOORCONTROLLER.name, async () => {
 	await Database.createCollection(settings.collectionName);
 	await Database.createCollection(settings.collectionDoorProps);
 	const propsExisting = await Database.fetchAllData('doors-props');
-	let props: IDoorProps = JSON.parse('{ "name": "string", "hashr": 4 }');
+	let props: IDoorProps = JSON.parse('{ "name": "string", "hash": 4 }');
 	if(propsExisting.length === 0) {
 		for(let i = 0; i < doorProps.length; i++) {
 			const propDoc: IDoorProps = {
