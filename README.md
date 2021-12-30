@@ -17,9 +17,6 @@
 # Setup (MongoDB) 
 - Add a new collection in your MongoDB Compass call it 'doors-props', add "doors-props" there. Just import the Database File i've added here. Key to open the Vue Menu is ","
 
-# Setup (MongoDB) 
-- Add a new collection in your MongoDB Compass, add "doors-props" there. Just import the Database File i've added here. Key to open the Vue Menu is ","
-  
 # Setup (Vue3 / Athena Pages)
 - Go to /src-webivews/pages and create a new Folder called "DoorController" in there.
 - Copy the DoorController.vue file of the repos Webview folder inside of that folder.
