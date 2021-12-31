@@ -71,7 +71,6 @@ class InternalFunctions implements ViewModel {
      */
     static async ready() {
         const view = await WebViewController.get();
-        view.emit(`${PAGE_NAME}:SendSomeData`, 'hello world');
     }
 }
 
@@ -92,7 +91,7 @@ alt.on(`${PAGE_NAME}:Vue:CloseUI`, () => {
 });
 
 alt.on('keydown', (key) => {
-    if(key === settings.keys.openDoorInterface && !isAnyMenuOpen(true)) {
+    if (key === settings.keys.openDoorInterface && !isAnyMenuOpen(true)) {
         alt.emitServer(`${PAGE_NAME}:Server:CheckPermissions`);
     }
 });
