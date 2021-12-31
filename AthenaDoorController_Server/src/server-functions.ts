@@ -42,6 +42,7 @@ export async function createDoor(player: alt.Player, doorData: IDoorControl) {
         description: 'Use Door',
         range: 1,
         position: { x: inserted.pos.x, y: inserted.pos.y, z: inserted.pos.z - 1 },
+        type: 'door',
         callback: (player: alt.Player) => {
             const keyExists = ItemFactory.get(inserted.keyData.keyName);
             if (!keyExists) {
@@ -50,7 +51,7 @@ export async function createDoor(player: alt.Player, doorData: IDoorControl) {
             }
 
             if (!playerFuncs.inventory.isInInventory(player, { name: inserted.keyData.keyName })) {
-                playerFuncs.emit.notification(player, `Key is missing! ((${inserted.keyData.keyName}))!`);
+                playerFuncs.emit.notification(player, `It seems like you are missing Key ${inserted.keyData.keyName}!`);
                 return;
             }
 
@@ -66,6 +67,13 @@ export async function createDoor(player: alt.Player, doorData: IDoorControl) {
                             maxDistance: settings.textLabelDistance,
                         });
                     }
+                    playerFuncs.emit.animation(
+                        player,
+                        settings.animDict,
+                        settings.animName,
+                        ANIMATION_FLAGS.NORMAL,
+                        settings.animDuration,
+                    );
                     updateLockstate(inserted._id, inserted.data.isLocked);
                     break;
                 }
@@ -80,6 +88,13 @@ export async function createDoor(player: alt.Player, doorData: IDoorControl) {
                             maxDistance: settings.textLabelDistance,
                         });
                     }
+                    playerFuncs.emit.animation(
+                        player,
+                        settings.animDict,
+                        settings.animName,
+                        ANIMATION_FLAGS.NORMAL,
+                        settings.animDuration,
+                    );
                     updateLockstate(inserted._id, inserted.data.isLocked);
                     break;
                 }
@@ -109,13 +124,9 @@ export async function createDoor(player: alt.Player, doorData: IDoorControl) {
     );
     DoorController.append(inserted);
     DoorController.refresh();
-    playerFuncs.emit.message(
+    playerFuncs.emit.notification(
         player,
-        `==> {01DF01} ${ATHENA_DOORCONTROLLER.name} ${ATHENA_DOORCONTROLLER.version}{FFFFFF} <==`,
-    );
-    playerFuncs.emit.message(
-        player,
-        `==> {FFFFFF} Auto filled door prop by database ==> {01DF01}${inserted.data.prop}`,
+        `~g~${ATHENA_DOORCONTROLLER.name} ${ATHENA_DOORCONTROLLER.version}~w~ ==> ${inserted.data.prop}`,
     );
 }
 export async function updateLockstate(doorId: string, isLocked: boolean) {
@@ -195,6 +206,7 @@ export async function loadDoors() {
             description: 'Use Door',
             range: 1,
             position: { x: door.pos.x, y: door.pos.y, z: door.pos.z - 1 },
+            type: 'door',
             callback: (player: alt.Player) => {
                 const keyExists = ItemFactory.get(door.keyData.keyName);
 

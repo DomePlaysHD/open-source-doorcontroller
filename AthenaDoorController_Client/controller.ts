@@ -6,7 +6,7 @@ import { getEntityCenter } from './src/client-functions';
 
 const player = alt.Player.local;
 // DO NOT TOUCH ME.
-// LEAVE ALONE PLEASE.
+// LEAVE ME ALONE PLEASE.
 export function clientAddDoor(data: IDoorControl) {
     const door: IDoorControl = {
         name: data.name,
@@ -28,8 +28,10 @@ export function clientAddDoor(data: IDoorControl) {
         rotation: null,
         center: null,
     };
+
     let doorType: number;
-    let closeDoor: any;
+    let closeDoor: [any, alt.Vector3, alt.Vector3];
+
     clientDoorList.forEach((obj, i) => {
         doorType = native.getClosestObjectOfType(
             player.pos.x,
@@ -41,6 +43,7 @@ export function clientAddDoor(data: IDoorControl) {
             false,
             false,
         );
+
         closeDoor = native.getCoordsAndRotationOfClosestObjectOfType(
             player.pos.x,
             player.pos.y,
@@ -51,6 +54,7 @@ export function clientAddDoor(data: IDoorControl) {
             null,
             2,
         );
+
         if (player.pos.isInRange(closeDoor[1], 2)) {
             if (doorType) {
                 console.log(`Found Door ==> ${obj.name}`);

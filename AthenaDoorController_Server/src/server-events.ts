@@ -71,15 +71,16 @@ alt.onClient('DoorController:Server:RemoveDoor', async (player: alt.Player) => {
         if (player.pos.isInRange(door.pos as alt.Vector3, 2)) {
             playerFuncs.emit.notification(
                 player,
-                `Successfully removed door with the prop ${door.name} and the hash: ${door.data.hash}.`,
+                `~g~AthenaDoorController => ~w~Successfully removed Door ~g~${door.name} ~w~| ~g~${door.data.prop} ~w~| ~g~${door.data.hash}.`,
             );
-            alt.setTimeout(() => {
-                InteractionController.remove(doorInteraction.getType(), doorInteraction.getIdentifier());
-                ServerTextLabelController.remove(`door-${door._id.toString()}`);
-            }, 500);
             door.data.isLocked = false;
             updateLockstate(door._id, false);
+
+            InteractionController.remove('door', `door-${door._id}`);
+            ServerTextLabelController.remove(`door-${door._id.toString()}`);
+            
             await Database.deleteById(door._id, 'doors');
+            DoorController.refresh();
         }
         return true;
     });
@@ -91,7 +92,7 @@ alt.onClient('DoorController:Server:ReadDoorData', async (player: alt.Player) =>
         if (player.pos.isInRange(door.pos, 2)) {
             playerFuncs.emit.message(
                 player,
-                `==> {01DF01} ${ATHENA_DOORCONTROLLER.name} ${ATHENA_DOORCONTROLLER.version}{FFFFFF} <==`,
+                `{01DF01} ${ATHENA_DOORCONTROLLER.name} ${ATHENA_DOORCONTROLLER.version}{FFFFFF}`,
             );
             playerFuncs.emit.message(player, `==> Door ID: {01DF01}${door._id}`);
             playerFuncs.emit.message(player, `==> Door Name: {01DF01}${door.name}`);

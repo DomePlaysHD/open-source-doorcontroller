@@ -14,6 +14,7 @@ const KEY = 'doors';
 
 export const DOORCONTROLLER_SETTINGS = {
     enableTextLabels: false,
+    textLabelDistance: 5,
 };
 
 export const DOORCONTROLLER_DATABASE = {
@@ -64,6 +65,7 @@ export class DoorController implements IDoorControl {
         return doorData._id;
     }
     /**
+     * Key will be automatically created through this method.
      * @param IDoorControl Door Datas, IDoorControl Interface
      * @returns Door found = true / Door not found = false
      */
@@ -99,11 +101,35 @@ export class DoorController implements IDoorControl {
     }
 
     /**
+    * 
+    * @param name 
+    * @param description 
+    */
+    static async addKey(name: string, description: string) {
+
+    }
+    static async getKey(name: string) {
+
+    }
+    /**
+    * 
+    * @param name 
+    */
+
+    static async removeKey(name: string) {
+
+
+    }
+    
+    static async deleteKey(name: string) {
+
+    }
+    /**
      * Used to get prop of the nearest door.
      * @param player
      * @returns the prop of a close door.
      */
-    static async findNearDoor(player: alt.Player): Promise<String | null> {
+    static async findNextDoor(player: alt.Player): Promise<String | null> {
         return null;
     }
 

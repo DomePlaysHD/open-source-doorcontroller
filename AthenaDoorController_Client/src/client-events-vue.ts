@@ -247,3 +247,7 @@ doorsView.on(`${PAGE_NAME}:Vue:ReadDoorData`, () => {
 doorsView.on(`${PAGE_NAME}:Vue:UpdateLockstate`, () => {
     alt.emitServer(`${PAGE_NAME}:Server:UpdateLockstate`);
 });
+
+doorsView.on(`${PAGE_NAME}:Vue:RemoveDoor`, () => {
+    alt.emitServer(`${PAGE_NAME}:Server:RemoveDoor`);
+});
