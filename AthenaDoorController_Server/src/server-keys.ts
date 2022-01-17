@@ -4,9 +4,9 @@ import { settings } from '../index';
 import { ItemFactory } from '../../../server/systems/item';
 import { sha256 } from '../../../server/utility/encryption';
 import { Item } from '../../../shared/interfaces/item';
-import { playerFuncs } from '../../../server/extensions/Player';
 import Database from '@stuyk/ezmongodb';
 import { ITEM_TYPE } from '../../../shared/enums/itemTypes';
+import { playerFuncs } from '../../../server/extensions/extPlayer';
 
 export async function loadItems() {
     const allItems = await Database.fetchAllData<Item>('items');

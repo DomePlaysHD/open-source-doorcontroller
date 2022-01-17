@@ -1,18 +1,17 @@
-import Database from '@stuyk/ezmongodb';
 import * as alt from 'alt-server';
-import { ATHENA_DOORCONTROLLER, settings, Translations } from '../index';
-
-import { playerFuncs } from '../../../server/extensions/Player';
-import { ServerTextLabelController } from '../../../server/streamers/textlabel';
-import { InteractionController } from '../../../server/systems/interaction';
-import { ANIMATION_FLAGS } from '../../../shared/flags/animationFlags';
-import { ItemFactory } from '../../../server/systems/item';
-
+import Database from '@stuyk/ezmongodb';
 import IDoorControl from './interfaces/IDoorControl';
 import IDoorObjects from './interfaces/IDoorObjects';
-import { sha256 } from '../../../server/utility/encryption';
+
+import { ATHENA_DOORCONTROLLER, settings, Translations } from '../index';
+import { ServerTextLabelController } from '../../../server/streamers/textlabel';
+import { InteractionController } from '../../../server/systems/interaction';
 import { doorsPropsDefaults } from './defaults/doors-props';
+import { ANIMATION_FLAGS } from '../../../shared/flags/animationFlags';
 import { DoorController } from '../controller';
+import { playerFuncs } from '../../../server/extensions/extPlayer';
+import { ItemFactory } from '../../../server/systems/item';
+import { sha256 } from '../../../server/utility/encryption';
 
 export let doorInteraction: any;
 
@@ -38,11 +37,10 @@ export async function createDoor(player: alt.Player, doorData: IDoorControl) {
     };
     const inserted = await Database.insertData<IDoorControl>(newDocument, settings.collectionName, true);
     doorInteraction = InteractionController.add({
-        identifier: `door-${inserted._id}`,
+        uid: `door-${inserted._id}`,
         description: 'Use Door',
         range: 1,
         position: { x: inserted.pos.x, y: inserted.pos.y, z: inserted.pos.z - 1 },
-        type: 'door',
         callback: (player: alt.Player) => {
             const keyExists = ItemFactory.get(inserted.keyData.keyName);
             if (!keyExists) {
@@ -202,11 +200,10 @@ export async function loadDoors() {
             }
         }
         doorInteraction = InteractionController.add({
-            identifier: `door-${door._id}`,
+            uid: `door-${door._id}`,
             description: 'Use Door',
             range: 1,
             position: { x: door.pos.x, y: door.pos.y, z: door.pos.z - 1 },
-            type: 'door',
             callback: (player: alt.Player) => {
                 const keyExists = ItemFactory.get(door.keyData.keyName);
 

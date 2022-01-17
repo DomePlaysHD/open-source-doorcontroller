@@ -1,6 +1,5 @@
 import Database from '@stuyk/ezmongodb';
 import * as alt from 'alt-server';
-import { Vector3 } from 'alt-shared';
 import { ItemFactory } from '../../server/systems/item';
 import { StreamerService } from '../../server/systems/streamer';
 import { sha256, sha256Random } from '../../server/utility/encryption';

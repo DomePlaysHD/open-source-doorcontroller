@@ -2,13 +2,13 @@ import * as alt from 'alt-server';
 import Database from '@stuyk/ezmongodb';
 import IDoorControl from './interfaces/IDoorControl';
 
-import { createDoor, doorInteraction, updateLockstate } from './server-functions';
+import { createDoor, updateLockstate } from './server-functions';
 import { ServerTextLabelController } from '../../../server/streamers/textlabel';
 import { InteractionController } from '../../../server/systems/interaction';
-import { playerFuncs } from '../../../server/extensions/Player';
 import { ATHENA_DOORCONTROLLER, settings, Translations } from '../index';
 import { DoorController } from '../controller';
 import { sha256 } from '../../../server/utility/encryption';
+import { playerFuncs } from '../../../server/extensions/extPlayer';
 
 alt.onClient('DoorController:Server:SendData', (player: alt.Player, data: IDoorControl) => {
     alt.log(`Received Door Datas from Client. ${JSON.stringify(data)}`);
@@ -76,7 +76,7 @@ alt.onClient('DoorController:Server:RemoveDoor', async (player: alt.Player) => {
             door.data.isLocked = false;
             updateLockstate(door._id, false);
 
-            InteractionController.remove('door', `door-${door._id}`);
+            InteractionController.remove(`door-${door._id}`);
             ServerTextLabelController.remove(`door-${door._id.toString()}`);
             
             await Database.deleteById(door._id, 'doors');
