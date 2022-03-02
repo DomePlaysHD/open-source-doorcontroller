@@ -1,8 +1,9 @@
 import * as alt from 'alt-client';
 import * as native from 'natives';
 import { WebViewController } from '../../../client/extensions/view2';
+import { showNotification } from '../../../client/utility/notification';
 import { InputView } from '../../../client/views/input';
-import IDoorControl from '../../../plugins/AthenaDoorController/src/interfaces/IDoorControl';
+import IDoorControl from '../../../server-plugins/athena-door-controller/src/interfaces/IDoorControl';
 import { InputMenu, InputOptionType, InputResult } from '../../../shared/interfaces/inputMenus';
 import { clientDoorList } from './client-events';
 import { getEntityCenter } from './client-functions';
@@ -33,114 +34,117 @@ doorsView.on(`${PAGE_NAME}:Vue:OpenInputMenu`, () => {
         );
         if (door) {
             mainDoor = obj.name;
+            alt.setTimeout(() => {
+                const InputMenu: InputMenu = {
+                    title: 'Athena DoorController',
+                    generalOptions: {
+                        description: `Database auto filled door model ==> ${mainDoor}`,
+                    },
+                    options: [
+                        {
+                            id: 'name',
+                            desc: 'Name of this door.',
+                            placeholder: 'Some Name.',
+                            type: InputOptionType.TEXT,
+                            error: 'Please specify name for this door.',
+                        },
+                        {
+                            id: 'faction',
+                            desc: 'Name of faction for this door.',
+                            placeholder: 'Los Santos Police Department',
+                            type: InputOptionType.TEXT,
+                            error: '',
+                        },
+                        {
+                            id: 'keyname',
+                            desc: 'Database key name for this door. Use same name and null as description for double doors.',
+                            placeholder: 'General Key LSPD',
+                            type: InputOptionType.TEXT,
+                            error: '',
+                        },
+                        {
+                            id: 'keydescription',
+                            desc: 'Data key description for this door.',
+                            placeholder: 'This key is used to unlock all doors bound to the Mission Row Police Department',
+                            type: InputOptionType.TEXT,
+                            error: '',
+                        },
+                    ],
+                    callback: (results: InputResult[]) => {
+                        if (results.length <= 0) {
+                            InputView.setMenu(InputMenu);
+                            return;
+                        }
+        
+                        const result = {
+                            name: results.find((x) => x && x.id === 'name'),
+                            faction: results.find((x) => x && x.id === 'faction'),
+                            keyName: results.find((x) => x && x.id === 'keyname'),
+                            keyDescription: results.find((x) => x && x.id === 'keydescription'),
+                        };
+        
+                        if (!result.keyName) {
+                            InputView.setMenu(InputMenu);
+                            return;
+                        }
+        
+                        clientDoorList.forEach((obj, i) => {
+                            door = native.getClosestObjectOfType(
+                                player.pos.x,
+                                player.pos.y,
+                                player.pos.z,
+                                0.5,
+                                alt.hash(obj.name),
+                                false,
+                                false,
+                                false,
+                            );
+                            if (door) {
+                                console.log(`Found Door ==> ${obj.name}`);
+                                doorProp = obj.name;
+                                doorRot = native.getEntityRotation(door, 2);
+                                doorCenter = getEntityCenter(door);
+                            }
+                        });
+                        const doorFound = native.getCoordsAndRotationOfClosestObjectOfType(
+                            player.pos.x,
+                            player.pos.y,
+                            player.pos.z,
+                            2,
+                            alt.hash(doorProp),
+                            { x: 0, y: 0, z: 0 } as alt.Vector3,
+                            { x: 0, y: 0, z: 0 } as alt.Vector3,
+                            0,
+                        );
+                        const doorDatas: IDoorControl = {
+                            name: result.name.value,
+                            data: {
+                                prop: doorProp,
+                            },
+                            keyData: {
+                                keyName: result.keyName.value,
+                                keyDescription: result.keyDescription.value,
+                                data: {
+                                    lockHash: result.keyName.value,
+                                    faction: result.faction.value,
+                                },
+                            },
+                            pos: doorFound[1],
+                            rotation: doorRot,
+                            center: doorCenter,
+                        };
+                        if (!doorDatas.pos || !doorDatas.rotation) return;
+                        alt.emitServer('DoorController:Server:AddDoor', doorDatas);
+                        alt.log(JSON.stringify(doorDatas));
+                    },
+                };
+                InputView.setMenu(InputMenu);
+            }, 250);
+        } else {
+            showNotification('No door found!');
+            return;
         }
     });
-    alt.setTimeout(() => {
-        const InputMenu: InputMenu = {
-            title: 'Athena DoorController',
-            generalOptions: {
-                description: `Database auto filled door model ==> ${mainDoor}`,
-            },
-            options: [
-                {
-                    id: 'name',
-                    desc: 'Name of this door.',
-                    placeholder: 'Some Name.',
-                    type: InputOptionType.TEXT,
-                    error: 'Please specify name for this door.',
-                },
-                {
-                    id: 'faction',
-                    desc: 'Name of faction for this door.',
-                    placeholder: 'Los Santos Police Department',
-                    type: InputOptionType.TEXT,
-                    error: '',
-                },
-                {
-                    id: 'keyname',
-                    desc: 'Database key name for this door. Use same name and null as description for double doors.',
-                    placeholder: 'General Key LSPD',
-                    type: InputOptionType.TEXT,
-                    error: '',
-                },
-                {
-                    id: 'keydescription',
-                    desc: 'Data key description for this door.',
-                    placeholder: 'This key is used to unlock all doors bound to the Mission Row Police Department',
-                    type: InputOptionType.TEXT,
-                    error: '',
-                },
-            ],
-            callback: (results: InputResult[]) => {
-                if (results.length <= 0) {
-                    InputView.setMenu(InputMenu);
-                    return;
-                }
-
-                const result = {
-                    name: results.find((x) => x && x.id === 'name'),
-                    faction: results.find((x) => x && x.id === 'faction'),
-                    keyName: results.find((x) => x && x.id === 'keyname'),
-                    keyDescription: results.find((x) => x && x.id === 'keydescription'),
-                };
-
-                if (!result.keyName) {
-                    InputView.setMenu(InputMenu);
-                    return;
-                }
-
-                clientDoorList.forEach((obj, i) => {
-                    door = native.getClosestObjectOfType(
-                        player.pos.x,
-                        player.pos.y,
-                        player.pos.z,
-                        0.5,
-                        alt.hash(obj.name),
-                        false,
-                        false,
-                        false,
-                    );
-                    if (door) {
-                        console.log(`Found Door ==> ${obj.name}`);
-                        doorProp = obj.name;
-                        doorRot = native.getEntityRotation(door, 2);
-                        doorCenter = getEntityCenter(door);
-                    }
-                });
-                const doorFound = native.getCoordsAndRotationOfClosestObjectOfType(
-                    player.pos.x,
-                    player.pos.y,
-                    player.pos.z,
-                    2,
-                    alt.hash(doorProp),
-                    { x: 0, y: 0, z: 0 } as alt.Vector3,
-                    { x: 0, y: 0, z: 0 } as alt.Vector3,
-                    0,
-                );
-                const doorDatas: IDoorControl = {
-                    name: result.name.value,
-                    data: {
-                        prop: doorProp,
-                    },
-                    keyData: {
-                        keyName: result.keyName.value,
-                        keyDescription: result.keyDescription.value,
-                        data: {
-                            lockHash: result.keyName.value,
-                            faction: result.faction.value,
-                        },
-                    },
-                    pos: doorFound[1],
-                    rotation: doorRot,
-                    center: doorCenter,
-                };
-                if (!doorDatas.pos || !doorDatas.rotation) return;
-                alt.emitServer('DoorController:Server:AddDoor', doorDatas);
-                alt.log(JSON.stringify(doorDatas));
-            },
-        };
-        InputView.setMenu(InputMenu);
-    }, 250);
 });
 
 doorsView.on(`${PAGE_NAME}:Vue:OpenCustomInputMenu`, () => {

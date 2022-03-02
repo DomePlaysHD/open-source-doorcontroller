@@ -10,7 +10,13 @@
         <template v-slot:content>
             <div class="buttons">
                 <br />
-                <Button class="mt-2" color="green" pageName="DoorController" style="width: 49%; float: right">
+                <Button
+                    v-on:click="addCustomDoor()"
+                    class="mt-2"
+                    color="green"
+                    pageName="DoorController"
+                    style="width: 49%; float: right"
+                >
                     {{ TRANSLATIONS.ADD_CUSTOMDOOR_TO_DATABASE }}
                 </Button>
                 <Button
@@ -144,6 +150,11 @@ export default defineComponent({
         addDoorDatabase() {
             if ('alt' in window) {
                 alt.emit(`${ComponentName}:Vue:OpenInputMenu`);
+            }
+        },
+        addCustomDoor() {
+            if ('alt' in window) {
+                alt.emit(`${ComponentName}:Vue:OpenCustomInputMenu`);
             }
         },
         readDoorData() {
