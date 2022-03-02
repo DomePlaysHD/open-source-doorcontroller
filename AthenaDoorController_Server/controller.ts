@@ -1,5 +1,6 @@
 import Database from '@stuyk/ezmongodb';
 import * as alt from 'alt-server';
+import { playerFuncs } from '../../server/extensions/extPlayer';
 import { ItemFactory } from '../../server/systems/item';
 import { StreamerService } from '../../server/systems/streamer';
 import { sha256, sha256Random } from '../../server/utility/encryption';
@@ -91,49 +92,24 @@ export class DoorController implements IDoorControl {
         return true;
     }
 
-    /**
-     * @param id ID of the closest door. Use with const id = DoorController.findNearDoor(player);
-     * @returns boolean true if successfully removed, else null.
-     */
-    static async removeDoor(id: string): Promise<Boolean | null> {
-        return true;
-    }
-
-    /**
-    * 
-    * @param name 
-    * @param description 
-    */
-    static async addKey(name: string, description: string) {
-
-    }
-    static async getKey(name: string) {
-
-    }
-    /**
-    * 
-    * @param name 
-    */
-
-    static async removeKey(name: string) {
-
-
-    }
-    
-    static async deleteKey(name: string) {
-
-    }
-    /**
-     * Used to get prop of the nearest door.
-     * @param player
-     * @returns the prop of a close door.
-     */
-    static async findNextDoor(player: alt.Player): Promise<String | null> {
-        return null;
-    }
-
-    static async findExistingDoor(): Promise<IDoorControl | null> {
-        return null;
+    static async giveKey(player: alt.Player, keyName: string, quantity?: number) {
+        const keyToGive = await ItemFactory.getByName(keyName);
+        const emptySlot = playerFuncs.inventory.getFreeInventorySlot(player);
+        const keyInInventory = playerFuncs.inventory.isInInventory(player, keyToGive);
+        if(quantity) {
+            keyToGive.quantity = quantity;
+        }
+        if(!keyToGive) return playerFuncs.emit.notification(player, `No valid key was found by name ${keyName}!`);
+        if(!keyInInventory) {
+            playerFuncs.inventory.inventoryAdd(player, keyToGive, emptySlot.slot);
+        } else {
+            if(quantity) {
+                player.data.inventory[keyInInventory.index].quantity += quantity;
+            } else {
+                player.data.inventory[keyInInventory.index].quantity += 1;
+            }
+        }
+        playerFuncs.save.field(player, 'inventory', player.data.inventory);
     }
 }
 DoorController.init();

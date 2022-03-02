@@ -18,8 +18,6 @@ import { PERMISSIONS } from '../../shared/flags/permissionFlags';
 import { DoorController } from './controller';
 import { playerFuncs } from '../../server/extensions/extPlayer';
 import Database from '@stuyk/ezmongodb';
-import VehicleFuncs from '../../server/extensions/vehicleFuncs';
-import { VehicleSystem } from '../../server/systems/vehicle';
 
 export const settings = {
     collectionName: 'doors', // Used to Create Collection, Insert Datas, Update Datas
@@ -65,9 +63,3 @@ PlayerEvents.on(ATHENA_EVENTS_PLAYER.SELECTED_CHARACTER, (player: alt.Player) =>
         return;
     }
 });
-
-ChatController.addCommand('TestAdd', '/TestAdd - Adds a door per DoorController.', PERMISSIONS.ADMIN, someTesting);
-function someTesting(player: alt.Player) {
-    playerFuncs.emit.message(player, `Testing.....`);
-    alt.emitClient(player, 'DoorController:Client:SendData');
-}
