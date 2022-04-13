@@ -8,4 +8,5 @@ export const DOORCONTROLLER_SETTINGS = {
     ANIMATION_DICTIONARY: 'anim@heists@keycard@',
     ANIMATION_NAME: 'idle_a',
     ANIMATION_DURATION: 3000,
+    KEY_TO_OPEN_UI: 37,
 }

@@ -6,8 +6,9 @@ import { clientDoorList } from './src/client-events';
 import { getEntityCenter } from './src/client-functions';
 
 const player = alt.Player.local;
-// DO NOT TOUCH ME.
-// LEAVE ME ALONE PLEASE.
+let doorType: number;
+let closeDoor: [any, alt.Vector3, alt.Vector3];
+
 export function clientAddDoor(data: IDoorControl) {
     const door: IDoorControl = {
         name: data.name,
@@ -29,9 +30,6 @@ export function clientAddDoor(data: IDoorControl) {
         rotation: null,
         center: null,
     };
-
-    let doorType: number;
-    let closeDoor: [any, alt.Vector3, alt.Vector3];
 
     clientDoorList.forEach((obj, i) => {
         doorType = native.getClosestObjectOfType(

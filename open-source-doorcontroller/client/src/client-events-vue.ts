@@ -209,6 +209,7 @@ doorsView.on(DOORCONTROLLER_EVENTS.OPEN_CUSTOM_INPUTMENU, () => {
                     InputView.setMenu(InputMenu);
                     return;
                 }
+
                 const doorFound = native.getCoordsAndRotationOfClosestObjectOfType(
                     player.pos.x,
                     player.pos.y,
@@ -219,6 +220,7 @@ doorsView.on(DOORCONTROLLER_EVENTS.OPEN_CUSTOM_INPUTMENU, () => {
                     { x: 0, y: 0, z: 0 } as alt.Vector3,
                     0,
                 );
+
                 const doorDatas: IDoorControl = {
                     name: result.name.value,
                     data: {
@@ -236,6 +238,7 @@ doorsView.on(DOORCONTROLLER_EVENTS.OPEN_CUSTOM_INPUTMENU, () => {
                     rotation: rotation,
                     center: center,
                 };
+                
                 if (!doorDatas.pos || !doorDatas.rotation) return;
                 alt.emitServer(DOORCONTROLLER_EVENTS.ADD_DOOR, doorDatas);
             },

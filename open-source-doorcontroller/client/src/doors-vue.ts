@@ -3,7 +3,7 @@ import { WebViewController } from '../../../../client/extensions/view2';
 import ViewModel from '../../../../client/models/viewModel';
 import { isAnyMenuOpen } from '../../../../client/utility/menus';
 import { DOORCONTROLLER_EVENTS } from '../../shared/events';
-import { settings } from '../index';
+import { DOORCONTROLLER_SETTINGS } from '../../shared/settings';
 
 // You should change this to match your Vue Template's ComponentName.
 const PAGE_NAME = 'DoorController';
@@ -76,7 +76,7 @@ class InternalFunctions implements ViewModel {
 }
 
 alt.on('keydown', (key) => {
-    if (key === 37 && !isAnyMenuOpen(true)) {
+    if (key === DOORCONTROLLER_SETTINGS.KEY_TO_OPEN_UI && !isAnyMenuOpen(true)) {
         alt.emitServer(DOORCONTROLLER_EVENTS.CHECK_PERMISSIONS);
     }
 });
