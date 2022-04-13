@@ -105,18 +105,13 @@ export class DoorController implements IDoorControl {
         const keyToGive = await ItemFactory.getByName(keyName);
         const emptySlot = playerFuncs.inventory.getFreeInventorySlot(player);
         const keyInInventory = playerFuncs.inventory.isInInventory(player, keyToGive);
-        if (quantity) {
-            keyToGive.quantity = quantity;
-        }
         if (!keyToGive) return playerFuncs.emit.notification(player, `No valid key was found by name ${keyName}!`);
         if (!keyInInventory) {
             playerFuncs.inventory.inventoryAdd(player, keyToGive, emptySlot.slot);
-        } else {
-            if (quantity) {
-                player.data.inventory[keyInInventory.index].quantity += quantity;
-            } else {
-                player.data.inventory[keyInInventory.index].quantity += 1;
-            }
+        } else if (keyInInventory) {
+            quantity
+                ? (player.data.inventory[keyInInventory.index].quantity += quantity)
+                : (player.data.inventory[keyInInventory.index].quantity += 1);
         }
         playerFuncs.save.field(player, 'inventory', player.data.inventory);
     }
