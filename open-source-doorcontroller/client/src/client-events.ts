@@ -1,8 +1,9 @@
 import * as alt from 'alt-client';
-import IDoorObjects from '../../server/src/interfaces/IDoorObjects';
+import { DOORCONTROLLER_EVENTS } from '../../shared/events';
+import IDoorObjects from '../../shared/interfaces/IDoorObjects';
 export let clientDoorList = Array<IDoorObjects>();
 
-alt.onServer('DoorController:Client:SendDatabaseObjects', (objects: Array<IDoorObjects>) => {
+alt.onServer(DOORCONTROLLER_EVENTS.DATABASE_DATA, (objects: Array<IDoorObjects>) => {
     objects.forEach((obj, i) => {
         clientDoorList.push(obj);
     });

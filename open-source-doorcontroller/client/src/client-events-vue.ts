@@ -4,25 +4,26 @@ import { WebViewController } from '../../../../client/extensions/view2';
 import { showNotification } from '../../../../client/utility/notification';
 import { InputView } from '../../../../client/views/input';
 import { InputMenu, InputOptionType, InputResult } from '../../../../shared/interfaces/inputMenus';
-import IDoorControl from '../../server/src/interfaces/IDoorControl';
+import { DOORCONTROLLER_EVENTS } from '../../shared/events';
+import IDoorControl from '../../shared/interfaces/IDoorControl';
 import { clientDoorList } from './client-events';
 import { getEntityCenter } from './client-functions';
 
 const player = alt.Player.local;
-const PAGE_NAME = 'DoorController';
 const doorsView = await WebViewController.get();
 
-let doorProp: any;
-let door: any;
-let doorRot: alt.Vector3;
-let doorCenter: alt.Vector3;
+let mainDoor: string;
+let prop: string;
+let doorNumber: number;
+let rotation: alt.Vector3;
+let center: alt.Vector3;
 
-doorsView.on(`${PAGE_NAME}:Vue:OpenInputMenu`, () => {
+doorsView.on(DOORCONTROLLER_EVENTS.OPEN_INPUTMENU, () => {
     // Timeout here to ensure the IPM is getting opened.
-    alt.emit(`${PAGE_NAME}:Vue:CloseUI`);
-    let mainDoor: string;
-    clientDoorList.forEach((obj, i) => {
-        door = native.getClosestObjectOfType(
+    alt.emit(DOORCONTROLLER_EVENTS.CLOSE_UI);
+    for (let x = 0; x < clientDoorList.length; x++) {
+        const obj = clientDoorList[x];
+        doorNumber = native.getClosestObjectOfType(
             player.pos.x,
             player.pos.y,
             player.pos.z,
@@ -32,7 +33,7 @@ doorsView.on(`${PAGE_NAME}:Vue:OpenInputMenu`, () => {
             false,
             false,
         );
-        if (door) {
+        if (doorNumber) {
             mainDoor = obj.name;
             alt.setTimeout(() => {
                 const InputMenu: InputMenu = {
@@ -65,7 +66,8 @@ doorsView.on(`${PAGE_NAME}:Vue:OpenInputMenu`, () => {
                         {
                             id: 'keydescription',
                             desc: 'Data key description for this door.',
-                            placeholder: 'This key is used to unlock all doors bound to the Mission Row Police Department',
+                            placeholder:
+                                'This key is used to unlock all doors bound to the Mission Row Police Department',
                             type: InputOptionType.TEXT,
                             error: '',
                         },
@@ -75,21 +77,21 @@ doorsView.on(`${PAGE_NAME}:Vue:OpenInputMenu`, () => {
                             InputView.setMenu(InputMenu);
                             return;
                         }
-        
+
                         const result = {
                             name: results.find((x) => x && x.id === 'name'),
                             faction: results.find((x) => x && x.id === 'faction'),
                             keyName: results.find((x) => x && x.id === 'keyname'),
                             keyDescription: results.find((x) => x && x.id === 'keydescription'),
                         };
-        
+
                         if (!result.keyName) {
                             InputView.setMenu(InputMenu);
                             return;
                         }
-        
-                        clientDoorList.forEach((obj, i) => {
-                            door = native.getClosestObjectOfType(
+
+                        /* clientDoorList.forEach((obj, i) => {
+                            doorNumber = native.getClosestObjectOfType(
                                 player.pos.x,
                                 player.pos.y,
                                 player.pos.z,
@@ -99,19 +101,19 @@ doorsView.on(`${PAGE_NAME}:Vue:OpenInputMenu`, () => {
                                 false,
                                 false,
                             );
-                            if (door) {
+                            if (doorNumber) {
                                 console.log(`Found Door ==> ${obj.name}`);
-                                doorProp = obj.name;
-                                doorRot = native.getEntityRotation(door, 2);
-                                doorCenter = getEntityCenter(door);
+                                prop = obj.name;
+                                rotation = native.getEntityRotation(doorNumber, 2);
+                                center = getEntityCenter(doorNumber);
                             }
-                        });
+                        }); */
                         const doorFound = native.getCoordsAndRotationOfClosestObjectOfType(
                             player.pos.x,
                             player.pos.y,
                             player.pos.z,
                             2,
-                            alt.hash(doorProp),
+                            alt.hash(prop),
                             { x: 0, y: 0, z: 0 } as alt.Vector3,
                             { x: 0, y: 0, z: 0 } as alt.Vector3,
                             0,
@@ -119,7 +121,7 @@ doorsView.on(`${PAGE_NAME}:Vue:OpenInputMenu`, () => {
                         const doorDatas: IDoorControl = {
                             name: result.name.value,
                             data: {
-                                prop: doorProp,
+                                prop: prop,
                             },
                             keyData: {
                                 keyName: result.keyName.value,
@@ -130,26 +132,25 @@ doorsView.on(`${PAGE_NAME}:Vue:OpenInputMenu`, () => {
                                 },
                             },
                             pos: doorFound[1],
-                            rotation: doorRot,
-                            center: doorCenter,
+                            rotation: rotation,
+                            center: center,
                         };
-                        if (!doorDatas.pos || !doorDatas.rotation) return;
-                        alt.emitServer('DoorController:Server:AddDoor', doorDatas);
                         alt.log(JSON.stringify(doorDatas));
+                        if (!doorDatas.pos || !doorDatas.rotation) return;
+                        alt.emitServer(DOORCONTROLLER_EVENTS.ADD_DOOR, doorDatas);
+                        alt.emitServer('Test', doorDatas);
                     },
                 };
                 InputView.setMenu(InputMenu);
             }, 250);
-        } else {
-            showNotification('No door found!');
-            return;
+            break;
         }
-    });
+    }
 });
 
-doorsView.on(`${PAGE_NAME}:Vue:OpenCustomInputMenu`, () => {
+doorsView.on(DOORCONTROLLER_EVENTS.OPEN_CUSTOM_INPUTMENU, () => {
     // Timeout here to ensure the IPM is getting opened.
-    alt.emit(`${PAGE_NAME}:Vue:CloseUI`);
+    alt.emit(DOORCONTROLLER_EVENTS.CLOSE_UI);
     alt.setTimeout(() => {
         const InputMenu: InputMenu = {
             title: 'Athena DoorController',
@@ -232,26 +233,25 @@ doorsView.on(`${PAGE_NAME}:Vue:OpenCustomInputMenu`, () => {
                         },
                     },
                     pos: doorFound[1],
-                    rotation: doorRot,
-                    center: doorCenter,
+                    rotation: rotation,
+                    center: center,
                 };
                 if (!doorDatas.pos || !doorDatas.rotation) return;
-                alt.emitServer('DoorController:Server:AddDoor', doorDatas);
-                alt.log(JSON.stringify(doorDatas));
+                alt.emitServer(DOORCONTROLLER_EVENTS.ADD_DOOR, doorDatas);
             },
         };
         InputView.setMenu(InputMenu);
     }, 250);
 });
 
-doorsView.on(`${PAGE_NAME}:Vue:ReadDoorData`, () => {
-    alt.emitServer(`${PAGE_NAME}:Server:ReadDoorData`);
+doorsView.on(DOORCONTROLLER_EVENTS.READ_DATA, () => {
+    alt.emitServer(DOORCONTROLLER_EVENTS.READ_DATA);
 });
 
-doorsView.on(`${PAGE_NAME}:Vue:UpdateLockstate`, () => {
-    alt.emitServer(`${PAGE_NAME}:Server:UpdateLockstate`);
+doorsView.on(DOORCONTROLLER_EVENTS.UPDATE_LOCKSTATE, () => {
+    alt.emitServer(DOORCONTROLLER_EVENTS.UPDATE_LOCKSTATE);
 });
 
-doorsView.on(`${PAGE_NAME}:Vue:RemoveDoor`, () => {
-    alt.emitServer(`${PAGE_NAME}:Server:RemoveDoor`);
+doorsView.on(DOORCONTROLLER_EVENTS.REMOVE_DOOR, () => {
+    alt.emitServer(DOORCONTROLLER_EVENTS.REMOVE_DOOR);
 });

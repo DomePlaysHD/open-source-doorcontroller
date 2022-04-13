@@ -1,9 +1,10 @@
 import * as alt from 'alt-client';
 import * as native from 'natives';
-import IDoorControl from '../../server/src/interfaces/IDoorControl';
+import { DOORCONTROLLER_EVENTS } from '../../shared/events';
+import IDoorControl from '../../shared/interfaces/IDoorControl';
 import { waitUntilDoorIsClosed } from './client-functions';
 
-alt.onServer('DoorController:Client:PopulateDoors', (doors: Array<IDoorControl>) => {
+alt.onServer(DOORCONTROLLER_EVENTS.POPULATE_DOORS, (doors: Array<IDoorControl>) => {
     doors.forEach(async (door, index) => {
         const closestDoor = native.getClosestObjectOfType(
             door.pos.x,

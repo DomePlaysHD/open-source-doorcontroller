@@ -6,11 +6,12 @@ import { ItemFactory } from '../../../../server/systems/item';
 import { sha256 } from '../../../../server/utility/encryption';
 import { ITEM_TYPE } from '../../../../shared/enums/itemTypes';
 import { Item } from '../../../../shared/interfaces/item';
+import { DOORCONTROLLER_EVENTS } from '../../shared/events';
 import { settings } from '../index';
 
 export async function loadItems() {
     const allItems = await Database.fetchAllData<Item>('items');
-    allItems.forEach((item, i) => {
+    allItems.forEach((item) => {
         if (item.icon === settings.keyIconName) {
             const dbItem: Item = {
                 name: item.name,
@@ -32,7 +33,7 @@ export async function loadItems() {
 }
 
 alt.on(
-    'doorController:serverSide:createKey',
+    DOORCONTROLLER_EVENTS.CREATE_KEY,
     async (player: alt.Player, keyName: string, keyDescription: string, lockHash: string, faction: string) => {
         const keyItem: Item = {
             name: keyName,

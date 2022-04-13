@@ -1,6 +1,7 @@
 import * as alt from 'alt-client';
 import * as native from 'natives';
-import IDoorControl from '../server/src/interfaces/IDoorControl';
+import { DOORCONTROLLER_EVENTS } from '../shared/events';
+import IDoorControl from '../shared/interfaces/IDoorControl';
 import { clientDoorList } from './src/client-events';
 import { getEntityCenter } from './src/client-functions';
 
@@ -69,5 +70,5 @@ export function clientAddDoor(data: IDoorControl) {
         }
         return true;
     });
-    alt.emitServer('DoorController:Server:SendData', door);
+    alt.emitServer(DOORCONTROLLER_EVENTS.DOOR_DATA, door);
 }

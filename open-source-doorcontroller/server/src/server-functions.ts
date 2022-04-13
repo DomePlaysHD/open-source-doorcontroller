@@ -1,7 +1,7 @@
 import * as alt from 'alt-server';
 import Database from '@stuyk/ezmongodb';
-import IDoorControl from './interfaces/IDoorControl';
-import IDoorObjects from './interfaces/IDoorObjects';
+import IDoorControl from '../../shared/interfaces/IDoorControl';
+import IDoorObjects from '../../shared/interfaces/IDoorObjects';
 
 import { ATHENA_DOORCONTROLLER, settings, Translations } from '../index';
 import { playerFuncs } from '../../../../server/extensions/extPlayer';
@@ -10,10 +10,11 @@ import { ItemFactory } from '../../../../server/systems/item';
 import { sha256 } from '../../../../server/utility/encryption';
 import { ANIMATION_FLAGS } from '../../../../shared/flags/animationFlags';
 import { DoorController } from '../controller';
-import { doorsPropsDefaults } from './defaults/doors-props';
+import { doorsPropsDefaults } from '../../shared/defaults/doors-props';
 import { InteractionController } from '../../../../server/systems/interaction';
+import { DOORCONTROLLER_EVENTS } from '../../shared/events';
 
-export let doorInteraction: any;
+export let doorInteraction: string;
 
 export async function createDoor(player: alt.Player, doorData: IDoorControl) {
     const newDocument = {
@@ -113,7 +114,7 @@ export async function createDoor(player: alt.Player, doorData: IDoorControl) {
     }
 
     alt.emit(
-        'doorController:serverSide:createKey',
+        DOORCONTROLLER_EVENTS.CREATE_KEY,
         player,
         inserted.keyData.keyName,
         doorData.keyData.keyDescription,
@@ -171,7 +172,7 @@ export async function loadDoors() {
     }
 
     const dbDoors = await Database.fetchAllData<IDoorControl>(settings.collectionName);
-    dbDoors.forEach((door, index) => {
+    dbDoors.forEach((door) => {
         switch (door.data.isLocked) {
             case false: {
                 if (settings.doorTextEnabled) {
@@ -281,5 +282,5 @@ export async function pushObjectArray(player: alt.Player) {
     objects.forEach(async (obj, i) => {
         doorObjects.push(obj);
     });
-    alt.emitClient(player, 'DoorController:Client:SendDatabaseObjects', doorObjects);
+    alt.emitClient(player, DOORCONTROLLER_EVENTS.DATABASE_DATA, doorObjects);
 }

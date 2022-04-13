@@ -1,6 +1,5 @@
 import * as native from 'natives';
 
-export function getDoorVectors() {}
 // >> Thanks to YANN (alt:V Discord - Snippets)
 export function waitUntilDoorIsClosed(entity: number, originOrientationYaw: number): Promise<boolean> {
     return new Promise((resolve) => {
@@ -26,6 +25,7 @@ export function isNumberBetween(n1: number, n2: number, range: number): boolean 
     return n1 - range < n2 && n2 < n1 + range;
 }
 
+// Thanks to [RU]zziger (alt:V Discord - Snippets)
 export function getEntityCenter(entity: number) {
     const [, min, max] = native.getModelDimensions(native.getEntityModel(entity));
     return native.getOffsetFromEntityInWorldCoords(

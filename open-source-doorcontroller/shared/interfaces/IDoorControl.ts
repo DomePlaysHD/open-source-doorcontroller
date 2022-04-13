@@ -1,4 +1,4 @@
-import * as alt from 'alt-server';
+import { Vector3 } from "alt-shared";
 
 export default interface IDoorControl {
     _id?: string;
@@ -17,7 +17,7 @@ export default interface IDoorControl {
             lockHash?: string;
         };
     };
-    pos: alt.Vector3;
-    rotation: alt.Vector3;
-    center: alt.Vector3;
+    pos: Vector3;
+    rotation: Vector3;
+    center: Vector3;
 }

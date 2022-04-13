@@ -2,6 +2,7 @@ import * as alt from 'alt-client';
 import { WebViewController } from '../../../../client/extensions/view2';
 import ViewModel from '../../../../client/models/viewModel';
 import { isAnyMenuOpen } from '../../../../client/utility/menus';
+import { DOORCONTROLLER_EVENTS } from '../../shared/events';
 import { settings } from '../index';
 
 // You should change this to match your Vue Template's ComponentName.
@@ -74,24 +75,20 @@ class InternalFunctions implements ViewModel {
     }
 }
 
-alt.onServer(`${PAGE_NAME}:Vue:OpenUI`, () => {
-    InternalFunctions.open();
-});
-
-alt.onServer(`${PAGE_NAME}:Vue:CloseUI`, () => {
-    InternalFunctions.close();
-});
-
-alt.onServer(`${PAGE_NAME}:Client:PermissionGranted`, () => {
-    InternalFunctions.open();
-});
-
-alt.on(`${PAGE_NAME}:Vue:CloseUI`, () => {
-    InternalFunctions.close();
-});
-
 alt.on('keydown', (key) => {
     if (key === 37 && !isAnyMenuOpen(true)) {
-        alt.emitServer(`${PAGE_NAME}:Server:CheckPermissions`);
+        alt.emitServer(DOORCONTROLLER_EVENTS.CHECK_PERMISSIONS);
     }
+});
+
+alt.onServer(DOORCONTROLLER_EVENTS.PERMISSION_GRANTED, () => {
+    InternalFunctions.open();
+});
+
+alt.onServer(DOORCONTROLLER_EVENTS.CLOSE_UI, () => {
+    InternalFunctions.close();
+});
+
+alt.on(DOORCONTROLLER_EVENTS.CLOSE_UI, () => {
+    InternalFunctions.close();
 });

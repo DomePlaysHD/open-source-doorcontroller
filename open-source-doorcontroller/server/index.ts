@@ -1,20 +1,18 @@
 // Core-Imports
 import * as alt from 'alt-server';
+import Database from '@stuyk/ezmongodb';
+
 import { loadItems } from './src/server-keys';
 import { doorObjects, loadDoors, pushObjectArray } from './src/server-functions';
-
+import { DoorController } from './controller';
+import { PlayerEvents } from '../../../server/events/playerEvents';
+import { PluginSystem } from '../../../server/systems/plugins';
+import { ATHENA_EVENTS_PLAYER } from '../../../shared/enums/athenaEvents';
 // Serverside Imports
 import './controller';
 import './src/server-events';
 import './src/server-functions';
 import './src/server-keys';
-import './src/interfaces/IDoorControl';
-import './src/interfaces/IDoorObjects';
-import { DoorController } from './controller';
-import Database from '@stuyk/ezmongodb';
-import { PlayerEvents } from '../../../server/events/playerEvents';
-import { PluginSystem } from '../../../server/systems/plugins';
-import { ATHENA_EVENTS_PLAYER } from '../../../shared/enums/athenaEvents';
 
 export const settings = {
     collectionName: 'doors', // Used to Create Collection, Insert Datas, Update Datas
