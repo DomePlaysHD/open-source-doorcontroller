@@ -90,7 +90,7 @@ doorsView.on(DOORCONTROLLER_EVENTS.OPEN_INPUTMENU, () => {
                             return;
                         }
 
-                        /* clientDoorList.forEach((obj, i) => {
+                        for(let x = 0; x < clientDoorList.length; x++) {
                             doorNumber = native.getClosestObjectOfType(
                                 player.pos.x,
                                 player.pos.y,
@@ -107,7 +107,7 @@ doorsView.on(DOORCONTROLLER_EVENTS.OPEN_INPUTMENU, () => {
                                 rotation = native.getEntityRotation(doorNumber, 2);
                                 center = getEntityCenter(doorNumber);
                             }
-                        }); */
+                        }
                         const doorFound = native.getCoordsAndRotationOfClosestObjectOfType(
                             player.pos.x,
                             player.pos.y,
@@ -135,15 +135,14 @@ doorsView.on(DOORCONTROLLER_EVENTS.OPEN_INPUTMENU, () => {
                             rotation: rotation,
                             center: center,
                         };
-                        alt.log(JSON.stringify(doorDatas));
                         if (!doorDatas.pos || !doorDatas.rotation) return;
+                        alt.log(JSON.stringify(doorDatas));
                         alt.emitServer(DOORCONTROLLER_EVENTS.ADD_DOOR, doorDatas);
-                        alt.emitServer('Test', doorDatas);
+                        // alt.emitServer('Test', doorDatas);
                     },
                 };
                 InputView.setMenu(InputMenu);
             }, 250);
-            break;
         }
     }
 });
