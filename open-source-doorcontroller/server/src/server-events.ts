@@ -3,12 +3,12 @@ import Database from '@stuyk/ezmongodb';
 import IDoorControl from './interfaces/IDoorControl';
 
 import { createDoor, updateLockstate } from './server-functions';
-import { ServerTextLabelController } from '../../../server/streamers/textlabel';
-import { InteractionController } from '../../../server/systems/interaction';
 import { ATHENA_DOORCONTROLLER, settings, Translations } from '../index';
 import { DoorController } from '../controller';
-import { sha256 } from '../../../server/utility/encryption';
-import { playerFuncs } from '../../../server/extensions/extPlayer';
+import { playerFuncs } from '../../../../server/extensions/extPlayer';
+import { ServerTextLabelController } from '../../../../server/streamers/textlabel';
+import { sha256 } from '../../../../server/utility/encryption';
+import { InteractionController } from '../../../../server/systems/interaction';
 
 alt.onClient('DoorController:Server:SendData', (player: alt.Player, data: IDoorControl) => {
     alt.log(`Received Door Datas from Client. ${JSON.stringify(data)}`);

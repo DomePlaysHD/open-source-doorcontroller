@@ -4,14 +4,14 @@ import IDoorControl from './interfaces/IDoorControl';
 import IDoorObjects from './interfaces/IDoorObjects';
 
 import { ATHENA_DOORCONTROLLER, settings, Translations } from '../index';
-import { ServerTextLabelController } from '../../../server/streamers/textlabel';
-import { InteractionController } from '../../../server/systems/interaction';
-import { doorsPropsDefaults } from './defaults/doors-props';
-import { ANIMATION_FLAGS } from '../../../shared/flags/animationFlags';
+import { playerFuncs } from '../../../../server/extensions/extPlayer';
+import { ServerTextLabelController } from '../../../../server/streamers/textlabel';
+import { ItemFactory } from '../../../../server/systems/item';
+import { sha256 } from '../../../../server/utility/encryption';
+import { ANIMATION_FLAGS } from '../../../../shared/flags/animationFlags';
 import { DoorController } from '../controller';
-import { playerFuncs } from '../../../server/extensions/extPlayer';
-import { ItemFactory } from '../../../server/systems/item';
-import { sha256 } from '../../../server/utility/encryption';
+import { doorsPropsDefaults } from './defaults/doors-props';
+import { InteractionController } from '../../../../server/systems/interaction';
 
 export let doorInteraction: any;
 

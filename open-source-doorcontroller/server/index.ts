@@ -1,7 +1,5 @@
 // Core-Imports
 import * as alt from 'alt-server';
-import { ATHENA_EVENTS_PLAYER } from '../../shared/enums/athenaEvents';
-import { PluginSystem } from '../../server/systems/plugins';
 import { loadItems } from './src/server-keys';
 import { doorObjects, loadDoors, pushObjectArray } from './src/server-functions';
 
@@ -12,12 +10,11 @@ import './src/server-functions';
 import './src/server-keys';
 import './src/interfaces/IDoorControl';
 import './src/interfaces/IDoorObjects';
-import { PlayerEvents } from '../../server/events/playerEvents';
-import ChatController from '../../server/systems/chat';
-import { PERMISSIONS } from '../../shared/flags/permissionFlags';
 import { DoorController } from './controller';
-import { playerFuncs } from '../../server/extensions/extPlayer';
 import Database from '@stuyk/ezmongodb';
+import { PlayerEvents } from '../../../server/events/playerEvents';
+import { PluginSystem } from '../../../server/systems/plugins';
+import { ATHENA_EVENTS_PLAYER } from '../../../shared/enums/athenaEvents';
 
 export const settings = {
     collectionName: 'doors', // Used to Create Collection, Insert Datas, Update Datas

@@ -1,8 +1,8 @@
 import * as alt from 'alt-client';
+import { WebViewController } from '../../../../client/extensions/view2';
+import ViewModel from '../../../../client/models/viewModel';
+import { isAnyMenuOpen } from '../../../../client/utility/menus';
 import { settings } from '../index';
-import { WebViewController } from '../../../client/extensions/view2';
-import ViewModel from '../../../client/models/ViewModel';
-import { isAnyMenuOpen } from '../../../client/utility/menus';
 
 // You should change this to match your Vue Template's ComponentName.
 const PAGE_NAME = 'DoorController';
@@ -91,7 +91,7 @@ alt.on(`${PAGE_NAME}:Vue:CloseUI`, () => {
 });
 
 alt.on('keydown', (key) => {
-    if (key === settings.keys.openDoorInterface && !isAnyMenuOpen(true)) {
+    if (key === 37 && !isAnyMenuOpen(true)) {
         alt.emitServer(`${PAGE_NAME}:Server:CheckPermissions`);
     }
 });

@@ -1,6 +1,6 @@
 import * as alt from 'alt-client';
 import * as native from 'natives';
-import IDoorControl from '../../../server-plugins/athena-door-controller/src/interfaces/IDoorControl';
+import IDoorControl from '../../server/src/interfaces/IDoorControl';
 import { waitUntilDoorIsClosed } from './client-functions';
 
 alt.onServer('DoorController:Client:PopulateDoors', (doors: Array<IDoorControl>) => {

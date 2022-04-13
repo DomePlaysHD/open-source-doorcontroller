@@ -1,12 +1,12 @@
 // *** Door Keys can be created here. *** //
-import * as alt from 'alt-server';
-import { settings } from '../index';
-import { ItemFactory } from '../../../server/systems/item';
-import { sha256 } from '../../../server/utility/encryption';
-import { Item } from '../../../shared/interfaces/item';
 import Database from '@stuyk/ezmongodb';
-import { ITEM_TYPE } from '../../../shared/enums/itemTypes';
-import { playerFuncs } from '../../../server/extensions/extPlayer';
+import * as alt from 'alt-server';
+import { playerFuncs } from '../../../../server/extensions/extPlayer';
+import { ItemFactory } from '../../../../server/systems/item';
+import { sha256 } from '../../../../server/utility/encryption';
+import { ITEM_TYPE } from '../../../../shared/enums/itemTypes';
+import { Item } from '../../../../shared/interfaces/item';
+import { settings } from '../index';
 
 export async function loadItems() {
     const allItems = await Database.fetchAllData<Item>('items');

@@ -1,11 +1,11 @@
 import Database from '@stuyk/ezmongodb';
 import * as alt from 'alt-server';
-import { playerFuncs } from '../../server/extensions/extPlayer';
-import { ItemFactory } from '../../server/systems/item';
-import { StreamerService } from '../../server/systems/streamer';
-import { sha256, sha256Random } from '../../server/utility/encryption';
-import { ITEM_TYPE } from '../../shared/enums/itemTypes';
-import { Item } from '../../shared/interfaces/item';
+import { playerFuncs } from '../../../server/extensions/extPlayer';
+import { ItemFactory } from '../../../server/systems/item';
+import { StreamerService } from '../../../server/systems/streamer';
+import { sha256Random, sha256 } from '../../../server/utility/encryption';
+import { ITEM_TYPE } from '../../../shared/enums/itemTypes';
+import { Item } from '../../../shared/interfaces/item';
 import IDoorControl from './src/interfaces/IDoorControl';
 
 const globalDoors: Array<IDoorControl> = [];

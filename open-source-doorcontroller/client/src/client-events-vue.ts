@@ -1,10 +1,10 @@
 import * as alt from 'alt-client';
 import * as native from 'natives';
-import { WebViewController } from '../../../client/extensions/view2';
-import { showNotification } from '../../../client/utility/notification';
-import { InputView } from '../../../client/views/input';
-import IDoorControl from '../../../server-plugins/athena-door-controller/src/interfaces/IDoorControl';
-import { InputMenu, InputOptionType, InputResult } from '../../../shared/interfaces/inputMenus';
+import { WebViewController } from '../../../../client/extensions/view2';
+import { showNotification } from '../../../../client/utility/notification';
+import { InputView } from '../../../../client/views/input';
+import { InputMenu, InputOptionType, InputResult } from '../../../../shared/interfaces/inputMenus';
+import IDoorControl from '../../server/src/interfaces/IDoorControl';
 import { clientDoorList } from './client-events';
 import { getEntityCenter } from './client-functions';
 
