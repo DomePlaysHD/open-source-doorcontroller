@@ -7,12 +7,12 @@ import { sha256 } from '../../../../server/utility/encryption';
 import { ITEM_TYPE } from '../../../../shared/enums/itemTypes';
 import { Item } from '../../../../shared/interfaces/item';
 import { DOORCONTROLLER_EVENTS } from '../../shared/events';
-import { settings } from '../index';
+import { DOORCONTROLLER_SETTINGS } from '../../shared/settings';
 
 export async function loadItems() {
     const allItems = await Database.fetchAllData<Item>('items');
     allItems.forEach((item) => {
-        if (item.icon === settings.keyIconName) {
+        if (item.icon === DOORCONTROLLER_SETTINGS.KEY_ICON_NAME) {
             const dbItem: Item = {
                 name: item.name,
                 uuid: item.uuid,

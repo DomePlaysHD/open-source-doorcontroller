@@ -1,0 +1,11 @@
+export const DOORCONTROLLER_SETTINGS = {
+    USE_TEXTLABELS: true,
+    TEXTLABEL_RANGE: 25,
+    DATABASE_COLLECTION: 'doors',
+    DATABASE_COLLECTION_PROPS: 'doors-props',
+    ADMIN_LEVEL_REQUIRED: 4,
+    KEY_ICON_NAME: 'keys',
+    ANIMATION_DICTIONARY: 'anim@heists@keycard@',
+    ANIMATION_NAME: 'idle_a',
+    ANIMATION_DURATION: 3000,
+}

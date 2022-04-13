@@ -13,18 +13,7 @@ import './controller';
 import './src/server-events';
 import './src/server-functions';
 import './src/server-keys';
-
-export const settings = {
-    collectionName: 'doors', // Used to Create Collection, Insert Datas, Update Datas
-    collectionDoorProps: 'doors-props', // Used to store props. Used to find default doors. Better don't change it if you've no clue what you are doing here.
-    doorTextEnabled: true, // If false doors won't have textlabels attached to center - Interaction is still possible.
-    textLabelDistance: 3,
-    requiredPermissionLevel: 4,
-    keyIconName: 'keys', // Used to search through items database for the keys, all keys should use the same icon.
-    animDict: 'anim@heists@keycard@',
-    animName: 'idle_a',
-    animDuration: 3000,
-};
+import { DOORCONTROLLER_SETTINGS } from '../shared/settings';
 
 export enum Translations {
     LOCKED = 'LOCKED',
@@ -45,8 +34,8 @@ PluginSystem.registerPlugin(ATHENA_DOORCONTROLLER.name, async () => {
     loadDoors();
     loadItems();
 
-    await Database.createCollection(settings.collectionName);
-    await Database.createCollection(settings.collectionDoorProps);
+    await Database.createCollection(DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION);
+    await Database.createCollection(DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION_PROPS);
 });
 
 PlayerEvents.on(ATHENA_EVENTS_PLAYER.SELECTED_CHARACTER, (player: alt.Player) => {

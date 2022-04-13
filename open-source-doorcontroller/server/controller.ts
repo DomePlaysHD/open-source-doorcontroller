@@ -8,20 +8,11 @@ import { ITEM_TYPE } from '../../../shared/enums/itemTypes';
 import { Item } from '../../../shared/interfaces/item';
 import { DOORCONTROLLER_EVENTS } from '../shared/events';
 import IDoorControl from '../shared/interfaces/IDoorControl';
+import { DOORCONTROLLER_SETTINGS } from '../shared/settings';
 
 const globalDoors: Array<IDoorControl> = [];
 const STREAM_RANGE = 25;
 const KEY = 'doors';
-
-export const DOORCONTROLLER_SETTINGS = {
-    enableTextLabels: false,
-    textLabelDistance: 5,
-};
-
-export const DOORCONTROLLER_DATABASE = {
-    defaultCollection: 'doors',
-    propsCollection: 'doors-props',
-};
 
 export class DoorController implements IDoorControl {
     _id?: string;
@@ -99,8 +90,7 @@ export class DoorController implements IDoorControl {
         };
         await ItemFactory.add(keyItem);
 
-        await Database.insertData(data, DOORCONTROLLER_DATABASE.defaultCollection, false);
-        alt.log(`Successfully added door. ${JSON.stringify(data)}`);
+        await Database.insertData(data, DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION, false);
         return true;
     }
 

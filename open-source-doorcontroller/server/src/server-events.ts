@@ -3,13 +3,14 @@ import Database from '@stuyk/ezmongodb';
 import IDoorControl from '../../shared/interfaces/IDoorControl';
 
 import { createDoor, updateLockstate } from './server-functions';
-import { ATHENA_DOORCONTROLLER, settings, Translations } from '../index';
+import { ATHENA_DOORCONTROLLER, Translations } from '../index';
 import { DoorController } from '../controller';
 import { playerFuncs } from '../../../../server/extensions/extPlayer';
 import { ServerTextLabelController } from '../../../../server/streamers/textlabel';
 import { sha256 } from '../../../../server/utility/encryption';
 import { InteractionController } from '../../../../server/systems/interaction';
 import { DOORCONTROLLER_EVENTS } from '../../shared/events';
+import { DOORCONTROLLER_SETTINGS } from '../../shared/settings';
 
 alt.onClient(DOORCONTROLLER_EVENTS.DOOR_DATA, (player: alt.Player, data: IDoorControl) => {
     data.keyData.data.lockHash = sha256(data.keyData.data.lockHash);
@@ -28,7 +29,7 @@ alt.onClient(DOORCONTROLLER_EVENTS.UPDATE_LOCKSTATE, async (player: alt.Player) 
             switch (door.data.isLocked) {
                 case true: {
                     door.data.isLocked = false;
-                    if (settings.doorTextEnabled) {
+                    if (DOORCONTROLLER_SETTINGS.USE_TEXTLABELS) {
                         ServerTextLabelController.remove(`door-${door._id.toString()}`);
                         ServerTextLabelController.append({
                             pos: { x: door.center.x, y: door.center.y, z: door.center.z },
@@ -44,7 +45,7 @@ alt.onClient(DOORCONTROLLER_EVENTS.UPDATE_LOCKSTATE, async (player: alt.Player) 
                 }
                 case false: {
                     door.data.isLocked = true;
-                    if (settings.doorTextEnabled) {
+                    if (DOORCONTROLLER_SETTINGS.USE_TEXTLABELS) {
                         ServerTextLabelController.remove(`door-${door._id.toString()}`);
                         ServerTextLabelController.append({
                             pos: { x: door.center.x, y: door.center.y, z: door.center.z },
@@ -88,7 +89,7 @@ alt.onClient(DOORCONTROLLER_EVENTS.REMOVE_DOOR, async (player: alt.Player) => {
 });
 
 alt.onClient(DOORCONTROLLER_EVENTS.READ_DATA, async (player: alt.Player) => {
-    const allDoors = await Database.fetchAllData<IDoorControl>(settings.collectionName);
+    const allDoors = await Database.fetchAllData<IDoorControl>(DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION);
     for (let x = 0; x < allDoors.length; x++) {
         const door = allDoors[x];
         if (player.pos.isInRange(door.pos, 2)) {
@@ -106,7 +107,7 @@ alt.onClient(DOORCONTROLLER_EVENTS.READ_DATA, async (player: alt.Player) => {
 });
 
 alt.onClient(DOORCONTROLLER_EVENTS.CHECK_PERMISSIONS, (player: alt.Player) => {
-    if (player.accountData.permissionLevel >= settings.requiredPermissionLevel) {
+    if (player.accountData.permissionLevel >= DOORCONTROLLER_SETTINGS.ADMIN_LEVEL_REQUIRED) {
         alt.emitClient(player, DOORCONTROLLER_EVENTS.PERMISSION_GRANTED);
     } else {
         return false;

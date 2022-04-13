@@ -3,7 +3,7 @@ import Database from '@stuyk/ezmongodb';
 import IDoorControl from '../../shared/interfaces/IDoorControl';
 import IDoorObjects from '../../shared/interfaces/IDoorObjects';
 
-import { ATHENA_DOORCONTROLLER, settings, Translations } from '../index';
+import { ATHENA_DOORCONTROLLER, Translations } from '../index';
 import { playerFuncs } from '../../../../server/extensions/extPlayer';
 import { ServerTextLabelController } from '../../../../server/streamers/textlabel';
 import { ItemFactory } from '../../../../server/systems/item';
@@ -13,11 +13,12 @@ import { DoorController } from '../controller';
 import { doorsPropsDefaults } from '../../shared/defaults/doors-props';
 import { InteractionController } from '../../../../server/systems/interaction';
 import { DOORCONTROLLER_EVENTS } from '../../shared/events';
+import { DOORCONTROLLER_SETTINGS } from '../../shared/settings';
 
 export let doorInteraction: string;
 
 export async function createDoor(player: alt.Player, doorData: IDoorControl) {
-    const newDocument = {
+    const newDocument: IDoorControl = {
         name: doorData.name,
         data: {
             prop: doorData.data.prop,
@@ -36,7 +37,7 @@ export async function createDoor(player: alt.Player, doorData: IDoorControl) {
         rotation: doorData.rotation as alt.Vector3,
         center: doorData.center as alt.Vector3,
     };
-    const inserted = await Database.insertData<IDoorControl>(newDocument, settings.collectionName, true);
+    const inserted = await Database.insertData<IDoorControl>(newDocument, DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION, true);
     doorInteraction = InteractionController.add({
         uid: `door-${inserted._id}`,
         description: 'Use Door',
@@ -57,42 +58,42 @@ export async function createDoor(player: alt.Player, doorData: IDoorControl) {
             switch (inserted.data.isLocked) {
                 case false: {
                     inserted.data.isLocked = true;
-                    if (settings.doorTextEnabled) {
+                    if (DOORCONTROLLER_SETTINGS.USE_TEXTLABELS) {
                         ServerTextLabelController.remove(`door-${inserted._id.toString()}`);
                         ServerTextLabelController.append({
                             pos: { x: inserted.center.x, y: inserted.center.y, z: inserted.center.z },
                             data: `~r~${Translations.LOCKED}`,
                             uid: `door-${inserted._id.toString()}`,
-                            maxDistance: settings.textLabelDistance,
+                            maxDistance: DOORCONTROLLER_SETTINGS.TEXTLABEL_RANGE,
                         });
                     }
                     playerFuncs.emit.animation(
                         player,
-                        settings.animDict,
-                        settings.animName,
+                        DOORCONTROLLER_SETTINGS.ANIMATION_DICTIONARY,
+                        DOORCONTROLLER_SETTINGS.ANIMATION_NAME,
                         ANIMATION_FLAGS.NORMAL,
-                        settings.animDuration,
+                        DOORCONTROLLER_SETTINGS.ANIMATION_DURATION,
                     );
                     updateLockstate(inserted._id, inserted.data.isLocked);
                     break;
                 }
                 case true: {
                     inserted.data.isLocked = false;
-                    if (settings.doorTextEnabled) {
+                    if (DOORCONTROLLER_SETTINGS.USE_TEXTLABELS) {
                         ServerTextLabelController.remove(`door-${inserted._id.toString()}`);
                         ServerTextLabelController.append({
                             pos: { x: inserted.center.x, y: inserted.center.y, z: inserted.center.z },
                             data: `~g~${Translations.UNLOCKED}`,
                             uid: `door-${inserted._id.toString()}`,
-                            maxDistance: settings.textLabelDistance,
+                            maxDistance: DOORCONTROLLER_SETTINGS.TEXTLABEL_RANGE,
                         });
                     }
                     playerFuncs.emit.animation(
                         player,
-                        settings.animDict,
-                        settings.animName,
+                        DOORCONTROLLER_SETTINGS.ANIMATION_DICTIONARY,
+                        DOORCONTROLLER_SETTINGS.ANIMATION_NAME,
                         ANIMATION_FLAGS.NORMAL,
-                        settings.animDuration,
+                        DOORCONTROLLER_SETTINGS.ANIMATION_DURATION,
                     );
                     updateLockstate(inserted._id, inserted.data.isLocked);
                     break;
@@ -104,12 +105,12 @@ export async function createDoor(player: alt.Player, doorData: IDoorControl) {
         },
     });
 
-    if (settings.doorTextEnabled) {
+    if (DOORCONTROLLER_SETTINGS.USE_TEXTLABELS) {
         ServerTextLabelController.append({
             pos: { x: inserted.center.x, y: inserted.center.y, z: inserted.center.z } as alt.Vector3,
             data: `~g~${Translations.UNLOCKED}`,
             uid: `door-${inserted._id.toString()}`,
-            maxDistance: settings.textLabelDistance,
+            maxDistance: DOORCONTROLLER_SETTINGS.TEXTLABEL_RANGE,
         });
     }
 
@@ -121,15 +122,17 @@ export async function createDoor(player: alt.Player, doorData: IDoorControl) {
         inserted.keyData.data.lockHash,
         inserted.keyData.data.faction,
     );
+
     DoorController.append(inserted);
     DoorController.refresh();
+
     playerFuncs.emit.notification(
         player,
         `~g~${ATHENA_DOORCONTROLLER.name} ${ATHENA_DOORCONTROLLER.version}~w~ ==> ${inserted.data.prop}`,
     );
 }
 export async function updateLockstate(doorId: string, isLocked: boolean) {
-    const door = await Database.fetchData<IDoorControl>('_id', doorId, settings.collectionName);
+    const door = await Database.fetchData<IDoorControl>('_id', doorId, DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION);
     await Database.updatePartialData(
         doorId,
         {
@@ -152,13 +155,13 @@ export async function updateLockstate(doorId: string, isLocked: boolean) {
             rotation: { x: door.rotation.x, y: door.rotation.y, z: door.rotation.z } as alt.Vector3,
             center: { x: door.center.x, y: door.center.y, z: door.center.z } as alt.Vector3,
         },
-        settings.collectionName,
+        DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION,
     );
     DoorController.refresh();
 }
 
 export async function loadDoors() {
-    let doorProps = await Database.fetchAllData<IDoorObjects>(settings.collectionDoorProps);
+    let doorProps = await Database.fetchAllData<IDoorObjects>(DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION_PROPS);
 
     if (!doorProps || doorProps.length <= 0) {
         for (let i = 0; i < doorsPropsDefaults.length; i++) {
@@ -166,32 +169,32 @@ export async function loadDoors() {
                 name: doorsPropsDefaults[i].name,
                 hash: doorsPropsDefaults[i].hash,
             };
-            await Database.insertData<IDoorObjects>(doorprop, settings.collectionDoorProps, false);
+            await Database.insertData<IDoorObjects>(doorprop, DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION_PROPS, false);
         }
-        doorProps = await Database.fetchAllData<IDoorObjects>(settings.collectionDoorProps);
+        doorProps = await Database.fetchAllData<IDoorObjects>(DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION_PROPS);
     }
 
-    const dbDoors = await Database.fetchAllData<IDoorControl>(settings.collectionName);
+    const dbDoors = await Database.fetchAllData<IDoorControl>(DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION);
     dbDoors.forEach((door) => {
         switch (door.data.isLocked) {
             case false: {
-                if (settings.doorTextEnabled) {
+                if (DOORCONTROLLER_SETTINGS.USE_TEXTLABELS) {
                     ServerTextLabelController.append({
                         pos: { x: door.center.x, y: door.center.y, z: door.center.z },
                         data: `~g~${Translations.UNLOCKED}`,
                         uid: `door-${door._id.toString()}`,
-                        maxDistance: settings.textLabelDistance,
+                        maxDistance: DOORCONTROLLER_SETTINGS.TEXTLABEL_RANGE,
                     });
                 }
                 break;
             }
             case true: {
-                if (settings.doorTextEnabled) {
+                if (DOORCONTROLLER_SETTINGS.USE_TEXTLABELS) {
                     ServerTextLabelController.append({
                         pos: { x: door.center.x, y: door.center.y, z: door.center.z },
                         data: `~r~${Translations.LOCKED}`,
                         uid: `door-${door._id.toString()}`,
-                        maxDistance: settings.textLabelDistance,
+                        maxDistance: DOORCONTROLLER_SETTINGS.TEXTLABEL_RANGE,
                     });
                 }
                 break;
@@ -221,42 +224,42 @@ export async function loadDoors() {
                 switch (door.data.isLocked) {
                     case false: {
                         door.data.isLocked = true;
-                        if (settings.doorTextEnabled) {
+                        if (DOORCONTROLLER_SETTINGS.USE_TEXTLABELS) {
                             ServerTextLabelController.remove(`door-${door._id.toString()}`);
                             ServerTextLabelController.append({
                                 pos: { x: door.center.x, y: door.center.y, z: door.center.z },
                                 data: `~r~${Translations.LOCKED}`,
                                 uid: `door-${door._id.toString()}`,
-                                maxDistance: settings.textLabelDistance,
+                                maxDistance: DOORCONTROLLER_SETTINGS.TEXTLABEL_RANGE,
                             });
                         }
                         playerFuncs.emit.animation(
                             player,
-                            settings.animDict,
-                            settings.animName,
+                            DOORCONTROLLER_SETTINGS.ANIMATION_DICTIONARY,
+                            DOORCONTROLLER_SETTINGS.ANIMATION_NAME,
                             ANIMATION_FLAGS.NORMAL,
-                            settings.animDuration,
+                            DOORCONTROLLER_SETTINGS.ANIMATION_DURATION
                         );
                         updateLockstate(door._id, door.data.isLocked);
                         break;
                     }
                     case true: {
                         door.data.isLocked = false;
-                        if (settings.doorTextEnabled) {
+                        if (DOORCONTROLLER_SETTINGS.USE_TEXTLABELS) {
                             ServerTextLabelController.remove(`door-${door._id.toString()}`);
                             ServerTextLabelController.append({
                                 pos: { x: door.center.x, y: door.center.y, z: door.center.z },
                                 data: `~g~${Translations.UNLOCKED}`,
                                 uid: `door-${door._id.toString()}`,
-                                maxDistance: settings.textLabelDistance,
+                                maxDistance: DOORCONTROLLER_SETTINGS.TEXTLABEL_RANGE,
                             });
                         }
                         playerFuncs.emit.animation(
                             player,
-                            settings.animDict,
-                            settings.animName,
+                            DOORCONTROLLER_SETTINGS.ANIMATION_DICTIONARY,
+                            DOORCONTROLLER_SETTINGS.ANIMATION_NAME,
                             ANIMATION_FLAGS.NORMAL,
-                            settings.animDuration,
+                            DOORCONTROLLER_SETTINGS.ANIMATION_DURATION
                         );
                         updateLockstate(door._id, door.data.isLocked);
                         break;
@@ -278,7 +281,7 @@ export async function loadDoors() {
 
 export const doorObjects = Array<IDoorObjects>();
 export async function pushObjectArray(player: alt.Player) {
-    const objects = await Database.fetchAllData<IDoorObjects>(settings.collectionDoorProps);
+    const objects = await Database.fetchAllData<IDoorObjects>(DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION_PROPS);
     objects.forEach(async (obj, i) => {
         doorObjects.push(obj);
     });
