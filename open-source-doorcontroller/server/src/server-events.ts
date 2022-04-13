@@ -18,17 +18,12 @@ alt.onClient(DOORCONTROLLER_EVENTS.DOOR_DATA, (player: alt.Player, data: IDoorCo
 
 alt.onClient(DOORCONTROLLER_EVENTS.ADD_DOOR, (player: alt.Player, doorData: IDoorControl) => {
     createDoor(player, doorData);
-    alt.log(JSON.stringify(doorData));
-});
-
-alt.onClient('Test', (player: alt.Player, doorData: IDoorControl) => {
-    createDoor(player, doorData);
-    alt.log(JSON.stringify(doorData));
 });
 
 alt.onClient(DOORCONTROLLER_EVENTS.UPDATE_LOCKSTATE, async (player: alt.Player) => {
-    const doors = await Database.fetchAllData<IDoorControl>('doors');
-    doors.forEach(async (door, index) => {
+    const allDoors = await Database.fetchAllData<IDoorControl>('doors');
+    for (let x = 0; x < allDoors.length; x++) {
+        const door = allDoors[x];
         if (player.pos.isInRange(door.pos, 3)) {
             switch (door.data.isLocked) {
                 case true: {
@@ -68,12 +63,13 @@ alt.onClient(DOORCONTROLLER_EVENTS.UPDATE_LOCKSTATE, async (player: alt.Player) 
                 }
             }
         }
-    });
+    }
 });
 
 alt.onClient(DOORCONTROLLER_EVENTS.REMOVE_DOOR, async (player: alt.Player) => {
-    const doors = await Database.fetchAllData<IDoorControl>('doors');
-    doors.forEach(async (door, index) => {
+    const allDoors = await Database.fetchAllData<IDoorControl>('doors');
+    for (let x = 0; x < allDoors.length; x++) {
+        const door = allDoors[x];
         if (player.pos.isInRange(door.pos as alt.Vector3, 2)) {
             playerFuncs.emit.notification(
                 player,
@@ -84,17 +80,17 @@ alt.onClient(DOORCONTROLLER_EVENTS.REMOVE_DOOR, async (player: alt.Player) => {
 
             InteractionController.remove(`door-${door._id}`);
             ServerTextLabelController.remove(`door-${door._id.toString()}`);
-            
+
             await Database.deleteById(door._id, 'doors');
             DoorController.refresh();
         }
-        return true;
-    });
+    }
 });
 
 alt.onClient(DOORCONTROLLER_EVENTS.READ_DATA, async (player: alt.Player) => {
     const allDoors = await Database.fetchAllData<IDoorControl>(settings.collectionName);
-    allDoors.forEach((door, index) => {
+    for (let x = 0; x < allDoors.length; x++) {
+        const door = allDoors[x];
         if (player.pos.isInRange(door.pos, 2)) {
             playerFuncs.emit.message(
                 player,
@@ -106,7 +102,7 @@ alt.onClient(DOORCONTROLLER_EVENTS.READ_DATA, async (player: alt.Player) => {
             playerFuncs.emit.message(player, `==> Door Faction: {01DF01}${door.data.faction}`);
             alt.emitClient(player, DOORCONTROLLER_EVENTS.CLOSE_UI);
         }
-    });
+    }
 });
 
 alt.onClient(DOORCONTROLLER_EVENTS.CHECK_PERMISSIONS, (player: alt.Player) => {
