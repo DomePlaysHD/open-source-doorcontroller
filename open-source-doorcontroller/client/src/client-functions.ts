@@ -1,4 +1,4 @@
-import * as native from 'natives';
+import native from 'natives';
 
 // >> Thanks to YANN (alt:V Discord - Snippets)
 export function waitUntilDoorIsClosed(entity: number, originOrientationYaw: number): Promise<boolean> {

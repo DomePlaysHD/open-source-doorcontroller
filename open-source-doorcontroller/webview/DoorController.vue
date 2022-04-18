@@ -1,126 +1,177 @@
 <template>
-    <Frame maxWidth="25%" minWidth="15%" padding="20%" class="DoorController-Main">
-        <template v-slot:toolbar>
-            <div class="toolbar">
-                <Toolbar :size="28" @close-page="relayClosePage" pageName="DoorController">
-                    <span id="Headline">Athena DoorController</span>
-                </Toolbar>
-            </div>
-        </template>
-        <template v-slot:content>
-            <div class="buttons">
-                <br />
-                <Button
-                    v-on:click="addCustomDoor()"
-                    class="mt-2"
-                    color="green"
-                    pageName="DoorController"
-                    style="width: 49%; float: right"
-                >
-                    {{ TRANSLATIONS.ADD_CUSTOMDOOR_TO_DATABASE }}
-                </Button>
-                <Button
-                    v-on:click="addDoorDatabase()"
-                    class="mt-2"
-                    color="green"
-                    pageName="DoorController"
-                    style="width: 49%"
-                >
-                    {{ TRANSLATIONS.ADD_DOOR_TO_DATABASE }}
-                </Button>
-                <Button class="mt-2" color="green" pageName="DoorController" style="width: 49%; float: right">
-                    {{ TRANSLATIONS.ADD_KEY_TO_DATABASE }}
-                </Button>
-                <Button
-                    v-on:click="readDoorData()"
-                    class="mt-2"
-                    color="green"
-                    pageName="DoorController"
-                    style="width: 49%"
-                >
-                    {{ TRANSLATIONS.READ_DOOR_DATA }}
-                </Button>
-                <br />
-                <hr />
-                <br />
-                <Button
-                    v-on:click="updateLockstate()"
-                    class="mt-2"
-                    color="yellow"
-                    pageName="DoorController"
-                    style="width: 49%; float: right"
-                >
-                    {{ TRANSLATIONS.UPDATE_LOCKSTATE }}
-                </Button>
-                <Button class="mt-2" color="yellow" pageName="DoorController" style="width: 49%">
-                    {{ TRANSLATIONS.CHANGE_SINGLE_LOCK }}
-                </Button>
-                <Button class="mt-2" color="yellow" pageName="DoorController" style="width: 49%">
-                    {{ TRANSLATIONS.CHANGE_ALL_LOCKS }}
-                </Button>
-                <br />
-                <hr />
-                <br />
-                <Button class="mt-2" color="red" pageName="DoorController" style="width: 49%">
-                    {{ TRANSLATIONS.REMOVE_DOOR_FROM_DATABASE }}
-                </Button>
-                <Button class="mt-2" color="red" pageName="DoorController" style="width: 49%">
-                    {{ TRANSLATIONS.REMOVE_KEY }} </Button
-                ><br />
-                <hr />
-            </div>
-        </template>
-    </Frame>
+    <div class="doors-wrapper">
+        <div class="header">
+            <p>Athena Framework - Door Management</p>
+            <button class="close-button" @click="close">Close</button>
+        </div>
+
+        <p>What would you like to do?</p>
+        <div class="content-wrapper">
+            <button class="button" @click="createDoor('default')">Create Door</button>
+            <button class="button" @click="createDoor('custom')">Create custom Door</button>
+
+            <button class="button" @click="removeDoor">Remove Door</button>
+            <button class="button" @click="changeLock">Change Lockstate</button>
+        </div>
+
+        <div class="input-wrapper" v-if="inputActive">
+            <p style="margin-top: -40px; text-align: center">Default GTA:V Door ({{ selection }})<br /> {{ currentDoor }}</p>
+            <input class="input" type="text" placeholder="<Mission Row - Police Department - Left>" />
+            <input class="input" type="text" placeholder="<General Key LSPD>" />
+            <input class="input" type="text" placeholder="<General Key Description>" />
+            <input class="input" type="text" placeholder="<General Key LSPD>" />
+            <input class="input" type="text" placeholder="<General Key Description>" />
+            <button class="execute" @click="execute">Execute!</button>
+            <p style="text-align: center">&copy; Created with ❤️ by Lord Development</p>
+        </div>
+
+        <div class="notification" v-else>
+            <p>Was execution successfull?</p>
+            <p>Successfully added door with properties:</p>
+            <p>NAME | FACTION | KEYNAME | KEYDESC</p>
+            <p>&copy; Created with ❤️ by Lord Development</p>
+        </div>
+    </div>
 </template>
+
+<style lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Anek+Bangla&family=Poppins:ital,wght@0,100;0,200;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+$font-stack: 'Poppins', sans-serif;
+$ui-color: rgb(82, 145, 218);
+
+.doors-wrapper {
+    width: 25%;
+    height: 750px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgb(0, 0, 0);
+    font-family: $font-stack;
+    font-size: 1rem;
+    border-radius: 15px 15px 0px 0px;
+}
+.header {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: $ui-color;
+    width: 100%;
+    height: 100px;
+    text-align: center;
+
+    & .close-button {
+        margin: 10px;
+        width: 180px;
+        height: 100px;
+        border: 0px;
+        transition: 0.5s !important;
+        font-family: $font-stack;
+        border-radius: 5px;
+        background-color: rgb(0, 0, 0);
+        color: $ui-color;
+        font-size: 1.2rem;
+    }
+
+    & .close-button:hover {
+        transition: 0.5s !important;
+        color: white;
+        cursor: pointer;
+        background-color: rgba(56, 56, 56, 0.589);
+    }
+}
+.content-wrapper {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    & .button {
+        background-color: rgba(8, 108, 155, 0.747);
+        color: white;
+        border: 0px;
+        height: 60px;
+        width: 190px;
+        font-family: $font-stack;
+        font-weight: bolder;
+        font-size: 16px;
+        margin: 1rem;
+        border-radius: 10px;
+        transition: 0.5s !important;
+    }
+    & .button:hover {
+        transition: 0.5s !important;
+        cursor: pointer;
+        background-color: rgb(8, 108, 155);
+    }
+}
+.input-wrapper {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    width: 80%;
+    margin: 25px;
+    & .input {
+        border-radius: 5px;
+        border: 1px solid $ui-color;
+        background-color: transparent;
+        font-family: $font-stack;
+        color: white;
+        text-align: center;
+        padding: 5px;
+    }
+
+    & .input::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+        text-align: center;
+    }
+
+    & > input:not(:last-child) {
+        margin-bottom: 20px;
+    }
+
+    & .execute {
+        color: white;
+        background-color: $ui-color;
+        border-radius: 0px;
+        border: 0px;
+        height: 40px;
+        transition: 0.5s !important;
+    }
+
+    & .execute:hover {
+        transition: 0.5s !important;
+        cursor: pointer;
+        background-color: rgb(8, 108, 155);
+    }
+}
+.notification {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    width: 100%;
+    padding: 60px;
+    & p {
+        font-family: $font-stack;
+        font-size: 1.2rem;
+        color: white;
+        text-align: center;
+    }
+}
+</style>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Button from '@components/Button.vue';
-import Frame from '@components/Frame.vue';
-import Icon from '@components/Icon.vue';
-import Input from '@components/Input.vue';
-import Modal from '@components/Modal.vue';
-import Module from '@components/Module.vue';
-import RangeInput from '@components/RangeInput.vue';
-import Toolbar from '@components/Toolbar.vue';
-import { DOORCONTROLLER_EVENTS } from '../shared/events';
-
-// Very Important! The name of the component must match the file name.
-// Don't forget to do this. This is a note so you don't forget.
 const ComponentName = 'DoorController';
 export default defineComponent({
     name: ComponentName,
-    // Used to add Custom Components
-    components: {
-        Button,
-        Frame,
-        Icon,
-        Input,
-        Modal,
-        Module,
-        RangeInput,
-        Toolbar,
-    },
-    // Used to define state
     data() {
         return {
-            TRANSLATIONS: {
-                ADD_DOOR_TO_DATABASE: 'Add a new default door to the database.',
-                ADD_CUSTOMDOOR_TO_DATABASE: 'Add a new custom door to the database.',
-                ADD_KEY_TO_DATABASE: 'Add a new key to the database.',
-                READ_DOOR_DATA: 'Read data of a close door.',
-                UPDATE_LOCKSTATE: 'Update Lockstate of this door.',
-                REMOVE_KEY: 'Remove a key from the database.',
-                CHANGE_SINGLE_LOCK: 'Change a single lock by keyname.',
-                CHANGE_ALL_LOCKS: 'Change all locks by keyname.',
-                REMOVE_DOOR_FROM_DATABASE: 'Remove a door from the database.',
-                REMOVE_KEY_FROM_DATABASE: 'Remove a key from the database.',
-            },
+            inputActive: false,
+            selection: 'None.',
+            currentDoor: 'None',
         };
     },
     mounted() {
         if ('alt' in window) {
             alt.emit(`${ComponentName}:Ready`);
+            alt.on(`${ComponentName}:SetDoor`, this.setDoor);
         }
         document.addEventListener('keyup', this.handleKeyPress);
     },
@@ -131,54 +182,30 @@ export default defineComponent({
         document.removeEventListener('keyup', this.handleKeyPress);
     },
     methods: {
-        relayClosePage(pageName: string) {
-            this.$emit('close-page', pageName);
+        setDoor(door: string) {
+            console.log("Vue Side Received => " + door);
+            this.currentDoor = door;
         },
-        addDoorDatabase() {
-            if ('alt' in window) {
-                alt.emit(DOORCONTROLLER_EVENTS.OPEN_INPUTMENU);
+        createDoor(type: string) {
+            if (type === 'default') {
+                console.log('Default Door.');
+                this.selection = type;
+                this.inputActive = true;
+            } else {
+                console.log('Custom Door.');
+                this.selection = type;
+                this.inputActive = true;
             }
         },
-        addCustomDoor() {
-            if ('alt' in window) {
-                alt.emit(DOORCONTROLLER_EVENTS.OPEN_CUSTOM_INPUTMENU);
-            }
+        removeDoor() {},
+        close() {
+            alt.emit(`${ComponentName}:Close`);
         },
-        readDoorData() {
-            if ('alt' in window) {
-                alt.emit(DOORCONTROLLER_EVENTS.READ_DATA);
-            }
-        },
-        updateLockstate() {
-            if ('alt' in window) {
-                alt.emit(DOORCONTROLLER_EVENTS.UPDATE_LOCKSTATE);
-            }
-        },
-        handleKeyPress(e: { keyCode: number; }) {
+        handleKeyPress(e: { keyCode: number }) {
             if (e.keyCode === 27 && 'alt' in window) {
                 alt.emit(`${ComponentName}:Close`);
             }
         },
-        sendSomeData(arg1: string) {
-            console.log(arg1);
-        },
     },
 });
 </script>
-
-<style scoped>
-.DoorController-Main {
-    position: relative;
-    width: 20%;
-    margin-right: 78%;
-}
-#Headline {
-    position: absolute;
-    margin-left: 25%;
-    text-align: center;
-}
-.DoorController-Mainbuttons {
-    position: relative;
-    margin-left: 30%;
-}
-</style>

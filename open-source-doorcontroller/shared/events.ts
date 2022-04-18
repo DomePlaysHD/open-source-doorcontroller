@@ -10,7 +10,7 @@ export enum DOORCONTROLLER_EVENTS {
     DOOR_DATA = 'DoorController:SendDoors',
 
     UPDATE_LOCKSTATE = 'DoorController:UpdateLockstate',
-    OPEN_INPUTMENU = 'DoorController:OpenInputMenu',
+    OPEN_WEBVIEW = 'DoorController:OpenWebview',
     OPEN_CUSTOM_INPUTMENU = 'DoorController:OpenCustomInputMenu',
 
     CHECK_PERMISSIONS = 'DoorController:CheckPermissions',

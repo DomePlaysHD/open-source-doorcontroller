@@ -5,8 +5,14 @@ export const DOORCONTROLLER_SETTINGS = {
     DATABASE_COLLECTION_PROPS: 'doors-props',
     ADMIN_LEVEL_REQUIRED: 4,
     KEY_ICON_NAME: 'keys',
+    USE_ANIMATION: false,
     ANIMATION_DICTIONARY: 'anim@heists@keycard@',
     ANIMATION_NAME: 'idle_a',
     ANIMATION_DURATION: 3000,
     KEY_TO_OPEN_UI: 37,
+}
+
+export enum DOORCONTROLLER_TRANSLATIONS {
+    LOCKED = 'LOCKED',
+    UNLOCKED = 'UNLOCKED',
 }

@@ -10,11 +10,11 @@ export default interface IDoorControl {
         faction?: string;
     };
     keyData: {
-        keyName?: string;
-        keyDescription?: string;
+        keyName: string;
+        keyDescription: string;
         data: {
-            faction?: string;
-            lockHash?: string;
+            faction: string;
+            lockHash: string;
         };
     };
     pos: Vector3;

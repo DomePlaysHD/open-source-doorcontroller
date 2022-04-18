@@ -1,24 +1,23 @@
 import * as alt from 'alt-server';
-import Database from '@stuyk/ezmongodb';
 import IDoorControl from '../../shared/interfaces/IDoorControl';
 import IDoorObjects from '../../shared/interfaces/IDoorObjects';
 
-import { ATHENA_DOORCONTROLLER, Translations } from '../index';
-import { playerFuncs } from '../../../../server/extensions/extPlayer';
+import { ATHENA_DOORCONTROLLER } from '../index';
 import { ServerTextLabelController } from '../../../../server/streamers/textlabel';
-import { ItemFactory } from '../../../../server/systems/item';
 import { sha256 } from '../../../../server/utility/encryption';
 import { ANIMATION_FLAGS } from '../../../../shared/flags/animationFlags';
 import { DoorController } from '../controller';
 import { doorsPropsDefaults } from '../../shared/defaults/doors-props';
 import { InteractionController } from '../../../../server/systems/interaction';
 import { DOORCONTROLLER_EVENTS } from '../../shared/events';
-import { DOORCONTROLLER_SETTINGS } from '../../shared/settings';
-
-export let doorInteraction: string;
+import { DOORCONTROLLER_SETTINGS, DOORCONTROLLER_TRANSLATIONS } from '../../shared/settings';
+import { SYSTEM_EVENTS } from '../../../../shared/enums/system';
+import { PlayerEvents } from '../../../../server/events/playerEvents';
+import { ATHENA_EVENTS_PLAYER } from '../../../../shared/enums/athenaEvents';
+import { Athena } from '../../../../server/api/athena';
 
 export async function createDoor(player: alt.Player, doorData: IDoorControl) {
-    const newDocument: IDoorControl = {
+    const doorDocument: IDoorControl = {
         name: doorData.name,
         data: {
             prop: doorData.data.prop,
@@ -30,138 +29,105 @@ export async function createDoor(player: alt.Player, doorData: IDoorControl) {
             keyName: doorData.keyData.keyName,
             data: {
                 faction: doorData.keyData.data.faction,
-                lockHash: sha256(JSON.stringify(doorData.keyData.keyName)).substring(0, 40),
+                lockHash: sha256(JSON.stringify(doorData.keyData.keyName)).substring(0, 20),
             },
+            keyDescription: doorData.keyData.keyDescription,
         },
         pos: doorData.pos as alt.Vector3,
         rotation: doorData.rotation as alt.Vector3,
         center: doorData.center as alt.Vector3,
     };
-    const inserted = await Database.insertData<IDoorControl>(newDocument, DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION, true);
-    doorInteraction = InteractionController.add({
-        uid: `door-${inserted._id}`,
-        description: 'Use Door',
-        range: 1,
-        position: { x: inserted.pos.x, y: inserted.pos.y, z: inserted.pos.z - 1 },
-        callback: (player: alt.Player) => {
-            const keyExists = ItemFactory.get(inserted.keyData.keyName);
-            if (!keyExists) {
-                alt.log('Key does not exist. ' + inserted.keyData.keyName);
-                return;
-            }
 
-            if (!playerFuncs.inventory.isInInventory(player, { name: inserted.keyData.keyName })) {
-                playerFuncs.emit.notification(player, `It seems like you are missing Key ${inserted.keyData.keyName}!`);
-                return;
-            }
-
-            switch (inserted.data.isLocked) {
-                case false: {
-                    inserted.data.isLocked = true;
-                    if (DOORCONTROLLER_SETTINGS.USE_TEXTLABELS) {
-                        ServerTextLabelController.remove(`door-${inserted._id.toString()}`);
-                        ServerTextLabelController.append({
-                            pos: { x: inserted.center.x, y: inserted.center.y, z: inserted.center.z },
-                            data: `~r~${Translations.LOCKED}`,
-                            uid: `door-${inserted._id.toString()}`,
-                            maxDistance: DOORCONTROLLER_SETTINGS.TEXTLABEL_RANGE,
-                        });
-                    }
-                    playerFuncs.emit.animation(
-                        player,
-                        DOORCONTROLLER_SETTINGS.ANIMATION_DICTIONARY,
-                        DOORCONTROLLER_SETTINGS.ANIMATION_NAME,
-                        ANIMATION_FLAGS.NORMAL,
-                        DOORCONTROLLER_SETTINGS.ANIMATION_DURATION,
-                    );
-                    updateLockstate(inserted._id, inserted.data.isLocked);
-                    break;
-                }
-                case true: {
-                    inserted.data.isLocked = false;
-                    if (DOORCONTROLLER_SETTINGS.USE_TEXTLABELS) {
-                        ServerTextLabelController.remove(`door-${inserted._id.toString()}`);
-                        ServerTextLabelController.append({
-                            pos: { x: inserted.center.x, y: inserted.center.y, z: inserted.center.z },
-                            data: `~g~${Translations.UNLOCKED}`,
-                            uid: `door-${inserted._id.toString()}`,
-                            maxDistance: DOORCONTROLLER_SETTINGS.TEXTLABEL_RANGE,
-                        });
-                    }
-                    playerFuncs.emit.animation(
-                        player,
-                        DOORCONTROLLER_SETTINGS.ANIMATION_DICTIONARY,
-                        DOORCONTROLLER_SETTINGS.ANIMATION_NAME,
-                        ANIMATION_FLAGS.NORMAL,
-                        DOORCONTROLLER_SETTINGS.ANIMATION_DURATION,
-                    );
-                    updateLockstate(inserted._id, inserted.data.isLocked);
-                    break;
-                }
-                default:
-                    break;
-            }
-            updateLockstate(inserted._id.toString(), inserted.data.isLocked);
-        },
-    });
+    const door = await Athena.database.funcs.insertData<IDoorControl>(
+        doorDocument,
+        DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION,
+        true,
+    );
 
     if (DOORCONTROLLER_SETTINGS.USE_TEXTLABELS) {
         ServerTextLabelController.append({
-            pos: { x: inserted.center.x, y: inserted.center.y, z: inserted.center.z } as alt.Vector3,
-            data: `~g~${Translations.UNLOCKED}`,
-            uid: `door-${inserted._id.toString()}`,
+            pos: { x: door.center.x, y: door.center.y, z: door.center.z } as alt.Vector3,
+            data: `~g~${DOORCONTROLLER_TRANSLATIONS.UNLOCKED}`,
+            uid: door._id.toString(),
             maxDistance: DOORCONTROLLER_SETTINGS.TEXTLABEL_RANGE,
         });
     }
+    // TODO: Refactor into main update lockstate function
+    InteractionController.add({
+        uid: door._id.toString(),
+        description: 'Use Door',
+        range: 1,
+        position: { x: door.pos.x, y: door.pos.y, z: door.pos.z - 1 },
+        callback: (player: alt.Player) => {
+            const translatedLockstate = door.data.isLocked
+                ? `~g~` + DOORCONTROLLER_TRANSLATIONS.UNLOCKED
+                : `~r~` + DOORCONTROLLER_TRANSLATIONS.LOCKED;
+
+            if (!Athena.player.inventory.isInInventory(player, { name: door.keyData.keyName })) {
+                Athena.player.emit.notification(player, `It seems like you are missing Key ${door.keyData.keyName}!`);
+                return;
+            }
+
+            if (DOORCONTROLLER_SETTINGS.USE_TEXTLABELS) {
+                ServerTextLabelController.append({
+                    pos: { x: door.center.x, y: door.center.y, z: door.center.z },
+                    data: translatedLockstate,
+                    uid: door._id.toString(),
+                    maxDistance: DOORCONTROLLER_SETTINGS.TEXTLABEL_RANGE,
+                });
+            }
+
+            Athena.player.emit.animation(
+                player,
+                DOORCONTROLLER_SETTINGS.ANIMATION_DICTIONARY,
+                DOORCONTROLLER_SETTINGS.ANIMATION_NAME,
+                ANIMATION_FLAGS.NORMAL,
+                DOORCONTROLLER_SETTINGS.ANIMATION_DURATION,
+            );
+
+            door.data.isLocked = !door.data.isLocked;
+            updateLockstate(door._id.toString(), door.data.isLocked);
+        },
+    });
 
     alt.emit(
         DOORCONTROLLER_EVENTS.CREATE_KEY,
         player,
-        inserted.keyData.keyName,
-        doorData.keyData.keyDescription,
-        inserted.keyData.data.lockHash,
-        inserted.keyData.data.faction,
+        door.keyData.keyName,
+        door.keyData.keyDescription,
+        door.keyData.data.lockHash,
+        door.keyData.data.faction,
     );
 
-    DoorController.append(inserted);
+    DoorController.append(door);
     DoorController.refresh();
 
-    playerFuncs.emit.notification(
+    Athena.player.emit.notification(
         player,
-        `~g~${ATHENA_DOORCONTROLLER.name} ${ATHENA_DOORCONTROLLER.version}~w~ ==> ${inserted.data.prop}`,
+        `~g~${ATHENA_DOORCONTROLLER.name} ${ATHENA_DOORCONTROLLER.version}~w~ ==> ${door.data.prop}`,
     );
 }
 export async function updateLockstate(doorId: string, isLocked: boolean) {
-    const door = await Database.fetchData<IDoorControl>('_id', doorId, DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION);
-    await Database.updatePartialData(
+    const door = await Athena.database.funcs.fetchData<IDoorControl>('_id', doorId, DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION);
+    await Athena.database.funcs.updatePartialData(
         doorId,
         {
-            _id: door._id,
-            name: door.name,
             data: {
-                prop: door.data.prop,
-                hash: door.data.hash,
-                isLocked: isLocked,
-                faction: door.keyData.data.faction,
+                isLocked,
             },
-            keyData: {
-                keyName: door.keyData.keyName,
-                data: {
-                    faction: door.keyData.data.faction,
-                    lockHash: door.keyData.data.lockHash,
-                },
-            },
-            pos: { x: door.pos.x, y: door.pos.y, z: door.pos.z } as alt.Vector3,
-            rotation: { x: door.rotation.x, y: door.rotation.y, z: door.rotation.z } as alt.Vector3,
-            center: { x: door.center.x, y: door.center.y, z: door.center.z } as alt.Vector3,
         },
         DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION,
+    );
+    alt.log(
+        `${door.name} is now ${
+            isLocked ? '~g~' + DOORCONTROLLER_TRANSLATIONS.UNLOCKED : '~r~' + DOORCONTROLLER_TRANSLATIONS.LOCKED
+        }`,
     );
     DoorController.refresh();
 }
 
 export async function loadDoors() {
-    let doorProps = await Database.fetchAllData<IDoorObjects>(DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION_PROPS);
+    let doorProps = await Athena.database.funcs.fetchAllData<IDoorObjects>(DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION_PROPS);
 
     if (!doorProps || doorProps.length <= 0) {
         for (let i = 0; i < doorsPropsDefaults.length; i++) {
@@ -169,121 +135,78 @@ export async function loadDoors() {
                 name: doorsPropsDefaults[i].name,
                 hash: doorsPropsDefaults[i].hash,
             };
-            await Database.insertData<IDoorObjects>(doorprop, DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION_PROPS, false);
+            await Athena.database.funcs.insertData<IDoorObjects>(doorprop, DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION_PROPS, false);
         }
-        doorProps = await Database.fetchAllData<IDoorObjects>(DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION_PROPS);
+        doorProps = await Athena.database.funcs.fetchAllData<IDoorObjects>(DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION_PROPS);
     }
 
-    const dbDoors = await Database.fetchAllData<IDoorControl>(DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION);
-    dbDoors.forEach((door) => {
-        switch (door.data.isLocked) {
-            case false: {
-                if (DOORCONTROLLER_SETTINGS.USE_TEXTLABELS) {
-                    ServerTextLabelController.append({
-                        pos: { x: door.center.x, y: door.center.y, z: door.center.z },
-                        data: `~g~${Translations.UNLOCKED}`,
-                        uid: `door-${door._id.toString()}`,
-                        maxDistance: DOORCONTROLLER_SETTINGS.TEXTLABEL_RANGE,
-                    });
-                }
-                break;
-            }
-            case true: {
-                if (DOORCONTROLLER_SETTINGS.USE_TEXTLABELS) {
-                    ServerTextLabelController.append({
-                        pos: { x: door.center.x, y: door.center.y, z: door.center.z },
-                        data: `~r~${Translations.LOCKED}`,
-                        uid: `door-${door._id.toString()}`,
-                        maxDistance: DOORCONTROLLER_SETTINGS.TEXTLABEL_RANGE,
-                    });
-                }
-                break;
-            }
-            default: {
-                break;
-            }
+    const dbDoors = await Athena.database.funcs.fetchAllData<IDoorControl>(DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION);
+    for (let x = 0; x < dbDoors.length; x++) {
+        const door = dbDoors[x];
+        let translatedLockstate = door.data.isLocked
+            ? `~r~` + DOORCONTROLLER_TRANSLATIONS.LOCKED
+            : `~g~` + DOORCONTROLLER_TRANSLATIONS.UNLOCKED;
+
+        if (DOORCONTROLLER_SETTINGS.USE_TEXTLABELS) {
+            ServerTextLabelController.append({
+                pos: { x: door.center.x, y: door.center.y, z: door.center.z },
+                data: translatedLockstate,
+                uid: door._id.toString(),
+                maxDistance: DOORCONTROLLER_SETTINGS.TEXTLABEL_RANGE,
+            });
         }
-        doorInteraction = InteractionController.add({
-            uid: `door-${door._id}`,
+
+        InteractionController.add({
+            uid: door._id.toString(),
             description: 'Use Door',
             range: 1,
             position: { x: door.pos.x, y: door.pos.y, z: door.pos.z - 1 },
             callback: (player: alt.Player) => {
-                const keyExists = ItemFactory.get(door.keyData.keyName);
-
-                if (!keyExists) {
-                    alt.log('Key does not exist. ' + door.keyData.keyName);
-                    return;
+                door.data.isLocked = !door.data.isLocked;
+                
+                if (DOORCONTROLLER_SETTINGS.USE_TEXTLABELS) {
+                    translatedLockstate = door.data.isLocked
+                        ? `~r~` + DOORCONTROLLER_TRANSLATIONS.LOCKED
+                        : `~g~` + DOORCONTROLLER_TRANSLATIONS.UNLOCKED;
+                    ServerTextLabelController.remove(door._id.toString());
+                    ServerTextLabelController.append({
+                        pos: { x: door.center.x, y: door.center.y, z: door.center.z },
+                        data: translatedLockstate,
+                        uid: door._id.toString(),
+                        maxDistance: DOORCONTROLLER_SETTINGS.TEXTLABEL_RANGE,
+                    });
                 }
 
-                if (!playerFuncs.inventory.isInInventory(player, { name: door.keyData.keyName })) {
-                    playerFuncs.emit.notification(player, `It seems like you are missing Key ${door.keyData.keyName}!`);
-                    return;
-                }
+                Athena.player.emit.animation(
+                    player,
+                    DOORCONTROLLER_SETTINGS.ANIMATION_DICTIONARY,
+                    DOORCONTROLLER_SETTINGS.ANIMATION_NAME,
+                    ANIMATION_FLAGS.NORMAL,
+                    DOORCONTROLLER_SETTINGS.ANIMATION_DURATION,
+                );
 
-                switch (door.data.isLocked) {
-                    case false: {
-                        door.data.isLocked = true;
-                        if (DOORCONTROLLER_SETTINGS.USE_TEXTLABELS) {
-                            ServerTextLabelController.remove(`door-${door._id.toString()}`);
-                            ServerTextLabelController.append({
-                                pos: { x: door.center.x, y: door.center.y, z: door.center.z },
-                                data: `~r~${Translations.LOCKED}`,
-                                uid: `door-${door._id.toString()}`,
-                                maxDistance: DOORCONTROLLER_SETTINGS.TEXTLABEL_RANGE,
-                            });
-                        }
-                        playerFuncs.emit.animation(
-                            player,
-                            DOORCONTROLLER_SETTINGS.ANIMATION_DICTIONARY,
-                            DOORCONTROLLER_SETTINGS.ANIMATION_NAME,
-                            ANIMATION_FLAGS.NORMAL,
-                            DOORCONTROLLER_SETTINGS.ANIMATION_DURATION
-                        );
-                        updateLockstate(door._id, door.data.isLocked);
-                        break;
-                    }
-                    case true: {
-                        door.data.isLocked = false;
-                        if (DOORCONTROLLER_SETTINGS.USE_TEXTLABELS) {
-                            ServerTextLabelController.remove(`door-${door._id.toString()}`);
-                            ServerTextLabelController.append({
-                                pos: { x: door.center.x, y: door.center.y, z: door.center.z },
-                                data: `~g~${Translations.UNLOCKED}`,
-                                uid: `door-${door._id.toString()}`,
-                                maxDistance: DOORCONTROLLER_SETTINGS.TEXTLABEL_RANGE,
-                            });
-                        }
-                        playerFuncs.emit.animation(
-                            player,
-                            DOORCONTROLLER_SETTINGS.ANIMATION_DICTIONARY,
-                            DOORCONTROLLER_SETTINGS.ANIMATION_NAME,
-                            ANIMATION_FLAGS.NORMAL,
-                            DOORCONTROLLER_SETTINGS.ANIMATION_DURATION
-                        );
-                        updateLockstate(door._id, door.data.isLocked);
-                        break;
-                    }
-                    default:
-                        break;
-                }
+                updateLockstate(door._id, door.data.isLocked);
             },
         });
         DoorController.append(door);
-    });
+        alt.logError(JSON.stringify(door));
+    }
     alt.log(
-        `~lg~${ATHENA_DOORCONTROLLER.name} ${ATHENA_DOORCONTROLLER.version} | DATABASE | ==> found ${dbDoors.length} doors to load.`,
+        `~lg~${ATHENA_DOORCONTROLLER.name} ${ATHENA_DOORCONTROLLER.version} | DATABASE | Loaded ${dbDoors.length} Doors!`,
     );
     alt.log(
-        `~lg~${ATHENA_DOORCONTROLLER.name} ${ATHENA_DOORCONTROLLER.version} | DATABASE | ==> default doors ${doorProps.length}`,
+        `~lg~${ATHENA_DOORCONTROLLER.name} ${ATHENA_DOORCONTROLLER.version} | DATABASE | Loaded ${doorProps.length} default Doors!`,
     );
 }
 
-export const doorObjects = Array<IDoorObjects>();
-export async function pushObjectArray(player: alt.Player) {
-    const objects = await Database.fetchAllData<IDoorObjects>(DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION_PROPS);
-    objects.forEach(async (obj, i) => {
-        doorObjects.push(obj);
-    });
-    alt.emitClient(player, DOORCONTROLLER_EVENTS.DATABASE_DATA, doorObjects);
-}
+export const dbDoorArray = Array<IDoorObjects>();
+alt.on(SYSTEM_EVENTS.BOOTUP_ENABLE_ENTRY, async () => {
+    const databaseDoors = await Athena.database.funcs.fetchAllData<IDoorObjects>(DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION_PROPS);
+    for (let i = 0; i < databaseDoors.length; i++) {
+        dbDoorArray.push(databaseDoors[i]);
+    }
+});
+
+PlayerEvents.on(ATHENA_EVENTS_PLAYER.SELECTED_CHARACTER, (player: alt.Player) => {
+    alt.emitClient(player, 'DCTest', dbDoorArray);
+});
