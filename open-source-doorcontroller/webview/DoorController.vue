@@ -15,12 +15,21 @@
         </div>
 
         <div class="input-wrapper" v-if="inputActive">
-            <p style="margin-top: -40px; text-align: center">Default GTA:V Door ({{ selection }})<br /> {{ currentDoor }}</p>
-            <input class="input" type="text" placeholder="<Mission Row - Police Department - Left>" />
-            <input class="input" type="text" placeholder="<General Key LSPD>" />
-            <input class="input" type="text" placeholder="<General Key Description>" />
-            <input class="input" type="text" placeholder="<General Key LSPD>" />
-            <input class="input" type="text" placeholder="<General Key Description>" />
+            <p style="margin-top: -40px; text-align: center">
+                Default GTA:V Door ({{ selection }})<br />
+                {{ currentDoor }}
+            </p>
+
+            <input
+                class="input"
+                type="text"
+                placeholder="<Mission Row - Police Department - Left>"
+                v-model="data.doorName"
+            />
+
+            <input class="input" type="text" placeholder="<General Key LSPD>" v-model="data.keyName" />
+            <input class="input" type="text" placeholder="<General Key Description>" v-model="data.keyDescription" />
+            <input class="input" type="text" placeholder="<General Key LSPD>" v-model="data.faction" />
             <button class="execute" @click="execute">Execute!</button>
             <p style="text-align: center">&copy; Created with ❤️ by Lord Development</p>
         </div>
@@ -158,14 +167,21 @@ $ui-color: rgb(82, 145, 218);
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { DOORCONTROLLER_EVENTS } from '../../../../../athena-cache/core/plugins/open-source-doorcontroller/shared/events';
 const ComponentName = 'DoorController';
 export default defineComponent({
     name: ComponentName,
     data() {
         return {
             inputActive: false,
-            selection: 'None.',
+            selection: 'None',
             currentDoor: 'None',
+            data: {
+                doorName: '',
+                keyName: '',
+                keyDescription: '',
+                faction: '',
+            },
         };
     },
     mounted() {
@@ -182,8 +198,12 @@ export default defineComponent({
         document.removeEventListener('keyup', this.handleKeyPress);
     },
     methods: {
+        execute() {
+            // alt.emit(DOORCONTROLLER_EVENTS.DOOR_ADD, this.data);
+            console.log(JSON.stringify(this.data));
+        },
         setDoor(door: string) {
-            console.log("Vue Side Received => " + door);
+            console.log('Vue Side Received => ' + door);
             this.currentDoor = door;
         },
         createDoor(type: string) {

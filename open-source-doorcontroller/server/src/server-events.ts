@@ -3,13 +3,15 @@ import Database from '@stuyk/ezmongodb';
 import IDoorControl from '../../shared/interfaces/IDoorControl';
 
 import { createDoor, updateLockstate } from './server-functions';
-import { DoorController } from '../controller';
+import { DoorController } from './controller';
 import { ServerTextLabelController } from '../../../../server/streamers/textlabel';
 import { InteractionController } from '../../../../server/systems/interaction';
 import { DOORCONTROLLER_EVENTS } from '../../shared/events';
-import { DOORCONTROLLER_SETTINGS, DOORCONTROLLER_TRANSLATIONS } from '../../shared/settings';
+import { DOORCONTROLLER_SETTINGS } from '../../shared/settings';
 import { Athena } from '../../../../server/api/athena';
 import { sha256 } from '../../../../server/utility/encryption';
+import { PlayerEvents } from '../../../../server/events/playerEvents';
+import { ATHENA_EVENTS_PLAYER } from '../../../../shared/enums/athenaEvents';
 
 alt.onClient(DOORCONTROLLER_EVENTS.DOOR_DATA, (player: alt.Player, data: IDoorControl) => {
     data.keyData.data.lockHash = sha256(data.keyData.data.lockHash);
@@ -99,10 +101,6 @@ alt.onClient(DOORCONTROLLER_EVENTS.REMOVE_DOOR, async (player: alt.Player) => {
     }
 });
 
-alt.onClient(DOORCONTROLLER_EVENTS.CHECK_PERMISSIONS, (player: alt.Player) => {
-    if (player.accountData.permissionLevel >= DOORCONTROLLER_SETTINGS.ADMIN_LEVEL_REQUIRED) {
-        alt.emitClient(player, DOORCONTROLLER_EVENTS.PERMISSION_GRANTED);
-        return;
-    }
-    Athena.player.emit.notification(player, `You do not have permission to use this command.`);
+PlayerEvents.on(ATHENA_EVENTS_PLAYER.SELECTED_CHARACTER, (player: alt.Player) => {
+    player.setLocalMeta('Permissionlevel', player.accountData.permissionLevel);
 });

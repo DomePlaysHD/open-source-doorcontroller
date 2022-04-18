@@ -52,22 +52,13 @@ class InternalFunctions implements ViewModel {
 }
 
 alt.on('keydown', (key) => {
-    if(key == DOORCONTROLLER_SETTINGS.KEY_TO_OPEN_UI) {
-        InternalFunctions.open();
-        const foundObject = DoorController.checkNearDoors();
-        doorObject = foundObject;
-        alt.log("Found Object: " + foundObject);
+    if (key == DOORCONTROLLER_SETTINGS.KEY_TO_OPEN_UI) {
+        const permissionLevel = alt.getLocalMeta('Permissionlevel');
+        if (permissionLevel >= DOORCONTROLLER_SETTINGS.ADMIN_LEVEL_REQUIRED) {
+            InternalFunctions.open();
+            const foundObject = DoorController.checkNearDoors();
+            doorObject = foundObject;
+            return;
+        } 
     }
 });
-
-/* 
-alt.on('keydown', (key) => {
-    if (key === DOORCONTROLLER_SETTINGS.KEY_TO_OPEN_UI && !isAnyMenuOpen(true)) {
-        alt.emitServer(DOORCONTROLLER_EVENTS.CHECK_PERMISSIONS);
-    }
-});
-
-alt.onServer(DOORCONTROLLER_EVENTS.PERMISSION_GRANTED, () => {
-    InternalFunctions.open();
-});
-*/

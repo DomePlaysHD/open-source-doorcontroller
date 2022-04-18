@@ -4,7 +4,6 @@ import natives from 'natives';
 import { clientDoorArray } from '../index';
 import { benchmarkTime } from '../../../development-plugin/shared/benchmark';
 export class DoorController {
-    @benchmarkTime
     static checkNearDoors() {
         const player = alt.Player.local;
         const pos = player.pos;

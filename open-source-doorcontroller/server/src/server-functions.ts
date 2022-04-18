@@ -6,7 +6,6 @@ import { ATHENA_DOORCONTROLLER } from '../index';
 import { ServerTextLabelController } from '../../../../server/streamers/textlabel';
 import { sha256 } from '../../../../server/utility/encryption';
 import { ANIMATION_FLAGS } from '../../../../shared/flags/animationFlags';
-import { DoorController } from '../controller';
 import { doorsPropsDefaults } from '../../shared/defaults/doors-props';
 import { InteractionController } from '../../../../server/systems/interaction';
 import { DOORCONTROLLER_EVENTS } from '../../shared/events';
@@ -15,6 +14,7 @@ import { SYSTEM_EVENTS } from '../../../../shared/enums/system';
 import { PlayerEvents } from '../../../../server/events/playerEvents';
 import { ATHENA_EVENTS_PLAYER } from '../../../../shared/enums/athenaEvents';
 import { Athena } from '../../../../server/api/athena';
+import { DoorController } from './controller';
 
 export async function createDoor(player: alt.Player, doorData: IDoorControl) {
     const doorDocument: IDoorControl = {

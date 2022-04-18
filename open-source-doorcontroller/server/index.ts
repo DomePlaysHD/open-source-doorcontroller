@@ -6,7 +6,7 @@ import { loadDoors } from './src/server-functions';
 import { PluginSystem } from '../../../server/systems/plugins';
 
 // Serverside Imports
-import './controller';
+import './src/controller';
 import './src/server-events';
 import './src/server-functions';
 import './src/server-keys';
