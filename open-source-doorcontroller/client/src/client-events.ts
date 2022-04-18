@@ -4,7 +4,7 @@ import IDoorControl from '../../shared/interfaces/IDoorControl';
 
 import { DOORCONTROLLER_EVENTS } from '../../shared/defaults/events';
 import { waitUntilDoorIsClosed } from './client-functions';
-import { WebViewController } from '../../../../client/extensions/view2';
+import { WebViewController } from '../../../../../client/extensions/view2';
 
 const view = await WebViewController.get();
 view.on(

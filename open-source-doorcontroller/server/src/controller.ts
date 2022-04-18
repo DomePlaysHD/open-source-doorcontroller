@@ -1,13 +1,14 @@
-import Database from '@stuyk/ezmongodb';
 import * as alt from 'alt-server';
-import { Athena } from '../../../../server/api/athena';
-import { StreamerService } from '../../../../server/systems/streamer';
-import { sha256Random } from '../../../../server/utility/encryption';
-import { ITEM_TYPE } from '../../../../shared/enums/itemTypes';
-import { Item } from '../../../../shared/interfaces/item';
-import { DOORCONTROLLER_EVENTS } from '../../shared/defaults/events';
+import Database from '@stuyk/ezmongodb';
 import IDoorControl from '../../shared/interfaces/IDoorControl';
+
 import { DOORCONTROLLER_SETTINGS } from '../../shared/settings';
+import { DOORCONTROLLER_EVENTS } from '../../shared/defaults/events';
+import { StreamerService } from '../../../../../server/systems/streamer';
+import { sha256Random } from '../../../../../server/utility/encryption';
+import { ITEM_TYPE } from '../../../../../shared/enums/itemTypes';
+import { Athena } from '../../../../../server/api/athena';
+import { Item } from '../../../../../shared/interfaces/item';
 
 const globalDoors: Array<IDoorControl> = [];
 const STREAM_RANGE = 25;

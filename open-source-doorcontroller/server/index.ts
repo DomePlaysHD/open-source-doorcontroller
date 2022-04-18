@@ -1,9 +1,9 @@
 import * as alt from 'alt-server';
 
 import { DOORCONTROLLER_SETTINGS } from '../shared/settings';
-import { PluginSystem } from '../../../server/systems/plugins'
+import { PluginSystem } from '../../../../server/systems/plugins';
 import { loadDoors } from './src/server-functions';
-import { Athena } from '../../../server/api/athena';
+import { Athena } from '../../../../server/api/athena';
 
 import './src/controller';
 import './src/server-events';
