@@ -10,8 +10,8 @@
             <button class="button" @click="createDoor('default')">Create Door</button>
             <button class="button" @click="createDoor('custom')">Create custom Door</button>
 
-            <button class="button" @click="removeDoor">Remove Door</button>
-            <button class="button" @click="changeLock">Change Lockstate</button>
+            <button class="button">Remove Door</button>
+            <button class="button">Change Lockstate</button>
         </div>
 
         <div class="input-wrapper" v-if="inputActive">
@@ -29,7 +29,7 @@
 
             <input class="input" type="text" placeholder="<General Key LSPD>" v-model="data.keyName" />
             <input class="input" type="text" placeholder="<General Key Description>" v-model="data.keyDescription" />
-            <input class="input" type="text" placeholder="<General Key LSPD>" v-model="data.faction" />
+            <input class="input" type="text" placeholder="<Faction Placeholder>" v-model="data.faction" />
             <button class="execute" @click="execute">Execute!</button>
             <p style="text-align: center">&copy; Created with ❤️ by Lord Development</p>
         </div>
@@ -206,6 +206,7 @@ export default defineComponent({
             if ('alt' in window) {
                 if (!this.data) return;
                 alt.emit(DOORCONTROLLER_EVENTS.CREATE_DOOR, this.currentDoor, this.data);
+                this.inputActive = false;
             }
         },
         setDoor(door: (string | Vector3)[]) {

@@ -1,9 +1,8 @@
 import Database from '@stuyk/ezmongodb';
 import * as alt from 'alt-server';
 import { Athena } from '../../../../server/api/athena';
-import { ItemFactory } from '../../../../server/systems/item';
 import { StreamerService } from '../../../../server/systems/streamer';
-import { sha256Random, sha256 } from '../../../../server/utility/encryption';
+import { sha256Random } from '../../../../server/utility/encryption';
 import { ITEM_TYPE } from '../../../../shared/enums/itemTypes';
 import { Item } from '../../../../shared/interfaces/item';
 import { DOORCONTROLLER_EVENTS } from '../../shared/defaults/events';
@@ -45,41 +44,27 @@ export class DoorController implements IDoorControl {
         return door._id;
     }
 
-    static async createDoor(data: IDoorControl): Promise<Boolean | null> {
-        const keyItem: Item = {
-            name: data.keyData.keyName,
-            uuid: sha256(data.keyData.keyName),
-            description: data.keyData.keyDescription,
-            icon: 'keys',
-            quantity: 1,
-            behavior: ITEM_TYPE.CAN_DROP | ITEM_TYPE.CAN_TRADE,
-            model: 'bkr_prop_jailer_keys_01a',
-            data: {
-                lockHash: data.keyData.data.lockHash,
-                faction: data.keyData.data.faction,
-            },
-            rarity: 3,
-            dbName: data.keyData.keyName,
-        };
-        await ItemFactory.add(keyItem);
-
-        await Database.insertData(data, DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION, false);
-        return true;
-    }
-
-    static async giveKey(player: alt.Player, keyName: string, quantity?: number) {
-        const keyToGive = await ItemFactory.getByName(keyName);
+    static async createKey(player: alt.Player, keyName: string, keyDescription: string, faction: string) {
         const emptySlot = Athena.player.inventory.getFreeInventorySlot(player);
-        const keyInInventory = Athena.player.inventory.isInInventory(player, keyToGive);
-        if (!keyToGive) return Athena.player.emit.notification(player, `No valid key was found by name ${keyName}!`);
-        if (!keyInInventory) {
-            Athena.player.inventory.inventoryAdd(player, keyToGive, emptySlot.slot);
-        } else if (keyInInventory) {
-            quantity
-                ? (player.data.inventory[keyInInventory.index].quantity += quantity)
-                : (player.data.inventory[keyInInventory.index].quantity += 1);
+        const key: Item = {
+            name: keyName,
+            description: keyDescription,
+            icon: 'KEY',
+            quantity: 0,
+            behavior: ITEM_TYPE.CAN_DROP | ITEM_TYPE.CAN_TRADE,
+            data: {
+                lockHash: null,
+                faction: faction,
+            },
+            dbName: `DoorController-${keyName}`,
         }
+
+        Athena.systems.itemFactory.add(key);
+        Athena.player.inventory.inventoryAdd(player, key, emptySlot.slot);
         Athena.player.save.field(player, 'inventory', player.data.inventory);
+        Athena.player.sync.inventory(player);
+
+        alt.logWarning(`DoorController created ${keyName} and added it Athena's ItemFactory!`);
     }
 
     static async getAll() {

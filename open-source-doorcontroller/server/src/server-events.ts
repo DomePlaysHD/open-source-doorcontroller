@@ -10,13 +10,8 @@ import { updateLockstate } from './server-functions';
 import { DoorController } from './controller';
 import { PlayerEvents } from '../../../../server/events/playerEvents';
 import { Athena } from '../../../../server/api/athena';
-import { sha256, sha256Random } from '../../../../server/utility/encryption';
+import { sha256Random } from '../../../../server/utility/encryption';
 import { DOORCONTROLLER_SETTINGS } from '../../shared/settings';
-
-alt.onClient(DOORCONTROLLER_EVENTS.DOOR_DATA, (player: alt.Player, data: IDoorControl) => {
-    data.keyData.data.lockHash = sha256(data.keyData.data.lockHash);
-    DoorController.createDoor(data);
-});
 
 alt.onClient(DOORCONTROLLER_EVENTS.CREATE_DOOR, async (player: alt.Player, prop: string, data) => {
     const door: IDoorControl = {
@@ -63,6 +58,7 @@ alt.onClient(DOORCONTROLLER_EVENTS.CREATE_DOOR, async (player: alt.Player, prop:
         });
 
         await Athena.database.funcs.insertData(door, DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION, false);
+        DoorController.createKey(player, door.keyData.keyName, door.keyData.keyDescription, door.keyData.data.faction);
         DoorController.append(door);
     } else if (dbDoor !== null) {
         alt.logError('Door already exists!');
@@ -93,7 +89,7 @@ alt.onClient(DOORCONTROLLER_EVENTS.REMOVE_DOOR, async (player: alt.Player) => {
 */
 PlayerEvents.on(ATHENA_EVENTS_PLAYER.SELECTED_CHARACTER, async (player: alt.Player) => {
     player.setLocalMeta('Permissionlevel', player.accountData.permissionLevel);
-    
+
     const allDoors = await DoorController.getAll();
     DoorController.update(player, allDoors);
 });

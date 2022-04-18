@@ -5,12 +5,6 @@ export enum DOORCONTROLLER_EVENTS {
     REMOVE_DOOR = 'DoorController:RemoveDoor',
     CREATE_KEY = 'DoorController:CreateKey',
 
-    DATABASE_DATA = 'DoorController:DatabaseData',
-    READ_DATA = 'DoorController:ReadData',
-    DOOR_DATA = 'DoorController:SendDoors',
-
     UPDATE_LOCKSTATE = 'DoorController:UpdateLockstate',
     OPEN_WEBVIEW = 'DoorController:OpenWebview',
-
-    CLOSE_UI = 'DoorController:CloseUI',
 }

@@ -1,15 +1,18 @@
 export const DOORCONTROLLER_SETTINGS = {
-    USE_TEXTLABELS: true,
-    TEXTLABEL_RANGE: 25,
-    DATABASE_COLLECTION: 'doors',
-    DATABASE_COLLECTION_PROPS: 'doors-props',
     ADMIN_LEVEL_REQUIRED: 4,
-    KEY_ICON_NAME: 'keys',
-    USE_ANIMATION: false,
-    ANIMATION_DICTIONARY: 'anim@heists@keycard@',
     ANIMATION_NAME: 'idle_a',
+    ANIMATION_DICTIONARY: 'anim@heists@keycard@',
     ANIMATION_DURATION: 3000,
+
+    DATABASE_COLLECTION_PROPS: 'doors-props',
+    DATABASE_COLLECTION: 'doors',
+
     KEY_TO_OPEN_UI: 37,
+    
+    USE_ANIMATION: false,
+    USE_TEXTLABELS: true,
+
+    TEXTLABEL_RANGE: 25,
 }
 
 export enum DOORCONTROLLER_TRANSLATIONS {
