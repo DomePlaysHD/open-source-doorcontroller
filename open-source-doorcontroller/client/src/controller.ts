@@ -1,8 +1,9 @@
-// TODO: Remove Benchmark
 import alt from 'alt-client';
 import natives from 'natives';
+
 import { clientDoorArray } from '../index';
-import { benchmarkTime } from '../../../development-plugin/shared/benchmark';
+import { getEntityCenter } from './client-functions';
+
 export class DoorController {
     static checkNearDoors() {
         const player = alt.Player.local;
@@ -35,10 +36,13 @@ export class DoorController {
             );
 
             if (foundObject) {
-                alt.log(`Found Door ==> ${obj.name}`);
-                return obj.name;
+                const name = obj.name;
+                const center = getEntityCenter(foundObject);
+                const position = closeDoor[1];
+                
+                return [name, center, position];
             }
         }
-        return null;
+        return [];
     }
 }

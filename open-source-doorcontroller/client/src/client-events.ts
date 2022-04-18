@@ -1,42 +1,23 @@
-import * as alt from 'alt-client';
-import * as native from 'natives';
-
-import { WebViewController } from '../../../../client/extensions/view2';
-import { DOORCONTROLLER_EVENTS } from '../../shared/events';
-import { waitUntilDoorIsClosed } from './client-functions';
+import alt from 'alt-client';
+import natives from 'natives';
 import IDoorControl from '../../shared/interfaces/IDoorControl';
 
-const player = alt.Player.local;
-const doorsView = await WebViewController.get();
+import { DOORCONTROLLER_EVENTS } from '../../shared/defaults/events';
+import { waitUntilDoorIsClosed } from './client-functions';
+import { WebViewController } from '../../../../client/extensions/view2';
 
-/*
-doorsView.on(DOORCONTROLLER_EVENTS.OPEN_WEBVIEW, async () => {
-    for (let x = 0; x < clientDoorArray.length; x++) {
-        const obj = clientDoorArray[x];
-        doorNumber = native.getClosestObjectOfType(
-            player.pos.x,
-            player.pos.y,
-            player.pos.z,
-            0.5,
-            alt.hash(obj.name),
-            false,
-            false,
-            false,
-        );
-        if (doorNumber) {
-            console.log(`Found Door ==> ${obj.name}`);
-            prop = obj.name;
-            rotation = native.getEntityRotation(doorNumber, 2);
-            center = getEntityCenter(doorNumber);
-        }
-    }
-});
-*/
+const view = await WebViewController.get();
+view.on(
+    DOORCONTROLLER_EVENTS.CREATE_DOOR,
+    (name, data) => {
+        alt.emitServer(DOORCONTROLLER_EVENTS.CREATE_DOOR, name, data);
+    },
+);
+
 alt.onServer(DOORCONTROLLER_EVENTS.POPULATE_DOORS, async (doors: Array<IDoorControl>) => {
-    for(let x = 0; x < doors.length; x++) {
+    for (let x = 0; x < doors.length; x++) {
         const door = doors[x];
-        alt.log(JSON.stringify(door.data.hash));
-        const closestDoor = native.getClosestObjectOfType(
+        const closestDoor = natives.getClosestObjectOfType(
             door.pos.x,
             door.pos.y,
             door.pos.z,
@@ -54,10 +35,10 @@ alt.onServer(DOORCONTROLLER_EVENTS.POPULATE_DOORS, async (doors: Array<IDoorCont
         }
 
         if (door.data.isLocked === true) {
-            native.freezeEntityPosition(closestDoor, true);
-            native.setEntityRotation(closestDoor, defaultRotation.x, defaultRotation.y, defaultRotation.z, 2, false);
+            natives.freezeEntityPosition(closestDoor, true);
+            natives.setEntityRotation(closestDoor, defaultRotation.x, defaultRotation.y, defaultRotation.z, 2, false);
         } else if (door.data.isLocked === false) {
-            native.freezeEntityPosition(closestDoor, false);
+            natives.freezeEntityPosition(closestDoor, false);
         }
     }
 });

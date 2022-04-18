@@ -2,83 +2,72 @@ import * as alt from 'alt-server';
 import Database from '@stuyk/ezmongodb';
 import IDoorControl from '../../shared/interfaces/IDoorControl';
 
-import { createDoor, updateLockstate } from './server-functions';
-import { DoorController } from './controller';
 import { ServerTextLabelController } from '../../../../server/streamers/textlabel';
 import { InteractionController } from '../../../../server/systems/interaction';
-import { DOORCONTROLLER_EVENTS } from '../../shared/events';
-import { DOORCONTROLLER_SETTINGS } from '../../shared/settings';
+import { DOORCONTROLLER_EVENTS } from '../../shared/defaults/events';
+import { ATHENA_EVENTS_PLAYER } from '../../../../shared/enums/athenaEvents';
+import { updateLockstate } from './server-functions';
+import { DoorController } from './controller';
+import { PlayerEvents } from '../../../../server/events/playerEvents';
 import { Athena } from '../../../../server/api/athena';
 import { sha256 } from '../../../../server/utility/encryption';
-import { PlayerEvents } from '../../../../server/events/playerEvents';
-import { ATHENA_EVENTS_PLAYER } from '../../../../shared/enums/athenaEvents';
+import { DOORCONTROLLER_SETTINGS } from '../../shared/settings';
 
 alt.onClient(DOORCONTROLLER_EVENTS.DOOR_DATA, (player: alt.Player, data: IDoorControl) => {
     data.keyData.data.lockHash = sha256(data.keyData.data.lockHash);
     DoorController.createDoor(data);
 });
 
-alt.onClient(DOORCONTROLLER_EVENTS.ADD_DOOR, (player: alt.Player, doorData: IDoorControl) => {
-    createDoor(player, doorData);
-});
-/* 
-alt.onClient(DOORCONTROLLER_EVENTS.UPDATE_LOCKSTATE, async (player: alt.Player) => {
-    const allDoors = await Database.fetchAllData<IDoorControl>('doors');
-    for (let x = 0; x < allDoors.length; x++) {
-        const door = allDoors[x];
-        if (player.pos.isInRange(door.pos, 3)) {
-            door.data.isLocked = !door.data.isLocked;
-            const translatedLockstate = door.data.isLocked ? `~r~` + DOORCONTROLLER_TRANSLATIONS.LOCKED : `~g~` + DOORCONTROLLER_TRANSLATIONS.UNLOCKED;
-            
-            if (DOORCONTROLLER_SETTINGS.USE_TEXTLABELS) {
-                ServerTextLabelController.remove(`door-${door._id.toString()}`);
-                ServerTextLabelController.append({
-                    pos: { x: door.center.x, y: door.center.y, z: door.center.z },
-                    data: `~r~${DOORCONTROLLER_TRANSLATIONS.LOCKED}`,
-                    uid: `door-${door._id.toString()}`,
-                    maxDistance: 3,
-                });
-            }
-            /* switch (door.data.isLocked) {
-                case true: {
-                    door.data.isLocked = false;
-                    if (DOORCONTROLLER_SETTINGS.USE_TEXTLABELS) {
-                        ServerTextLabelController.remove(`door-${door._id.toString()}`);
-                        ServerTextLabelController.append({
-                            pos: { x: door.center.x, y: door.center.y, z: door.center.z },
-                            data: `~r~${DOORCONTROLLER_TRANSLATIONS.LOCKED}`,
-                            uid: `door-${door._id.toString()}`,
-                            maxDistance: 3,
-                        });
-                    }
-                    playerNotification(player, `Door is now unlocked.`);
-                    await updateLockstate(door._id, door.data.isLocked);
-                    alt.emitClient(player, DOORCONTROLLER_EVENTS.CLOSE_UI);
-                    break;
-                }
-                case false: {
-                    door.data.isLocked = true;
-                    if (DOORCONTROLLER_SETTINGS.USE_TEXTLABELS) {
-                        ServerTextLabelController.remove(`door-${door._id.toString()}`);
-                        ServerTextLabelController.append({
-                            pos: { x: door.center.x, y: door.center.y, z: door.center.z },
-                            data: `~r~${DOORCONTROLLER_TRANSLATIONS.LOCKED}`,
-                            uid: `door-${door._id.toString()}`,
-                            maxDistance: 3,
-                        });
-                    }
-                    playerNotification(player, `Door is now locked.`);
-                    await updateLockstate(door._id, door.data.isLocked);
-                    alt.emitClient(player, DOORCONTROLLER_EVENTS.CLOSE_UI);
-                    break;
-                }
-                default: {
-                    break;
-                }
-            }
-        }
+alt.onClient(DOORCONTROLLER_EVENTS.CREATE_DOOR, async (player: alt.Player, prop: string, data) => {
+    const door: IDoorControl = {
+        name: data.doorName,
+        data: {
+            prop: prop,
+            hash: 0,
+            isLocked: false,
+            faction: 'none',
+        },
+        keyData: {
+            keyName: data.keyName,
+            keyDescription: data.keyDescription,
+            data: {
+                faction: data.faction,
+                lockHash: 'none',
+            },
+        },
+        pos: data.position,
+        rotation: data.rotation,
+        center: data.center,
+    };
+
+    const dbDoor = await Athena.database.funcs.fetchData<IDoorControl>(
+        'pos',
+        data.position,
+        DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION,
+    );
+    if (dbDoor === null) {
+        ServerTextLabelController.append({
+            data: '~g~UNLOCKED',
+            pos: data.center,
+            maxDistance: 5,
+        });
+
+        InteractionController.add({
+            position: { x: data.position.x, y: data.position.y, z: data.position.z - 1 },
+            range: 3,
+            description: 'Use Door',
+            callback: () => {
+                alt.logError('Hello World!');
+            },
+        });
+
+        await Athena.database.funcs.insertData(door, DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION, false);
+        DoorController.append(door);
+    } else if (dbDoor !== null) {
+        alt.logError('Door already exists!');
+        return;
     }
-}); */
+});
 
 alt.onClient(DOORCONTROLLER_EVENTS.REMOVE_DOOR, async (player: alt.Player) => {
     const allDoors = await Database.fetchAllData<IDoorControl>('doors');

@@ -2,19 +2,19 @@ import * as alt from 'alt-server';
 import IDoorControl from '../../shared/interfaces/IDoorControl';
 import IDoorObjects from '../../shared/interfaces/IDoorObjects';
 
-import { ATHENA_DOORCONTROLLER } from '../index';
-import { ServerTextLabelController } from '../../../../server/streamers/textlabel';
-import { sha256 } from '../../../../server/utility/encryption';
-import { ANIMATION_FLAGS } from '../../../../shared/flags/animationFlags';
-import { doorsPropsDefaults } from '../../shared/defaults/doors-props';
-import { InteractionController } from '../../../../server/systems/interaction';
-import { DOORCONTROLLER_EVENTS } from '../../shared/events';
 import { DOORCONTROLLER_SETTINGS, DOORCONTROLLER_TRANSLATIONS } from '../../shared/settings';
+import { ServerTextLabelController } from '../../../../server/streamers/textlabel';
+import { InteractionController } from '../../../../server/systems/interaction';
+import { ATHENA_DOORCONTROLLER } from '../index';
+import { DOORCONTROLLER_EVENTS } from '../../shared/defaults/events';
+import { ATHENA_EVENTS_PLAYER } from '../../../../shared/enums/athenaEvents';
+import { doorsPropsDefaults } from '../../shared/defaults/doors-props';
+import { ANIMATION_FLAGS } from '../../../../shared/flags/animationFlags';
+import { DoorController } from './controller';
 import { SYSTEM_EVENTS } from '../../../../shared/enums/system';
 import { PlayerEvents } from '../../../../server/events/playerEvents';
-import { ATHENA_EVENTS_PLAYER } from '../../../../shared/enums/athenaEvents';
+import { sha256 } from '../../../../server/utility/encryption';
 import { Athena } from '../../../../server/api/athena';
-import { DoorController } from './controller';
 
 export async function createDoor(player: alt.Player, doorData: IDoorControl) {
     const doorDocument: IDoorControl = {

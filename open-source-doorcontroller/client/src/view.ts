@@ -1,12 +1,13 @@
-import * as alt from 'alt-client';
-import { WebViewController } from '../../../../client/extensions/view2';
+import alt, { Vector3 } from 'alt-client';
 import ViewModel from '../../../../client/models/viewModel';
-import { isAnyMenuOpen } from '../../../../client/utility/menus';
-import { DOORCONTROLLER_SETTINGS } from '../../shared/settings';
-import { DoorController } from './controller';
 
+import { DOORCONTROLLER_SETTINGS } from '../../shared/settings';
+import { WebViewController } from '../../../../client/extensions/view2';
+import { DoorController } from './controller';
+import { isAnyMenuOpen } from '../../../../client/utility/menus';
+import { showNotification } from '../../../../client/utility/notification';
 const PAGE_NAME = 'DoorController';
-let doorObject: string;
+let door: (string | alt.Vector3)[];
 
 class InternalFunctions implements ViewModel {
     static async open() {
@@ -47,18 +48,15 @@ class InternalFunctions implements ViewModel {
 
     static async ready() {
         const view = await WebViewController.get();
-        view.emit(`${PAGE_NAME}:SetDoor`, doorObject);
+        view.emit(`${PAGE_NAME}:SetDoor`, door);
     }
 }
 
 alt.on('keydown', (key) => {
     if (key == DOORCONTROLLER_SETTINGS.KEY_TO_OPEN_UI) {
-        const permissionLevel = alt.getLocalMeta('Permissionlevel');
-        if (permissionLevel >= DOORCONTROLLER_SETTINGS.ADMIN_LEVEL_REQUIRED) {
+        if (alt.getLocalMeta('Permissionlevel') >= DOORCONTROLLER_SETTINGS.ADMIN_LEVEL_REQUIRED) {
             InternalFunctions.open();
-            const foundObject = DoorController.checkNearDoors();
-            doorObject = foundObject;
-            return;
-        } 
+            door = DoorController.checkNearDoors();
+        }
     }
 });

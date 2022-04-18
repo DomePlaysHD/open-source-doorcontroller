@@ -6,7 +6,7 @@ import { StreamerService } from '../../../../server/systems/streamer';
 import { sha256Random, sha256 } from '../../../../server/utility/encryption';
 import { ITEM_TYPE } from '../../../../shared/enums/itemTypes';
 import { Item } from '../../../../shared/interfaces/item';
-import { DOORCONTROLLER_EVENTS } from '../../shared/events';
+import { DOORCONTROLLER_EVENTS } from '../../shared/defaults/events';
 import IDoorControl from '../../shared/interfaces/IDoorControl';
 import { DOORCONTROLLER_SETTINGS } from '../../shared/settings';
 

@@ -1,20 +1,17 @@
 import * as alt from 'alt-server';
-import Database from '@stuyk/ezmongodb';
 
-import { loadItems } from './src/server-keys';
+import { DOORCONTROLLER_SETTINGS } from '../shared/settings';
+import { PluginSystem } from '../../../server/systems/plugins'
 import { loadDoors } from './src/server-functions';
-import { PluginSystem } from '../../../server/systems/plugins';
+import { Athena } from '../../../server/api/athena';
 
-// Serverside Imports
 import './src/controller';
 import './src/server-events';
 import './src/server-functions';
-import './src/server-keys';
-import { DOORCONTROLLER_SETTINGS } from '../shared/settings';
 
 export const ATHENA_DOORCONTROLLER = {
     name: 'Athena DoorController',
-    version: 'v3.0',
+    version: 'v1.0 - Release',
 };
 
 PluginSystem.registerPlugin(ATHENA_DOORCONTROLLER.name, async () => {
@@ -23,8 +20,7 @@ PluginSystem.registerPlugin(ATHENA_DOORCONTROLLER.name, async () => {
     );
 
     loadDoors();
-    loadItems();
-
-    await Database.createCollection(DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION);
-    await Database.createCollection(DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION_PROPS);
+ 
+    await Athena.database.funcs.createCollection(DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION);
+    await Athena.database.funcs.createCollection(DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION_PROPS);
 });

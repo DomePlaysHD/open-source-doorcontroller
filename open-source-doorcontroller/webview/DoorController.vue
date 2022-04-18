@@ -167,7 +167,8 @@ $ui-color: rgb(82, 145, 218);
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { DOORCONTROLLER_EVENTS } from '../../../../../athena-cache/core/plugins/open-source-doorcontroller/shared/events';
+import { Vector3 } from '../../../shared/interfaces/vector';
+import { DOORCONTROLLER_EVENTS } from '../shared/defaults/events';
 const ComponentName = 'DoorController';
 export default defineComponent({
     name: ComponentName,
@@ -181,6 +182,8 @@ export default defineComponent({
                 keyName: '',
                 keyDescription: '',
                 faction: '',
+                center: null,
+                position: null,
             },
         };
     },
@@ -199,20 +202,21 @@ export default defineComponent({
     },
     methods: {
         execute() {
-            // alt.emit(DOORCONTROLLER_EVENTS.DOOR_ADD, this.data);
-            console.log(JSON.stringify(this.data));
+            if ('alt' in window) {
+                if(!this.data) return;
+                alt.emit(DOORCONTROLLER_EVENTS.CREATE_DOOR, this.currentDoor, this.data);
+            }
         },
-        setDoor(door: string) {
-            console.log('Vue Side Received => ' + door);
-            this.currentDoor = door;
+        setDoor(door: (string | Vector3)[]) {
+            this.currentDoor = door[0];
+            this.data.center = door[1];
+            this.data.position = door[2];
         },
         createDoor(type: string) {
             if (type === 'default') {
-                console.log('Default Door.');
                 this.selection = type;
                 this.inputActive = true;
             } else {
-                console.log('Custom Door.');
                 this.selection = type;
                 this.inputActive = true;
             }
