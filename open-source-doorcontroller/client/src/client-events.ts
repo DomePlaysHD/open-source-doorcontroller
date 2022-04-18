@@ -41,4 +41,5 @@ alt.onServer(DOORCONTROLLER_EVENTS.POPULATE_DOORS, async (doors: Array<IDoorCont
             natives.freezeEntityPosition(closestDoor, false);
         }
     }
+    alt.logError("Doors to Populate => " + doors.length);
 });

@@ -183,6 +183,7 @@ export default defineComponent({
                 keyDescription: '',
                 faction: '',
                 center: null,
+                rotation: null,
                 position: null,
             },
         };
@@ -203,14 +204,15 @@ export default defineComponent({
     methods: {
         execute() {
             if ('alt' in window) {
-                if(!this.data) return;
+                if (!this.data) return;
                 alt.emit(DOORCONTROLLER_EVENTS.CREATE_DOOR, this.currentDoor, this.data);
             }
         },
         setDoor(door: (string | Vector3)[]) {
             this.currentDoor = door[0];
-            this.data.center = door[1];
-            this.data.position = door[2];
+            this.data.center = door[1]; // center
+            this.data.rotation = door[2]; // rotation
+            this.data.position = door[3]; // position
         },
         createDoor(type: string) {
             if (type === 'default') {

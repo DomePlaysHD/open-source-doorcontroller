@@ -38,9 +38,9 @@ export class DoorController {
             if (foundObject) {
                 const name = obj.name;
                 const center = getEntityCenter(foundObject);
+                const rotation = natives.getEntityRotation(foundObject, 2);
                 const position = closeDoor[1];
-                
-                return [name, center, position];
+                return [name, center, rotation, position];
             }
         }
         return [];

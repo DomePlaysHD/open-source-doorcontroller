@@ -35,14 +35,14 @@ export class DoorController implements IDoorControl {
         StreamerService.updateData(KEY, globalDoors);
     }
 
-    static append(doorData: IDoorControl): string {
-        if (!doorData._id) {
-            doorData._id = sha256Random(JSON.stringify(doorData));
+    static append(door: IDoorControl): string {
+        if (!door._id) {
+            door._id = sha256Random(JSON.stringify(door));
         }
 
-        globalDoors.push(doorData);
+        globalDoors.push(door);
         DoorController.refresh();
-        return doorData._id;
+        return door._id;
     }
 
     static async createDoor(data: IDoorControl): Promise<Boolean | null> {
@@ -80,6 +80,10 @@ export class DoorController implements IDoorControl {
                 : (player.data.inventory[keyInInventory.index].quantity += 1);
         }
         Athena.player.save.field(player, 'inventory', player.data.inventory);
+    }
+
+    static async getAll() {
+        return await Database.fetchAllData<IDoorControl>(DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION);
     }
 }
 DoorController.init();

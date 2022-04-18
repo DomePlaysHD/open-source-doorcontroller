@@ -10,7 +10,7 @@ import { updateLockstate } from './server-functions';
 import { DoorController } from './controller';
 import { PlayerEvents } from '../../../../server/events/playerEvents';
 import { Athena } from '../../../../server/api/athena';
-import { sha256 } from '../../../../server/utility/encryption';
+import { sha256, sha256Random } from '../../../../server/utility/encryption';
 import { DOORCONTROLLER_SETTINGS } from '../../shared/settings';
 
 alt.onClient(DOORCONTROLLER_EVENTS.DOOR_DATA, (player: alt.Player, data: IDoorControl) => {
@@ -23,16 +23,16 @@ alt.onClient(DOORCONTROLLER_EVENTS.CREATE_DOOR, async (player: alt.Player, prop:
         name: data.doorName,
         data: {
             prop: prop,
-            hash: 0,
+            hash: alt.hash(prop),
             isLocked: false,
-            faction: 'none',
+            faction: data.faction,
         },
         keyData: {
             keyName: data.keyName,
             keyDescription: data.keyDescription,
             data: {
                 faction: data.faction,
-                lockHash: 'none',
+                lockHash: sha256Random(data.keyName).substring(0, 40),
             },
         },
         pos: data.position,
@@ -45,6 +45,7 @@ alt.onClient(DOORCONTROLLER_EVENTS.CREATE_DOOR, async (player: alt.Player, prop:
         data.position,
         DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION,
     );
+
     if (dbDoor === null) {
         ServerTextLabelController.append({
             data: '~g~UNLOCKED',
@@ -68,7 +69,7 @@ alt.onClient(DOORCONTROLLER_EVENTS.CREATE_DOOR, async (player: alt.Player, prop:
         return;
     }
 });
-
+/* 
 alt.onClient(DOORCONTROLLER_EVENTS.REMOVE_DOOR, async (player: alt.Player) => {
     const allDoors = await Database.fetchAllData<IDoorControl>('doors');
     for (let x = 0; x < allDoors.length; x++) {
@@ -89,7 +90,10 @@ alt.onClient(DOORCONTROLLER_EVENTS.REMOVE_DOOR, async (player: alt.Player) => {
         }
     }
 });
-
-PlayerEvents.on(ATHENA_EVENTS_PLAYER.SELECTED_CHARACTER, (player: alt.Player) => {
+*/
+PlayerEvents.on(ATHENA_EVENTS_PLAYER.SELECTED_CHARACTER, async (player: alt.Player) => {
     player.setLocalMeta('Permissionlevel', player.accountData.permissionLevel);
+    
+    const allDoors = await DoorController.getAll();
+    DoorController.update(player, allDoors);
 });
