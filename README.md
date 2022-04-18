@@ -4,7 +4,7 @@
 ![Fichier 22mdpi](https://user-images.githubusercontent.com/82890183/147709903-28af3180-38fe-4aa0-b11e-70813c11df79.png)
 
 ### Features
-- Build on the Athena Framework <3
+- Build on the Athena Framework <3s
 - Completly manage doors ingame, add, remove, read data, change lockstates
 - GTA V default doors will be automatically found. No need to search through Codewalker. All door props should be inside of the doors-props.json.
 - Full Database Integration. No Hardcoded .ts files or either JSON Lists.
