@@ -1,6 +1,8 @@
 import { PERMISSIONS } from "../../../../../shared/flags/permissionFlags";
 
 export const config = {
+    pluginName: 'Athena-OSDoorController',
+    pluginVersion: '1.0.0 - Release',
     permissionsRequired: PERMISSIONS.ADMIN,
     animationName: 'idle_a',
     animationDictionary: 'anim@heists@keycard@',

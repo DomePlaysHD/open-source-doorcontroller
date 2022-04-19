@@ -7,18 +7,12 @@ import { DoorController } from './src/controller';
 import './src/server-events';
 import './src/server-functions';
 
-
-
-export const ATHENA_DOORCONTROLLER = {
-    name: 'Athena DoorController',
-    version: 'v1.0 - Release',
-};
-
-PluginSystem.registerPlugin(ATHENA_DOORCONTROLLER.name, async () => {
+PluginSystem.registerPlugin(config.pluginName, async () => {
     alt.log(
-        `~lg~${ATHENA_DOORCONTROLLER.name} ${ATHENA_DOORCONTROLLER.version} - ${ATHENA_DOORCONTROLLER.version} ==> successfully loaded.`,
+        `~lg~${config.pluginName} ${config.pluginVersion} ==> successfully loaded.`,
     );
 
+    DoorController.convertInterface();
     DoorController.loadDoors();
  
     await Athena.database.funcs.createCollection(config.dbCollection);

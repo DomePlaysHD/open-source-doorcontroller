@@ -1,5 +1,4 @@
 import * as alt from 'alt-server';
-import { ATHENA_DOORCONTROLLER } from '..';
 import { Athena } from '../../../../../server/api/athena';
 import { ServerTextLabelController } from '../../../../../server/streamers/textlabel';
 import { InteractionController } from '../../../../../server/systems/interaction';
@@ -15,20 +14,11 @@ import { Translations } from '../../shared/enums/translations';
 import IDoor from '../../shared/interfaces/IDoor';
 import IDoorObjects from '../../shared/interfaces/IDoorObjects';
 
-
 const globalDoors: Array<IDoor> = [];
 const STREAM_RANGE = 25;
 const KEY = 'doors';
 
-export class DoorController implements IDoor{
-    _id?: string;
-    name: string;
-    data: { prop?: string; hash?: number; isLocked?: boolean; faction?: string };
-    keyData: { keyName: string; keyDescription: string; data: { faction: string; lockHash: string } };
-    pos: alt.Vector3;
-    rotation: alt.Vector3;
-    center: alt.Vector3;
-
+export class DoorController {
     static init() {
         StreamerService.registerCallback(KEY, DoorController.update, STREAM_RANGE);
     }
@@ -51,24 +41,16 @@ export class DoorController implements IDoor{
         return door._id;
     }
 
-    static async updateDoor(player: alt.Player, id: string, ) {
-        const door = await Athena.database.funcs.fetchData<IDoor>(
-            '_id',
-            id,
-            config.dbCollection,
-        );
-    
-        let translatedLockstate = door.data.isLocked
-            ? `~r~` + Translations.Locked
-            : `~g~` + Translations.Unlocked;
-    
+    static async updateDoor(player: alt.Player, id: string) {
+        const door = await Athena.database.funcs.fetchData<IDoor>('_id', id, config.dbCollection);
+
+        let translatedLockstate = door.data.isLocked ? `~r~` + Translations.Locked : `~g~` + Translations.Unlocked;
+
         door.data.isLocked = !door.data.isLocked;
-    
+
         if (config.useTextLabels) {
-            translatedLockstate = door.data.isLocked
-                ? `~r~` + Translations.Locked
-                : `~g~` + Translations.Unlocked;
-            
+            translatedLockstate = door.data.isLocked ? `~r~` + Translations.Locked : `~g~` + Translations.Unlocked;
+
             ServerTextLabelController.remove(door._id.toString());
             ServerTextLabelController.append({
                 pos: { x: door.center.x, y: door.center.y, z: door.center.z },
@@ -77,8 +59,8 @@ export class DoorController implements IDoor{
                 maxDistance: config.textLabelRange,
             });
         }
-    
-        if(config.useAnimation) {
+
+        if (config.useAnimation) {
             Athena.player.emit.animation(
                 player,
                 config.animationDictionary,
@@ -87,7 +69,7 @@ export class DoorController implements IDoor{
                 config.animationDuration,
             );
         }
-    
+
         await Athena.database.funcs.updatePartialData(
             id,
             {
@@ -95,11 +77,9 @@ export class DoorController implements IDoor{
             },
             config.dbCollection,
         );
-    
+
         alt.log(
-            `${door.name} is now ${
-                door.data.isLocked ? '~r~' + Translations.Locked : '~g~' + Translations.Unlocked
-            }`,
+            `${door.name} is now ${door.data.isLocked ? '~r~' + Translations.Locked : '~g~' + Translations.Unlocked}`,
         );
         DoorController.refresh();
     }
@@ -137,23 +117,17 @@ export class DoorController implements IDoor{
                     name: doorsPropsDefaults[i].name,
                     hash: doorsPropsDefaults[i].hash,
                 };
-    
-                await Athena.database.funcs.insertData<IDoorObjects>(
-                    doorprop,
-                    config.dbCollectionProps,
-                    false,
-                );
+
+                await Athena.database.funcs.insertData<IDoorObjects>(doorprop, config.dbCollectionProps, false);
             }
             doorProps = await DoorController.getProps();
         }
-    
+
         const dbDoors = await DoorController.getAll();
         for (let x = 0; x < dbDoors.length; x++) {
             const door = dbDoors[x];
-            let translatedLockstate = door.data.isLocked
-                ? `~r~` + Translations.Locked
-                : `~g~` + Translations.Unlocked;
-    
+            let translatedLockstate = door.data.isLocked ? `~r~` + Translations.Locked : `~g~` + Translations.Unlocked;
+
             if (config.useTextLabels) {
                 ServerTextLabelController.append({
                     pos: { x: door.center.x, y: door.center.y, z: door.center.z },
@@ -162,29 +136,63 @@ export class DoorController implements IDoor{
                     maxDistance: config.textLabelRange,
                 });
             }
-    
+
             InteractionController.add({
                 uid: door._id.toString(),
                 description: 'Use Door',
                 range: 2,
                 position: { x: door.pos.x, y: door.pos.y, z: door.pos.z - 1 },
-                callback: (player: alt.Player) => { 
+                callback: (player: alt.Player) => {
                     door.data.isLocked = !door.data.isLocked;
                     DoorController.updateDoor(player, door._id);
-                }
+                },
             });
-    
+
             DoorController.append(door);
             DoorController.refresh();
         }
-    
+
+        alt.log(`~lg~${config.pluginName} ${config.pluginVersion} | DATABASE | Loaded ${dbDoors.length} Doors!`);
+
         alt.log(
-            `~lg~${ATHENA_DOORCONTROLLER.name} ${ATHENA_DOORCONTROLLER.version} | DATABASE | Loaded ${dbDoors.length} Doors!`,
+            `~lg~${config.pluginName} ${config.pluginVersion} | DATABASE | Loaded ${doorProps.length} default Doors!`,
         );
-    
-        alt.log(
-            `~lg~${ATHENA_DOORCONTROLLER.name} ${ATHENA_DOORCONTROLLER.version} | DATABASE | Loaded ${doorProps.length} default Doors!`,
-        );
+    }
+
+    static async convertInterface() {
+        const dbDoors = await this.getAll();
+        for (let x = 0; x < dbDoors.length; x++) {
+            const door = dbDoors[x];
+            const updatedDoor: IDoor = {
+                _id: door._id,
+                door: {
+                    name: door.name,
+                    hash: door.data.hash,
+                    isLocked: door.data.isLocked,
+                    prop: door.data.prop,
+                    faction: door.data.faction,
+                },
+                key: {
+                    name: door.keyData.keyName,
+                    description: door.keyData.keyDescription,
+                    hash: door.keyData.data.lockHash,
+                    faction: door.keyData.data.faction,
+                },
+
+                pos: door.pos,
+                rotation: door.rotation,
+                center: door.center,
+            };
+            if (!door.version) {
+                await Athena.database.funcs.updatePartialData(
+                    updatedDoor._id.toString(),
+                    { updatedDoor},
+                    config.dbCollection
+                );
+                alt.log('DoorController: Converting door interface...');
+                alt.log(`Updated ${dbDoors.length} doors!`);
+            }
+        }
     }
 
     static async getAll() {
@@ -192,9 +200,7 @@ export class DoorController implements IDoor{
     }
 
     static async getProps() {
-        return Athena.database.funcs.fetchAllData<IDoorObjects>(
-            config.dbCollectionProps,
-        );
+        return Athena.database.funcs.fetchAllData<IDoorObjects>(config.dbCollectionProps);
     }
 }
 DoorController.init();
