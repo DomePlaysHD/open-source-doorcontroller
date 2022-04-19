@@ -167,7 +167,7 @@ $ui-color: rgb(82, 145, 218);
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { Vector3 } from '../../../shared/interfaces/vector';
+import { Vector3 } from '../../../../shared/interfaces/Vector';
 import { DOORCONTROLLER_EVENTS } from '../shared/defaults/events';
 const ComponentName = 'DoorController';
 export default defineComponent({
