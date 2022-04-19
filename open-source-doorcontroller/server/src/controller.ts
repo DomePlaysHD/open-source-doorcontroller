@@ -182,11 +182,13 @@ export class DoorController {
                 center: door.center,
                 version: null
             };
+            alt.log(JSON.stringify(updatedDoor));
             if (updatedDoor.version !== null) {
                 await Athena.database.funcs.updatePartialData(
                     updatedDoor._id.toString(),
-                    {  version: updatedDoor.version },
+                    updatedDoor,
                     config.dbCollection,
+                    { data: '', keyData: '', name: '', rotation: '' }
                 );
                 alt.log('DoorController: Converting door interface...');
                 alt.log(`Updated ${dbDoors.length} doors!`);

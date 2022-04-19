@@ -1,4 +1,51 @@
 <template>
+    <div class="flex-container">
+        <DoorsHeader />
+        <DoorsBody />
+        <DoorsFooter />
+    </div>
+</template>
+
+<script lang="ts" setup>
+import DoorsHeader from './components/DoorsHeader.vue';
+import DoorsBody from './components/DoorsBody.vue';
+import DoorsFooter from './components/DoorsFooter.vue';
+
+import { onMounted, onUnmounted } from 'vue';
+onMounted(() => {
+    if ('alt' in window) {
+        if ('alt' in window) {
+            alt.emit(`DoorController:Ready`);
+            alt.on(`DoorController:SetDoor`, setDoor);
+        }
+        document.addEventListener('keyup', handleKeyPress);
+    }
+});
+
+onUnmounted(() => {});
+
+function setDoor() {}
+function handleKeyPress(e: { keyCode: number }) {
+    if (e.keyCode === 27 && 'alt' in window) {
+        alt.emit(`DoorController:Close`);
+    }
+}
+</script>
+
+<style lang="scss" scoped>
+.flex-container {
+    position: absolute;
+    left: 3.5%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 500px;
+    height: 800px;
+    border: 2px solid rgb(65, 184, 65);
+}
+</style>
+
+<!-- <template>
     <div class="doors-wrapper">
         <div class="header">
             <p>Athena Framework - Door Management</p>
@@ -236,3 +283,4 @@ export default defineComponent({
     },
 });
 </script>
+-->
