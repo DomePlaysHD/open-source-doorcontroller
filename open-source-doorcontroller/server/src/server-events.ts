@@ -10,7 +10,6 @@ import { DoorControllerEvents } from '../../shared/enums/events';
 import IDoorControl from '../../shared/interfaces/IDoorControl';
 import { DoorController } from './controller';
 
-
 alt.onClient(DoorControllerEvents.createDoor, async (player: alt.Player, prop: string, data) => {
     const door: IDoorControl = {
         name: data.doorName,
@@ -50,7 +49,7 @@ alt.onClient(DoorControllerEvents.createDoor, async (player: alt.Player, prop: s
             position: { x: data.position.x, y: data.position.y, z: data.position.z - 1 },
             range: 3,
             description: 'Use Door',
-            callback: () => DoorController.updateDoor(player, dbDoor._id)
+            callback: () => DoorController.updateDoor(player, door._id)
         });
 
         await Athena.database.funcs.insertData(door, config.dbCollection, false);

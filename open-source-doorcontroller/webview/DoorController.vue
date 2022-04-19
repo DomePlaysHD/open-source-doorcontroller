@@ -168,7 +168,7 @@ $ui-color: rgb(82, 145, 218);
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { Vector3 } from '../../../../shared/interfaces/Vector';
-import { DOORCONTROLLER_EVENTS } from '../shared/enums/events';
+import { DoorControllerEvents } from '../shared/enums/events';
 const ComponentName = 'DoorController';
 export default defineComponent({
     name: ComponentName,
@@ -205,7 +205,7 @@ export default defineComponent({
         execute() {
             if ('alt' in window) {
                 if (!this.data) return;
-                alt.emit(DOORCONTROLLER_EVENTS.CREATE_DOOR, this.currentDoor, this.data);
+                alt.emit(DoorControllerEvents.createDoor, this.currentDoor, this.data);
                 this.inputActive = false;
             }
         },
