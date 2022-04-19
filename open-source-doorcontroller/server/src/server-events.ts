@@ -50,12 +50,11 @@ alt.onClient(DOORCONTROLLER_EVENTS.CREATE_DOOR, async (player: alt.Player, prop:
             position: { x: data.position.x, y: data.position.y, z: data.position.z - 1 },
             range: 3,
             description: 'Use Door',
-            callback: () => {
-                alt.logError('Hello World!');
-            },
+            callback: () => DoorController.updateDoor(player, dbDoor._id)
         });
 
         await Athena.database.funcs.insertData(door, DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION, false);
+        
         DoorController.createKey(player, door.keyData.keyName, door.keyData.keyDescription, door.keyData.data.faction);
         DoorController.append(door);
     } else if (dbDoor !== null) {

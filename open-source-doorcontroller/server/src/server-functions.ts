@@ -23,8 +23,8 @@ export async function updateLockstate(player: alt.Player, doorId: string, isLock
     );
 
     let translatedLockstate = door.data.isLocked
-    ? `~r~` + DOORCONTROLLER_TRANSLATIONS.LOCKED
-    : `~g~` + DOORCONTROLLER_TRANSLATIONS.UNLOCKED;
+        ? `~r~` + DOORCONTROLLER_TRANSLATIONS.LOCKED
+        : `~g~` + DOORCONTROLLER_TRANSLATIONS.UNLOCKED;
 
     door.data.isLocked = !door.data.isLocked;
 
@@ -48,104 +48,21 @@ export async function updateLockstate(player: alt.Player, doorId: string, isLock
         ANIMATION_FLAGS.NORMAL,
         DOORCONTROLLER_SETTINGS.ANIMATION_DURATION,
     );
-    
+
     await Athena.database.funcs.updatePartialData(
         doorId,
         {
-            data: {
-                isLocked,
-            },
+            data: door.data,
         },
         DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION,
     );
-    
+
     alt.log(
         `${door.name} is now ${
-            isLocked ? '~g~' + DOORCONTROLLER_TRANSLATIONS.UNLOCKED : '~r~' + DOORCONTROLLER_TRANSLATIONS.LOCKED
+            isLocked ? '~r~' + DOORCONTROLLER_TRANSLATIONS.LOCKED : '~g~' + DOORCONTROLLER_TRANSLATIONS.UNLOCKED
         }`,
     );
     DoorController.refresh();
-}
-
-export async function loadDoors() {
-    let doorProps = await Athena.database.funcs.fetchAllData<IDoorObjects>(
-        DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION_PROPS,
-    );
-
-    if (!doorProps || doorProps.length <= 0) {
-        for (let i = 0; i < doorsPropsDefaults.length; i++) {
-            const doorprop: IDoorObjects = {
-                name: doorsPropsDefaults[i].name,
-                hash: doorsPropsDefaults[i].hash,
-            };
-            await Athena.database.funcs.insertData<IDoorObjects>(
-                doorprop,
-                DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION_PROPS,
-                false,
-            );
-        }
-        doorProps = await Athena.database.funcs.fetchAllData<IDoorObjects>(
-            DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION_PROPS,
-        );
-    }
-
-    const dbDoors = await Athena.database.funcs.fetchAllData<IDoorControl>(DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION);
-    for (let x = 0; x < dbDoors.length; x++) {
-        const door = dbDoors[x];
-        let translatedLockstate = door.data.isLocked
-            ? `~r~` + DOORCONTROLLER_TRANSLATIONS.LOCKED
-            : `~g~` + DOORCONTROLLER_TRANSLATIONS.UNLOCKED;
-
-        if (DOORCONTROLLER_SETTINGS.USE_TEXTLABELS) {
-            ServerTextLabelController.append({
-                pos: { x: door.center.x, y: door.center.y, z: door.center.z },
-                data: translatedLockstate,
-                uid: door._id.toString(),
-                maxDistance: DOORCONTROLLER_SETTINGS.TEXTLABEL_RANGE,
-            });
-        }
-
-        InteractionController.add({
-            uid: door._id.toString(),
-            description: 'Use Door',
-            range: 1,
-            position: { x: door.pos.x, y: door.pos.y, z: door.pos.z - 1 },
-            callback: (player: alt.Player) => {
-                /* door.data.isLocked = !door.data.isLocked;
-
-                if (DOORCONTROLLER_SETTINGS.USE_TEXTLABELS) {
-                    translatedLockstate = door.data.isLocked
-                        ? `~r~` + DOORCONTROLLER_TRANSLATIONS.LOCKED
-                        : `~g~` + DOORCONTROLLER_TRANSLATIONS.UNLOCKED;
-                    ServerTextLabelController.remove(door._id.toString());
-                    ServerTextLabelController.append({
-                        pos: { x: door.center.x, y: door.center.y, z: door.center.z },
-                        data: translatedLockstate,
-                        uid: door._id.toString(),
-                        maxDistance: DOORCONTROLLER_SETTINGS.TEXTLABEL_RANGE,
-                    });
-                }
-
-                Athena.player.emit.animation(
-                    player,
-                    DOORCONTROLLER_SETTINGS.ANIMATION_DICTIONARY,
-                    DOORCONTROLLER_SETTINGS.ANIMATION_NAME,
-                    ANIMATION_FLAGS.NORMAL,
-                    DOORCONTROLLER_SETTINGS.ANIMATION_DURATION,
-                ); */
-
-                updateLockstate(player, door._id, door.data.isLocked);
-            },
-        });
-        DoorController.append(door);
-        DoorController.refresh();
-    }
-    alt.log(
-        `~lg~${ATHENA_DOORCONTROLLER.name} ${ATHENA_DOORCONTROLLER.version} | DATABASE | Loaded ${dbDoors.length} Doors!`,
-    );
-    alt.log(
-        `~lg~${ATHENA_DOORCONTROLLER.name} ${ATHENA_DOORCONTROLLER.version} | DATABASE | Loaded ${doorProps.length} default Doors!`,
-    );
 }
 
 export const dbDoorArray = Array<IDoorObjects>();

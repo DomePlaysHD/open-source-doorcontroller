@@ -1,14 +1,15 @@
 import alt from 'alt-client';
 import natives from 'natives';
 import IDoorControl from '../../shared/interfaces/IDoorControl';
+import IDoorObjects from '../../shared/interfaces/IDoorObjects';
 
 import { DOORCONTROLLER_EVENTS } from '../../shared/defaults/events';
 import { waitUntilDoorIsClosed } from './client-functions';
 import { WebViewController } from '../../../../../client/extensions/view2';
-import IDoorObjects from '../../shared/interfaces/IDoorObjects';
-export let clientDoorArray: IDoorObjects [] = [];
 
 const view = await WebViewController.get();
+export let clientDoorArray: IDoorObjects [] = [];
+
 view.on(
     DOORCONTROLLER_EVENTS.CREATE_DOOR,
     (name, data) => {
@@ -40,10 +41,10 @@ alt.onServer(DOORCONTROLLER_EVENTS.POPULATE_DOORS, async (doors: Array<IDoorCont
             return;
         }
 
-        if (door.data.isLocked === true) {
+        if (door.data.isLocked) {
             natives.freezeEntityPosition(closestDoor, true);
             natives.setEntityRotation(closestDoor, defaultRotation.x, defaultRotation.y, defaultRotation.z, 2, false);
-        } else if (door.data.isLocked === false) {
+        } else if (!door.data.isLocked) {
             natives.freezeEntityPosition(closestDoor, false);
         }
     }
