@@ -1,68 +1,49 @@
-# Athena Framework - DoorController v3
+# Athena Framework - DoorController v1.0 (Release)
 
-![Fichier 22mdpi](https://user-images.githubusercontent.com/82890183/147709903-28af3180-38fe-4aa0-b11e-70813c11df79.png)
+The Athena Framework DoorController will help you managing ingame doors.
 
-### Features
+## Features
 
-- Build on the Athena Framework <3
-- Completly manage doors ingame, add, remove, read data, change lockstates
-- GTA V default doors will be automatically found. No need to search through Codewalker. All door props should be inside of the doors-props.json.
-- Full Database Integration. No Hardcoded .ts files or either JSON Lists.
-- Integrated database Keys (changeable locks soon.)
-- Configurable to your likings for example disableTextlabel, set range for all Labels, custom collection and more.
+-   Automatically detect GTA:V default doors
+-   Automatically create key items for the door
 
-## Setup - General
+### Dependencies
 
-- Just import the stuff from AthenaDoorController_Client in a new folder here -> src/core/client-plugins/AthenaDoorController
+-   SASS
 
-- Import the stuff from AthenaDoorController_Server in a new folder here -> src/core/plugins/AthenaDoorController
+### Installing
 
-## Setup (MongoDB)
+-   Install SASS by typing npm i sass or yarn add sass
 
-- Add a new collection in your MongoDB Compass call it 'doors-props', add "doors-props" there. Just import the Database File i've added here. Key to open the Vue Menu is ","
+-   This repository is a git submodule so you can clone it directly into your plugins folder.
 
-## Setup Vue / Athena Page
+```ts
+git clone https://github.com/Booster1212/Athena-OSDoorController.git
 
-- Go to /src-webivews/pages and create a new Folder called "DoorController" in there.
-- Copy the DoorController.vue file of the repos Webview folder inside of that folder.
-- Add to components.ts (src-webviews/) -> import DoorController from './DoorController/DoorController.vue';
-- Add to components.ts (src-webviews/) -> DoorController: shallowRef(DoorController)
-
-##Imports Server/Client
-
-```typescript
-// Imports on plugin/imports.ts
-import './AthenaDoorController/index';
-
-// Imports on client-plugins/import.ts
-import './AthenaDoorController/index';
-import './AthenaDoorController/src/doors-vue';
-import './AthenaDoorController/src/client-events-vue';
-import './AthenaDoorController/src/client-functions';
-import './AthenaDoorController/src/client-streamer';
-import './AthenaDoorController/src/client-events';
+git checkout development
 ```
 
-## Events - Scripting - Not available yet.
+Add the imports to your src/core/plugins/athena folder
 
-```typescript
-// Clientside Events
+## Help
 
-// Serverside Events
+In case of any unforeseen problems with the door system, please feel free to contact us in our Discord server, we will try to help you as soon as possible.
 
-// Vue To Client Events
+## Author & Contributors
 
-// Client To Client Events
+-   Author
+    -   Der Lord!
+-   Contributors
+    -   J0N4S (Automatically add door props into database)
 
-// Server To Server Events
-```
+## License
 
-## Images
+This project is licensed under the [MIT] License - see the LICENSE.md file for details
 
-![image](https://user-images.githubusercontent.com/82890183/147631180-c26ff168-ab1c-4ae8-83ab-fa152e2e665d.png)
+## Acknowledgments
 
-![image](https://user-images.githubusercontent.com/82890183/147631218-c2468894-1b0a-4a6b-ac0a-a5f7cb6a5f5f.png)
+Inspiration, code snippets, etc.
 
-![image](https://user-images.githubusercontent.com/82890183/147719985-0fb6952b-0b68-42b1-a8f4-1ce1555c2252.png)
-
-Join my plugin discord -> https://discord.gg/Pk6gQ2agbQ
+-   [Athena-Framework](https://athenaframework.com/)
+-   [Athena-Framework Discord](https://discord.gg/qdV8mg2GvF)
+-   [Lord-Development Discord](https://discord.gg/zCqZ3XA7E3)
