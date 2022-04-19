@@ -77,13 +77,15 @@ export class DoorController implements IDoorControl {
             });
         }
     
-        Athena.player.emit.animation(
-            player,
-            DOORCONTROLLER_SETTINGS.ANIMATION_DICTIONARY,
-            DOORCONTROLLER_SETTINGS.ANIMATION_NAME,
-            ANIMATION_FLAGS.NORMAL,
-            DOORCONTROLLER_SETTINGS.ANIMATION_DURATION,
-        );
+        if(DOORCONTROLLER_SETTINGS.USE_ANIMATION) {
+            Athena.player.emit.animation(
+                player,
+                DOORCONTROLLER_SETTINGS.ANIMATION_DICTIONARY,
+                DOORCONTROLLER_SETTINGS.ANIMATION_NAME,
+                ANIMATION_FLAGS.NORMAL,
+                DOORCONTROLLER_SETTINGS.ANIMATION_DURATION,
+            );
+        }
     
         await Athena.database.funcs.updatePartialData(
             id,
