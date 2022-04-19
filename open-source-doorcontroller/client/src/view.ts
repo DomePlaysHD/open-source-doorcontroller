@@ -1,7 +1,7 @@
 import alt from 'alt-client';
 import ViewModel from '../../../../../client/models/viewModel';
 
-import { DOORCONTROLLER_SETTINGS } from '../../shared/settings';
+import { config } from '../../shared/config/index';
 import { WebViewController } from '../../../../../client/extensions/view2';
 import { DoorController } from './controller';
 import { isAnyMenuOpen } from '../../../../../client/utility/menus';
@@ -53,8 +53,8 @@ class InternalFunctions implements ViewModel {
 }
 
 alt.on('keydown', (key) => {
-    if (key == DOORCONTROLLER_SETTINGS.KEY_TO_OPEN_UI) {
-        if (alt.getLocalMeta('Permissionlevel') >= DOORCONTROLLER_SETTINGS.ADMIN_LEVEL_REQUIRED) {
+    if (key == config.keyToOpenUi) {
+        if (alt.getLocalMeta('Permissionlevel') >= config.permissionsRequired) {
             InternalFunctions.open();
             door = DoorController.checkNearDoors();
         }

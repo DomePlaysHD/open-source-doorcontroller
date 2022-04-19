@@ -2,16 +2,16 @@ import * as alt from 'alt-server';
 import IDoorControl from '../../shared/interfaces/IDoorControl';
 
 import { ServerTextLabelController } from '../../../../../server/streamers/textlabel';
-import { DOORCONTROLLER_SETTINGS } from '../../shared/settings';
+import { config } from '../../shared/config/index';
 import { InteractionController } from '../../../../../server/systems/interaction';
-import { DOORCONTROLLER_EVENTS } from '../../shared/defaults/events';
 import { ATHENA_EVENTS_PLAYER } from '../../../../../shared/enums/athenaEvents';
 import { DoorController } from './controller';
 import { PlayerEvents } from '../../../../../server/events/playerEvents';
 import { sha256Random } from '../../../../../server/utility/encryption';
 import { Athena } from '../../../../../server/api/athena';
+import { DoorControllerEvents } from '../../shared/enums/events';
 
-alt.onClient(DOORCONTROLLER_EVENTS.CREATE_DOOR, async (player: alt.Player, prop: string, data) => {
+alt.onClient(DoorControllerEvents.createDoor, async (player: alt.Player, prop: string, data) => {
     const door: IDoorControl = {
         name: data.doorName,
         data: {
@@ -36,7 +36,7 @@ alt.onClient(DOORCONTROLLER_EVENTS.CREATE_DOOR, async (player: alt.Player, prop:
     const dbDoor = await Athena.database.funcs.fetchData<IDoorControl>(
         'pos',
         data.position,
-        DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION,
+        config.dbCollection,
     );
 
     if (dbDoor === null) {
@@ -53,7 +53,7 @@ alt.onClient(DOORCONTROLLER_EVENTS.CREATE_DOOR, async (player: alt.Player, prop:
             callback: () => DoorController.updateDoor(player, dbDoor._id)
         });
 
-        await Athena.database.funcs.insertData(door, DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION, false);
+        await Athena.database.funcs.insertData(door, config.dbCollection, false);
         
         DoorController.createKey(player, door.keyData.keyName, door.keyData.keyDescription, door.keyData.data.faction);
         DoorController.append(door);

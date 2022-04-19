@@ -3,25 +3,25 @@ import natives from 'natives';
 import IDoorControl from '../../shared/interfaces/IDoorControl';
 import IDoorObjects from '../../shared/interfaces/IDoorObjects';
 
-import { DOORCONTROLLER_EVENTS } from '../../shared/defaults/events';
 import { waitUntilDoorIsClosed } from './client-functions';
 import { WebViewController } from '../../../../../client/extensions/view2';
+import { DoorControllerEvents } from '../../shared/enums/events';
 
 const view = await WebViewController.get();
 export let clientDoorArray: IDoorObjects [] = [];
 
 view.on(
-    DOORCONTROLLER_EVENTS.CREATE_DOOR,
+    DoorControllerEvents.createDoor,
     (name, data) => {
-        alt.emitServer(DOORCONTROLLER_EVENTS.CREATE_DOOR, name, data);
+        alt.emitServer(DoorControllerEvents.createDoor, name, data);
     },
 );
 
-alt.onServer(DOORCONTROLLER_EVENTS.FILL_ARRAY, (dbDoors: Array<IDoorObjects>) => {
+alt.onServer(DoorControllerEvents.fillArray, (dbDoors: Array<IDoorObjects>) => {
     clientDoorArray = dbDoors;
 });
 
-alt.onServer(DOORCONTROLLER_EVENTS.POPULATE_DOORS, async (doors: Array<IDoorControl>) => {
+alt.onServer(DoorControllerEvents.populateDoors, async (doors: Array<IDoorControl>) => {
     for (let x = 0; x < doors.length; x++) {
         const door = doors[x];
         const closestDoor = natives.getClosestObjectOfType(

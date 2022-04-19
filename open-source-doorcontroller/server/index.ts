@@ -1,6 +1,6 @@
 import * as alt from 'alt-server';
 
-import { DOORCONTROLLER_SETTINGS } from '../shared/settings';
+import { config } from '../shared/config/index';
 import { DoorController } from './src/controller';
 import { PluginSystem } from '../../../../server/systems/plugins';
 import { Athena } from '../../../../server/api/athena';
@@ -21,6 +21,6 @@ PluginSystem.registerPlugin(ATHENA_DOORCONTROLLER.name, async () => {
 
     DoorController.loadDoors();
  
-    await Athena.database.funcs.createCollection(DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION);
-    await Athena.database.funcs.createCollection(DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION_PROPS);
+    await Athena.database.funcs.createCollection(config.dbCollection);
+    await Athena.database.funcs.createCollection(config.dbCollectionProps);
 });

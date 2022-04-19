@@ -1,8 +1,8 @@
 import * as alt from 'alt-server';
 import IDoorControl from '../../shared/interfaces/IDoorControl';
 
-import { DOORCONTROLLER_SETTINGS, DOORCONTROLLER_TRANSLATIONS } from '../../shared/settings';
-import { DOORCONTROLLER_EVENTS } from '../../shared/defaults/events';
+import { config } from '../../shared/config/index';
+import { DoorControllerEvents } from '../../shared/enums/events';
 import { StreamerService } from '../../../../../server/systems/streamer';
 import { sha256Random } from '../../../../../server/utility/encryption';
 import { ITEM_TYPE } from '../../../../../shared/enums/itemTypes';
@@ -14,6 +14,7 @@ import { ServerTextLabelController } from '../../../../../server/streamers/textl
 import { doorsPropsDefaults } from '../../shared/defaults/doors-props';
 import { InteractionController } from '../../../../../server/systems/interaction';
 import { ANIMATION_FLAGS } from '../../../../../shared/flags/animationFlags';
+import { Translations } from '../../shared/enums/translations';
 
 const globalDoors: Array<IDoorControl> = [];
 const STREAM_RANGE = 25;
@@ -33,7 +34,7 @@ export class DoorController implements IDoorControl {
     }
 
     static update(player: alt.Player, doors: Array<IDoorControl>) {
-        alt.emitClient(player, DOORCONTROLLER_EVENTS.POPULATE_DOORS, doors);
+        alt.emitClient(player, DoorControllerEvents.populateDoors, doors);
     }
 
     static refresh() {
@@ -54,36 +55,36 @@ export class DoorController implements IDoorControl {
         const door = await Athena.database.funcs.fetchData<IDoorControl>(
             '_id',
             id,
-            DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION,
+            config.dbCollection,
         );
     
         let translatedLockstate = door.data.isLocked
-            ? `~r~` + DOORCONTROLLER_TRANSLATIONS.LOCKED
-            : `~g~` + DOORCONTROLLER_TRANSLATIONS.UNLOCKED;
+            ? `~r~` + Translations.Locked
+            : `~g~` + Translations.Unlocked;
     
         door.data.isLocked = !door.data.isLocked;
     
-        if (DOORCONTROLLER_SETTINGS.USE_TEXTLABELS) {
+        if (config.useTextLabels) {
             translatedLockstate = door.data.isLocked
-                ? `~r~` + DOORCONTROLLER_TRANSLATIONS.LOCKED
-                : `~g~` + DOORCONTROLLER_TRANSLATIONS.UNLOCKED;
+                ? `~r~` + Translations.Locked
+                : `~g~` + Translations.Unlocked;
             
             ServerTextLabelController.remove(door._id.toString());
             ServerTextLabelController.append({
                 pos: { x: door.center.x, y: door.center.y, z: door.center.z },
                 data: translatedLockstate,
                 uid: door._id.toString(),
-                maxDistance: DOORCONTROLLER_SETTINGS.TEXTLABEL_RANGE,
+                maxDistance: config.textLabelRange,
             });
         }
     
-        if(DOORCONTROLLER_SETTINGS.USE_ANIMATION) {
+        if(config.useAnimation) {
             Athena.player.emit.animation(
                 player,
-                DOORCONTROLLER_SETTINGS.ANIMATION_DICTIONARY,
-                DOORCONTROLLER_SETTINGS.ANIMATION_NAME,
+                config.animationDictionary,
+                config.animationName,
                 ANIMATION_FLAGS.NORMAL,
-                DOORCONTROLLER_SETTINGS.ANIMATION_DURATION,
+                config.animationDuration,
             );
         }
     
@@ -92,12 +93,12 @@ export class DoorController implements IDoorControl {
             {
                 data: door.data,
             },
-            DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION,
+            config.dbCollection,
         );
     
         alt.log(
             `${door.name} is now ${
-                door.data.isLocked ? '~r~' + DOORCONTROLLER_TRANSLATIONS.LOCKED : '~g~' + DOORCONTROLLER_TRANSLATIONS.UNLOCKED
+                door.data.isLocked ? '~r~' + Translations.Locked : '~g~' + Translations.Unlocked
             }`,
         );
         DoorController.refresh();
@@ -139,7 +140,7 @@ export class DoorController implements IDoorControl {
     
                 await Athena.database.funcs.insertData<IDoorObjects>(
                     doorprop,
-                    DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION_PROPS,
+                    config.dbCollectionProps,
                     false,
                 );
             }
@@ -150,15 +151,15 @@ export class DoorController implements IDoorControl {
         for (let x = 0; x < dbDoors.length; x++) {
             const door = dbDoors[x];
             let translatedLockstate = door.data.isLocked
-                ? `~r~` + DOORCONTROLLER_TRANSLATIONS.LOCKED
-                : `~g~` + DOORCONTROLLER_TRANSLATIONS.UNLOCKED;
+                ? `~r~` + Translations.Locked
+                : `~g~` + Translations.Unlocked;
     
-            if (DOORCONTROLLER_SETTINGS.USE_TEXTLABELS) {
+            if (config.useTextLabels) {
                 ServerTextLabelController.append({
                     pos: { x: door.center.x, y: door.center.y, z: door.center.z },
                     data: translatedLockstate,
                     uid: door._id.toString(),
-                    maxDistance: DOORCONTROLLER_SETTINGS.TEXTLABEL_RANGE,
+                    maxDistance: config.textLabelRange,
                 });
             }
     
@@ -185,22 +186,14 @@ export class DoorController implements IDoorControl {
             `~lg~${ATHENA_DOORCONTROLLER.name} ${ATHENA_DOORCONTROLLER.version} | DATABASE | Loaded ${doorProps.length} default Doors!`,
         );
     }
-    /**
-     * This function returns a promise that resolves to an array of objects that are of type IDoorControl.
-     * @returns An array of IDoorControl objects.
-     */
+
     static async getAll() {
-        return await Athena.database.funcs.fetchAllData<IDoorControl>(DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION);
+        return Athena.database.funcs.fetchAllData<IDoorControl>(config.dbCollection);
     }
 
-    /**
-     * It fetches all the data from the database collection "props" and returns it as an array of
-     * IDoorObjects.
-     * @returns An array of IDoorObjects
-     */
     static async getProps() {
-        return await Athena.database.funcs.fetchAllData<IDoorObjects>(
-            DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION_PROPS,
+        return Athena.database.funcs.fetchAllData<IDoorObjects>(
+            config.dbCollectionProps,
         );
     }
 }
