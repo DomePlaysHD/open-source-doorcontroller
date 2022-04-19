@@ -1,4 +1,4 @@
-import native from 'natives';
+import natives from 'natives';
 
 // >> Thanks to YANN (alt:V Discord - Snippets)
 export function waitUntilDoorIsClosed(entity: number, originOrientationYaw: number): Promise<boolean> {
@@ -12,7 +12,7 @@ export function waitUntilDoorIsClosed(entity: number, originOrientationYaw: numb
             if (i === 5) {
                 clearTimeout(timeout), clearInterval(interval), resolve(true);
             }
-            if (isNumberBetween(originOrientationYaw, native.getEntityRotation(entity, 2).z, 1)) {
+            if (isNumberBetween(originOrientationYaw, natives.getEntityRotation(entity, 2).z, 1)) {
                 i++;
             } else {
                 i = 0;
@@ -27,8 +27,8 @@ export function isNumberBetween(n1: number, n2: number, range: number): boolean 
 
 // Thanks to [RU]zziger (alt:V Discord - Snippets)
 export function getEntityCenter(entity: number) {
-    const [, min, max] = native.getModelDimensions(native.getEntityModel(entity));
-    return native.getOffsetFromEntityInWorldCoords(
+    const [, min, max] = natives.getModelDimensions(natives.getEntityModel(entity));
+    return natives.getOffsetFromEntityInWorldCoords(
         entity,
         (min.x + max.x) / 2,
         (min.y + max.y) / 2,
