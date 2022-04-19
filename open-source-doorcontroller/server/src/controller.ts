@@ -107,7 +107,7 @@ export class DoorController {
         Athena.player.save.field(player, 'inventory', player.data.inventory);
         Athena.player.sync.inventory(player);
 
-        alt.logWarning(`DoorController created ${keyName} and added it Athena's ItemFactory!`);
+        alt.logWarning(`DoorController created ${keyName} and added it to Athena's ItemFactory!`);
     }
 
     static async loadDoors() {
