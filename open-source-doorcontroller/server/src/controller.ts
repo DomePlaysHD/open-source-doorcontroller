@@ -178,7 +178,7 @@ export class DoorController {
                 },
 
                 pos: door.pos,
-                rotation: door.rotation,
+                rot: door.rotation,
                 center: door.center,
                 version: null
             };
