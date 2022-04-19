@@ -63,28 +63,7 @@ alt.onClient(DOORCONTROLLER_EVENTS.CREATE_DOOR, async (player: alt.Player, prop:
         return;
     }
 });
-/* 
-alt.onClient(DOORCONTROLLER_EVENTS.REMOVE_DOOR, async (player: alt.Player) => {
-    const allDoors = await Database.fetchAllData<IDoorControl>('doors');
-    for (let x = 0; x < allDoors.length; x++) {
-        const door = allDoors[x];
-        if (player.pos.isInRange(door.pos as alt.Vector3, 2)) {
-            Athena.player.emit.notification(
-                player,
-                `~g~AthenaDoorController => ~w~Successfully removed Door ~g~${door.name} ~w~| ~g~${door.data.prop} ~w~| ~g~${door.data.hash}.`,
-            );
-            door.data.isLocked = false;
-            updateLockstate(door._id, false);
 
-            InteractionController.remove(`door-${door._id}`);
-            ServerTextLabelController.remove(`door-${door._id.toString()}`);
-
-            await Database.deleteById(door._id, 'doors');
-            DoorController.refresh();
-        }
-    }
-});
-*/
 PlayerEvents.on(ATHENA_EVENTS_PLAYER.SELECTED_CHARACTER, async (player: alt.Player) => {
     player.setLocalMeta('Permissionlevel', player.accountData.permissionLevel);
 
