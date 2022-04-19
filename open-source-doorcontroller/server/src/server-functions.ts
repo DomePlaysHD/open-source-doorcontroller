@@ -13,6 +13,7 @@ import { DoorController } from './controller';
 import { SYSTEM_EVENTS } from '../../../../../shared/enums/system';
 import { PlayerEvents } from '../../../../../server/events/playerEvents';
 import { Athena } from '../../../../../server/api/athena';
+import { DOORCONTROLLER_EVENTS } from '../../shared/defaults/events';
 
 export async function updateLockstate(doorId: string, isLocked: boolean) {
     const door = await Athena.database.funcs.fetchData<IDoorControl>('_id', doorId, DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION);
@@ -115,5 +116,5 @@ alt.on(SYSTEM_EVENTS.BOOTUP_ENABLE_ENTRY, async () => {
 });
 
 PlayerEvents.on(ATHENA_EVENTS_PLAYER.SELECTED_CHARACTER, (player: alt.Player) => {
-    alt.emitClient(player, 'DCTest', dbDoorArray);
+    alt.emitClient(player, DOORCONTROLLER_EVENTS.FILL_ARRAY, dbDoorArray);
 });

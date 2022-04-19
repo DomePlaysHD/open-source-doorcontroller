@@ -1,4 +1,5 @@
 export enum DOORCONTROLLER_EVENTS {
+    FILL_ARRAY = 'DoorController:FillArray',
     POPULATE_DOORS = 'DoorController:PopulateDoors',
 
     CREATE_DOOR = 'DoorController:AddDoor',
