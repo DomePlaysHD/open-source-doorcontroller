@@ -7,11 +7,11 @@ import { sha256Random } from '../../../../../server/utility/encryption';
 import { ATHENA_EVENTS_PLAYER } from '../../../../../shared/enums/athenaEvents';
 import { config } from '../../shared/config/index';
 import { DoorControllerEvents } from '../../shared/enums/events';
-import IDoor from '../../shared/interfaces/IDoor';
+import { IDoorOld } from '../../shared/interfaces/IDoorOld';
 import { DoorController } from './controller';
 
 alt.onClient(DoorControllerEvents.createDoor, async (player: alt.Player, prop: string, data) => {
-    const door: IDoor = {
+    const door: IDoorOld = {
         name: data.doorName,
         data: {
             prop: prop,
@@ -32,7 +32,7 @@ alt.onClient(DoorControllerEvents.createDoor, async (player: alt.Player, prop: s
         center: data.center,
     };
 
-    const dbDoor = await Athena.database.funcs.fetchData<IDoor>(
+    const dbDoor = await Athena.database.funcs.fetchData<IDoorOld>(
         'pos',
         data.position,
         config.dbCollection,
@@ -65,5 +65,5 @@ alt.onClient(DoorControllerEvents.createDoor, async (player: alt.Player, prop: s
 PlayerEvents.on(ATHENA_EVENTS_PLAYER.SPAWNED, async (player: alt.Player) => {
     player.setLocalMeta('Permissionlevel', player.accountData.permissionLevel);
     const allDoors = await DoorController.getAll();
-    DoorController.update(player, allDoors);
+    DoorController.update(player, allDoors as IDoorOld[]);
 });

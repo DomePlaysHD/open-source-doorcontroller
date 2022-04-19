@@ -13,8 +13,10 @@ import { DoorControllerEvents } from '../../shared/enums/events';
 import { Translations } from '../../shared/enums/translations';
 import IDoor from '../../shared/interfaces/IDoor';
 import IDoorObjects from '../../shared/interfaces/IDoorObjects';
+import { IDoorOld } from '../../shared/interfaces/IDoorOld';
+import { dbDoorArray } from './server-functions';
 
-const globalDoors: Array<IDoor> = [];
+const globalDoors: Array<IDoorOld> = [];
 const STREAM_RANGE = 25;
 const KEY = 'doors';
 
@@ -23,7 +25,7 @@ export class DoorController {
         StreamerService.registerCallback(KEY, DoorController.update, STREAM_RANGE);
     }
 
-    static update(player: alt.Player, doors: Array<IDoor>) {
+    static update(player: alt.Player, doors: Array<IDoorOld>) {
         alt.emitClient(player, DoorControllerEvents.populateDoors, doors);
     }
 
@@ -31,7 +33,7 @@ export class DoorController {
         StreamerService.updateData(KEY, globalDoors);
     }
 
-    static append(door: IDoor): string {
+    static append(door: IDoorOld): string {
         if (!door._id) {
             door._id = sha256Random(JSON.stringify(door));
         }
@@ -42,7 +44,7 @@ export class DoorController {
     }
 
     static async updateDoor(player: alt.Player, id: string) {
-        const door = await Athena.database.funcs.fetchData<IDoor>('_id', id, config.dbCollection);
+        const door = await Athena.database.funcs.fetchData<IDoorOld>('_id', id, config.dbCollection);
 
         let translatedLockstate = door.data.isLocked ? `~r~` + Translations.Locked : `~g~` + Translations.Unlocked;
 
@@ -125,7 +127,7 @@ export class DoorController {
 
         const dbDoors = await DoorController.getAll();
         for (let x = 0; x < dbDoors.length; x++) {
-            const door = dbDoors[x];
+            const door = dbDoors[x] as IDoorOld;
             let translatedLockstate = door.data.isLocked ? `~r~` + Translations.Locked : `~g~` + Translations.Unlocked;
 
             if (config.useTextLabels) {
@@ -152,17 +154,13 @@ export class DoorController {
             DoorController.refresh();
         }
 
-        alt.log(`~lg~${config.pluginName} ${config.pluginVersion} | DATABASE | Loaded ${dbDoors.length} Doors!`);
-
-        alt.log(
-            `~lg~${config.pluginName} ${config.pluginVersion} | DATABASE | Loaded ${doorProps.length} default Doors!`,
-        );
+        alt.log(`~lg~${config.pluginName} ${config.pluginVersion} | DATABASE | Loaded ${dbDoors.length} Doors & ${dbDoorArray.length} GTA:V default door props!`);
     }
 
     static async convertInterface() {
         const dbDoors = await this.getAll();
         for (let x = 0; x < dbDoors.length; x++) {
-            const door = dbDoors[x];
+            const door = dbDoors[x] as IDoorOld;
             const updatedDoor: IDoor = {
                 _id: door._id,
                 door: {
@@ -182,12 +180,13 @@ export class DoorController {
                 pos: door.pos,
                 rotation: door.rotation,
                 center: door.center,
+                version: null
             };
-            if (!door.version) {
+            if (updatedDoor.version !== null) {
                 await Athena.database.funcs.updatePartialData(
                     updatedDoor._id.toString(),
-                    { updatedDoor},
-                    config.dbCollection
+                    {  version: updatedDoor.version },
+                    config.dbCollection,
                 );
                 alt.log('DoorController: Converting door interface...');
                 alt.log(`Updated ${dbDoors.length} doors!`);
@@ -196,7 +195,7 @@ export class DoorController {
     }
 
     static async getAll() {
-        return Athena.database.funcs.fetchAllData<IDoor>(config.dbCollection);
+        return Athena.database.funcs.fetchAllData<Partial<IDoorOld> | Partial<IDoor>>(config.dbCollection);
     }
 
     static async getProps() {
