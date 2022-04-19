@@ -15,8 +15,40 @@ import { PlayerEvents } from '../../../../../server/events/playerEvents';
 import { Athena } from '../../../../../server/api/athena';
 import { DOORCONTROLLER_EVENTS } from '../../shared/defaults/events';
 
-export async function updateLockstate(doorId: string, isLocked: boolean) {
-    const door = await Athena.database.funcs.fetchData<IDoorControl>('_id', doorId, DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION);
+export async function updateLockstate(player: alt.Player, doorId: string, isLocked: boolean) {
+    const door = await Athena.database.funcs.fetchData<IDoorControl>(
+        '_id',
+        doorId,
+        DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION,
+    );
+
+    let translatedLockstate = door.data.isLocked
+    ? `~r~` + DOORCONTROLLER_TRANSLATIONS.LOCKED
+    : `~g~` + DOORCONTROLLER_TRANSLATIONS.UNLOCKED;
+
+    door.data.isLocked = !door.data.isLocked;
+
+    if (DOORCONTROLLER_SETTINGS.USE_TEXTLABELS) {
+        translatedLockstate = door.data.isLocked
+            ? `~r~` + DOORCONTROLLER_TRANSLATIONS.LOCKED
+            : `~g~` + DOORCONTROLLER_TRANSLATIONS.UNLOCKED;
+        ServerTextLabelController.remove(door._id.toString());
+        ServerTextLabelController.append({
+            pos: { x: door.center.x, y: door.center.y, z: door.center.z },
+            data: translatedLockstate,
+            uid: door._id.toString(),
+            maxDistance: DOORCONTROLLER_SETTINGS.TEXTLABEL_RANGE,
+        });
+    }
+
+    Athena.player.emit.animation(
+        player,
+        DOORCONTROLLER_SETTINGS.ANIMATION_DICTIONARY,
+        DOORCONTROLLER_SETTINGS.ANIMATION_NAME,
+        ANIMATION_FLAGS.NORMAL,
+        DOORCONTROLLER_SETTINGS.ANIMATION_DURATION,
+    );
+    
     await Athena.database.funcs.updatePartialData(
         doorId,
         {
@@ -26,6 +58,7 @@ export async function updateLockstate(doorId: string, isLocked: boolean) {
         },
         DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION,
     );
+    
     alt.log(
         `${door.name} is now ${
             isLocked ? '~g~' + DOORCONTROLLER_TRANSLATIONS.UNLOCKED : '~r~' + DOORCONTROLLER_TRANSLATIONS.LOCKED
@@ -35,7 +68,9 @@ export async function updateLockstate(doorId: string, isLocked: boolean) {
 }
 
 export async function loadDoors() {
-    let doorProps = await Athena.database.funcs.fetchAllData<IDoorObjects>(DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION_PROPS);
+    let doorProps = await Athena.database.funcs.fetchAllData<IDoorObjects>(
+        DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION_PROPS,
+    );
 
     if (!doorProps || doorProps.length <= 0) {
         for (let i = 0; i < doorsPropsDefaults.length; i++) {
@@ -43,9 +78,15 @@ export async function loadDoors() {
                 name: doorsPropsDefaults[i].name,
                 hash: doorsPropsDefaults[i].hash,
             };
-            await Athena.database.funcs.insertData<IDoorObjects>(doorprop, DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION_PROPS, false);
+            await Athena.database.funcs.insertData<IDoorObjects>(
+                doorprop,
+                DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION_PROPS,
+                false,
+            );
         }
-        doorProps = await Athena.database.funcs.fetchAllData<IDoorObjects>(DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION_PROPS);
+        doorProps = await Athena.database.funcs.fetchAllData<IDoorObjects>(
+            DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION_PROPS,
+        );
     }
 
     const dbDoors = await Athena.database.funcs.fetchAllData<IDoorControl>(DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION);
@@ -70,8 +111,8 @@ export async function loadDoors() {
             range: 1,
             position: { x: door.pos.x, y: door.pos.y, z: door.pos.z - 1 },
             callback: (player: alt.Player) => {
-                door.data.isLocked = !door.data.isLocked;
-                
+                /* door.data.isLocked = !door.data.isLocked;
+
                 if (DOORCONTROLLER_SETTINGS.USE_TEXTLABELS) {
                     translatedLockstate = door.data.isLocked
                         ? `~r~` + DOORCONTROLLER_TRANSLATIONS.LOCKED
@@ -91,9 +132,9 @@ export async function loadDoors() {
                     DOORCONTROLLER_SETTINGS.ANIMATION_NAME,
                     ANIMATION_FLAGS.NORMAL,
                     DOORCONTROLLER_SETTINGS.ANIMATION_DURATION,
-                );
+                ); */
 
-                updateLockstate(door._id, door.data.isLocked);
+                updateLockstate(player, door._id, door.data.isLocked);
             },
         });
         DoorController.append(door);
@@ -109,7 +150,9 @@ export async function loadDoors() {
 
 export const dbDoorArray = Array<IDoorObjects>();
 alt.on(SYSTEM_EVENTS.BOOTUP_ENABLE_ENTRY, async () => {
-    const databaseDoors = await Athena.database.funcs.fetchAllData<IDoorObjects>(DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION_PROPS);
+    const databaseDoors = await Athena.database.funcs.fetchAllData<IDoorObjects>(
+        DOORCONTROLLER_SETTINGS.DATABASE_COLLECTION_PROPS,
+    );
     for (let i = 0; i < databaseDoors.length; i++) {
         dbDoorArray.push(databaseDoors[i]);
     }
