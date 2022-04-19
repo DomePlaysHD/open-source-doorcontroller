@@ -1,11 +1,11 @@
 import alt from 'alt-client';
 import natives from 'natives';
-import IDoorControl from '../../shared/interfaces/IDoorControl';
-import IDoorObjects from '../../shared/interfaces/IDoorObjects';
-
-import { waitUntilDoorIsClosed } from './client-functions';
 import { WebViewController } from '../../../../../client/extensions/view2';
 import { DoorControllerEvents } from '../../shared/enums/events';
+import IDoorControl from '../../shared/interfaces/IDoorControl';
+import IDoorObjects from '../../shared/interfaces/IDoorObjects';
+import { waitUntilDoorIsClosed } from './client-functions';
+
 
 const view = await WebViewController.get();
 export let clientDoorArray: IDoorObjects [] = [];

@@ -1,6 +1,5 @@
 import alt from 'alt-client';
 import natives from 'natives';
-
 import { clientDoorArray } from './client-events';
 import { getEntityCenter } from './client-functions';
 

@@ -1,13 +1,13 @@
 import * as alt from 'alt-server';
-
-import { config } from '../shared/config/index';
-import { DoorController } from './src/controller';
-import { PluginSystem } from '../../../../server/systems/plugins';
 import { Athena } from '../../../../server/api/athena';
-
+import { PluginSystem } from '../../../../server/systems/plugins';
+import { config } from '../shared/config/index';
 import './src/controller';
+import { DoorController } from './src/controller';
 import './src/server-events';
 import './src/server-functions';
+
+
 
 export const ATHENA_DOORCONTROLLER = {
     name: 'Athena DoorController',

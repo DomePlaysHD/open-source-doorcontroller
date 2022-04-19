@@ -1,10 +1,10 @@
 import alt from 'alt-client';
-import ViewModel from '../../../../../client/models/viewModel';
-
-import { config } from '../../shared/config/index';
 import { WebViewController } from '../../../../../client/extensions/view2';
-import { DoorController } from './controller';
+import ViewModel from '../../../../../client/models/viewModel';
 import { isAnyMenuOpen } from '../../../../../client/utility/menus';
+import { config } from '../../shared/config/index';
+import { DoorController } from './controller';
+
 
 const PAGE_NAME = 'DoorController';
 let door: (string | alt.Vector3)[];

@@ -1,15 +1,15 @@
 import * as alt from 'alt-server';
-import IDoorControl from '../../shared/interfaces/IDoorControl';
-
-import { ServerTextLabelController } from '../../../../../server/streamers/textlabel';
-import { config } from '../../shared/config/index';
-import { InteractionController } from '../../../../../server/systems/interaction';
-import { ATHENA_EVENTS_PLAYER } from '../../../../../shared/enums/athenaEvents';
-import { DoorController } from './controller';
-import { PlayerEvents } from '../../../../../server/events/playerEvents';
-import { sha256Random } from '../../../../../server/utility/encryption';
 import { Athena } from '../../../../../server/api/athena';
+import { PlayerEvents } from '../../../../../server/events/playerEvents';
+import { ServerTextLabelController } from '../../../../../server/streamers/textlabel';
+import { InteractionController } from '../../../../../server/systems/interaction';
+import { sha256Random } from '../../../../../server/utility/encryption';
+import { ATHENA_EVENTS_PLAYER } from '../../../../../shared/enums/athenaEvents';
+import { config } from '../../shared/config/index';
 import { DoorControllerEvents } from '../../shared/enums/events';
+import IDoorControl from '../../shared/interfaces/IDoorControl';
+import { DoorController } from './controller';
+
 
 alt.onClient(DoorControllerEvents.createDoor, async (player: alt.Player, prop: string, data) => {
     const door: IDoorControl = {

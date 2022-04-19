@@ -1,17 +1,17 @@
 import * as alt from 'alt-server';
-import IDoorControl from '../../shared/interfaces/IDoorControl';
-import IDoorObjects from '../../shared/interfaces/IDoorObjects';
-
-import { config } from '../../shared/config/index';
+import { Athena } from '../../../../../server/api/athena';
+import { PlayerEvents } from '../../../../../server/events/playerEvents';
 import { ServerTextLabelController } from '../../../../../server/streamers/textlabel';
 import { ATHENA_EVENTS_PLAYER } from '../../../../../shared/enums/athenaEvents';
-import { ANIMATION_FLAGS } from '../../../../../shared/flags/animationFlags';
-import { DoorController } from './controller';
 import { SYSTEM_EVENTS } from '../../../../../shared/enums/system';
-import { PlayerEvents } from '../../../../../server/events/playerEvents';
-import { Athena } from '../../../../../server/api/athena';
+import { ANIMATION_FLAGS } from '../../../../../shared/flags/animationFlags';
+import { config } from '../../shared/config/index';
 import { DoorControllerEvents } from '../../shared/enums/events';
 import { Translations } from '../../shared/enums/translations';
+import IDoorControl from '../../shared/interfaces/IDoorControl';
+import IDoorObjects from '../../shared/interfaces/IDoorObjects';
+import { DoorController } from './controller';
+
 
 export async function updateLockstate(player: alt.Player, doorId: string, isLocked: boolean) {
     const door = await Athena.database.funcs.fetchData<IDoorControl>('_id', doorId, config.dbCollection);

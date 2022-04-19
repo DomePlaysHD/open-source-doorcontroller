@@ -1,20 +1,20 @@
 import * as alt from 'alt-server';
-import IDoorControl from '../../shared/interfaces/IDoorControl';
-
-import { config } from '../../shared/config/index';
-import { DoorControllerEvents } from '../../shared/enums/events';
+import { ATHENA_DOORCONTROLLER } from '..';
+import { Athena } from '../../../../../server/api/athena';
+import { ServerTextLabelController } from '../../../../../server/streamers/textlabel';
+import { InteractionController } from '../../../../../server/systems/interaction';
 import { StreamerService } from '../../../../../server/systems/streamer';
 import { sha256Random } from '../../../../../server/utility/encryption';
 import { ITEM_TYPE } from '../../../../../shared/enums/itemTypes';
-import { Athena } from '../../../../../server/api/athena';
-import { Item } from '../../../../../shared/interfaces/item';
-import IDoorObjects from '../../shared/interfaces/IDoorObjects';
-import { ATHENA_DOORCONTROLLER } from '..';
-import { ServerTextLabelController } from '../../../../../server/streamers/textlabel';
-import { doorsPropsDefaults } from '../../shared/defaults/doors-props';
-import { InteractionController } from '../../../../../server/systems/interaction';
 import { ANIMATION_FLAGS } from '../../../../../shared/flags/animationFlags';
+import { Item } from '../../../../../shared/interfaces/item';
+import { config } from '../../shared/config/index';
+import { doorsPropsDefaults } from '../../shared/defaults/doors-props';
+import { DoorControllerEvents } from '../../shared/enums/events';
 import { Translations } from '../../shared/enums/translations';
+import IDoorControl from '../../shared/interfaces/IDoorControl';
+import IDoorObjects from '../../shared/interfaces/IDoorObjects';
+
 
 const globalDoors: Array<IDoorControl> = [];
 const STREAM_RANGE = 25;
