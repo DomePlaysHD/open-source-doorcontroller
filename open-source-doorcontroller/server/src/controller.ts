@@ -12,15 +12,15 @@ import { config } from '../../shared/config/index';
 import { doorsPropsDefaults } from '../../shared/defaults/doors-props';
 import { DoorControllerEvents } from '../../shared/enums/events';
 import { Translations } from '../../shared/enums/translations';
-import IDoorControl from '../../shared/interfaces/IDoorControl';
+import IDoor from '../../shared/interfaces/IDoor';
 import IDoorObjects from '../../shared/interfaces/IDoorObjects';
 
 
-const globalDoors: Array<IDoorControl> = [];
+const globalDoors: Array<IDoor> = [];
 const STREAM_RANGE = 25;
 const KEY = 'doors';
 
-export class DoorController implements IDoorControl {
+export class DoorController implements IDoor{
     _id?: string;
     name: string;
     data: { prop?: string; hash?: number; isLocked?: boolean; faction?: string };
@@ -33,7 +33,7 @@ export class DoorController implements IDoorControl {
         StreamerService.registerCallback(KEY, DoorController.update, STREAM_RANGE);
     }
 
-    static update(player: alt.Player, doors: Array<IDoorControl>) {
+    static update(player: alt.Player, doors: Array<IDoor>) {
         alt.emitClient(player, DoorControllerEvents.populateDoors, doors);
     }
 
@@ -41,7 +41,7 @@ export class DoorController implements IDoorControl {
         StreamerService.updateData(KEY, globalDoors);
     }
 
-    static append(door: IDoorControl): string {
+    static append(door: IDoor): string {
         if (!door._id) {
             door._id = sha256Random(JSON.stringify(door));
         }
@@ -52,7 +52,7 @@ export class DoorController implements IDoorControl {
     }
 
     static async updateDoor(player: alt.Player, id: string, ) {
-        const door = await Athena.database.funcs.fetchData<IDoorControl>(
+        const door = await Athena.database.funcs.fetchData<IDoor>(
             '_id',
             id,
             config.dbCollection,
@@ -188,7 +188,7 @@ export class DoorController implements IDoorControl {
     }
 
     static async getAll() {
-        return Athena.database.funcs.fetchAllData<IDoorControl>(config.dbCollection);
+        return Athena.database.funcs.fetchAllData<IDoor>(config.dbCollection);
     }
 
     static async getProps() {

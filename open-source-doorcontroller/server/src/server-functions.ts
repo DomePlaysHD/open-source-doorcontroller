@@ -8,13 +8,13 @@ import { ANIMATION_FLAGS } from '../../../../../shared/flags/animationFlags';
 import { config } from '../../shared/config/index';
 import { DoorControllerEvents } from '../../shared/enums/events';
 import { Translations } from '../../shared/enums/translations';
-import IDoorControl from '../../shared/interfaces/IDoorControl';
+import IDoor from '../../shared/interfaces/IDoor';
 import IDoorObjects from '../../shared/interfaces/IDoorObjects';
 import { DoorController } from './controller';
 
 
 export async function updateLockstate(player: alt.Player, doorId: string, isLocked: boolean) {
-    const door = await Athena.database.funcs.fetchData<IDoorControl>('_id', doorId, config.dbCollection);
+    const door = await Athena.database.funcs.fetchData<IDoor>('_id', doorId, config.dbCollection);
 
     let translatedLockstate = door.data.isLocked ? `~r~` + Translations.Locked : `~g~` + Translations.Unlocked;
 

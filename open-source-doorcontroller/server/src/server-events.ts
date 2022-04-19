@@ -7,11 +7,11 @@ import { sha256Random } from '../../../../../server/utility/encryption';
 import { ATHENA_EVENTS_PLAYER } from '../../../../../shared/enums/athenaEvents';
 import { config } from '../../shared/config/index';
 import { DoorControllerEvents } from '../../shared/enums/events';
-import IDoorControl from '../../shared/interfaces/IDoorControl';
+import IDoor from '../../shared/interfaces/IDoor';
 import { DoorController } from './controller';
 
 alt.onClient(DoorControllerEvents.createDoor, async (player: alt.Player, prop: string, data) => {
-    const door: IDoorControl = {
+    const door: IDoor = {
         name: data.doorName,
         data: {
             prop: prop,
@@ -32,7 +32,7 @@ alt.onClient(DoorControllerEvents.createDoor, async (player: alt.Player, prop: s
         center: data.center,
     };
 
-    const dbDoor = await Athena.database.funcs.fetchData<IDoorControl>(
+    const dbDoor = await Athena.database.funcs.fetchData<IDoor>(
         'pos',
         data.position,
         config.dbCollection,

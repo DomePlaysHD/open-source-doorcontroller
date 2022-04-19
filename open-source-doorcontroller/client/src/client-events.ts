@@ -2,7 +2,7 @@ import alt from 'alt-client';
 import natives from 'natives';
 import { WebViewController } from '../../../../../client/extensions/view2';
 import { DoorControllerEvents } from '../../shared/enums/events';
-import IDoorControl from '../../shared/interfaces/IDoorControl';
+import IDoor from '../../shared/interfaces/IDoor';
 import IDoorObjects from '../../shared/interfaces/IDoorObjects';
 import { waitUntilDoorIsClosed } from './client-functions';
 
@@ -21,7 +21,7 @@ alt.onServer(DoorControllerEvents.fillArray, (dbDoors: Array<IDoorObjects>) => {
     clientDoorArray = dbDoors;
 });
 
-alt.onServer(DoorControllerEvents.populateDoors, async (doors: Array<IDoorControl>) => {
+alt.onServer(DoorControllerEvents.populateDoors, async (doors: Array<IDoor>) => {
     for (let x = 0; x < doors.length; x++) {
         const door = doors[x];
         const closestDoor = natives.getClosestObjectOfType(

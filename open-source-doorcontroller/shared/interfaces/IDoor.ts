@@ -1,6 +1,6 @@
 import { Vector3 } from "alt-shared";
 
-export default interface IDoorControl {
+export default interface IDoor {
     _id?: string;
     name: string;
     data: {
