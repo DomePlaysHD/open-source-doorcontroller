@@ -22,7 +22,7 @@ alt.onServer(DOORCONTROLLER_EVENTS.POPULATE_DOORS, async (doors: Array<IDoorCont
             door.pos.y,
             door.pos.z,
             2,
-            door.data.hash,
+            alt.hash(door.data.prop),
             false,
             false,
             false,
