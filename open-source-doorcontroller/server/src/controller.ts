@@ -175,8 +175,6 @@ export class DoorController implements IDoorControl {
     
             DoorController.append(door);
             DoorController.refresh();
-    
-            alt.logError(JSON.stringify(door));
         }
     
         alt.log(
