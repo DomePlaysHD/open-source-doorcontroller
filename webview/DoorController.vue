@@ -14,13 +14,18 @@ import DoorsBody from './components/body/DoorsBody.vue';
 // @ts-ignore
 import DoorsFooter from './components/footer/DoorsFooter.vue';
 
-import { onMounted, onUnmounted } from 'vue';
+import { defineComponent, onMounted, onUnmounted } from 'vue';
 import { DoorControllerEvents } from '../shared/enums/events';
+
+defineComponent({
+    name: 'DoorController'
+});
+
 onMounted(() => {
     if ('alt' in window) {
         if ('alt' in window) {
             alt.emit(`DoorController:Ready`);
-            alt.on(DoorControllerEvents.pushDoorObject, pushDoorObject);
+            alt.on(DoorControllerEvents.pushDefaultDoor, pushDefaultDoor);
         }
         document.addEventListener('keyup', handleKeyPress);
     }
@@ -28,7 +33,7 @@ onMounted(() => {
 
 onUnmounted(() => {
     if ('alt' in window) {
-        alt.off(DoorControllerEvents.pushDoorObject, pushDoorObject);
+        alt.off(DoorControllerEvents.pushDefaultDoor, pushDefaultDoor);
     }
     document.removeEventListener('keyup', handleKeyPress);
 });
@@ -43,7 +48,7 @@ let models: Object = {
     prop: '',
 }
 
-function pushDoorObject() {}
+function pushDefaultDoor() {}
 function handleKeyPress(e: { keyCode: number }) {
     if (e.keyCode === 27 && 'alt' in window) {
         alt.emit(`DoorController:Close`);

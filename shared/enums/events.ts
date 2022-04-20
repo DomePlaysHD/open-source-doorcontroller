@@ -6,7 +6,7 @@ export const enum DoorControllerEvents {
     updateLockState = 'DoorController:UpdateLockstate',
     
     populateDoors = 'DoorController:PopulateDoors',
-    pushDoorObject = 'DoorController:PushDoorObject',
+    pushDefaultDoor = 'DoorController:PushDefaultDoor',
     removeDoor = 'DoorController:RemoveDoor',
     openWebview = 'DoorController:OpenWebview',
 }

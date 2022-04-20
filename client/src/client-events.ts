@@ -45,7 +45,7 @@ alt.onServer(DoorControllerEvents.populateDoors, async (doors: Array<IDoorOld>) 
         if (door.data.isLocked) {
             natives.freezeEntityPosition(closestDoor, true);
             natives.setEntityRotation(closestDoor, defaultRotation.x, defaultRotation.y, defaultRotation.z, 2, false);
-        } else if (!door.data.isLocked) {
+        } else {
             natives.freezeEntityPosition(closestDoor, false);
         }
     }

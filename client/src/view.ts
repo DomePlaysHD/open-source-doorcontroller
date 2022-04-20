@@ -49,13 +49,13 @@ class InternalFunctions implements ViewModel {
 
     static async ready() {
         const view = await WebViewController.get();
-        view.emit(DoorControllerEvents.pushDoorObject, door);
+        view.emit(DoorControllerEvents.pushDefaultDoor, door);
     }
 }
 
 alt.on('keydown', (key) => {
     if (key == config.keyToOpenUi) {
-        if (alt.getLocalMeta('Permissionlevel') >= config.permissionsRequired) {
+        if (alt.getLocalMeta('permissionLevel') >= config.permissionsRequired) {
             InternalFunctions.open();
             door = DoorController.checkNearDoors();
         }

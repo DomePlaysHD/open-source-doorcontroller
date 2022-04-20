@@ -62,8 +62,8 @@ alt.onClient(DoorControllerEvents.createDoor, async (player: alt.Player, prop: s
     }
 });
 
-PlayerEvents.on(ATHENA_EVENTS_PLAYER.SPAWNED, async (player: alt.Player) => {
-    player.setLocalMeta('Permissionlevel', player.accountData.permissionLevel);
+PlayerEvents.on(ATHENA_EVENTS_PLAYER.SELECTED_CHARACTER, async (player: alt.Player) => {
+    player.setLocalMeta('permissionLevel', player.accountData.permissionLevel);
     const allDoors = await DoorController.getAll();
     DoorController.update(player, allDoors as IDoorOld[]);
 });
