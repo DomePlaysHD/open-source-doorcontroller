@@ -1,8 +1,9 @@
 import alt from 'alt-client';
-import { WebViewController } from '../../../../../client/extensions/view2';
-import ViewModel from '../../../../../client/models/viewModel';
-import { isAnyMenuOpen } from '../../../../../client/utility/menus';
+import { WebViewController } from '../../../../client/extensions/view2';
+import ViewModel from '../../../../client/models/viewModel';
+import { isAnyMenuOpen } from '../../../../client/utility/menus';
 import { config } from '../../shared/config/index';
+import { DoorControllerEvents } from '../../shared/enums/events';
 import { DoorController } from './controller';
 
 
@@ -48,7 +49,7 @@ class InternalFunctions implements ViewModel {
 
     static async ready() {
         const view = await WebViewController.get();
-        view.emit(`${PAGE_NAME}:SetDoor`, door);
+        view.emit(DoorControllerEvents.pushDoorObject, door);
     }
 }
 

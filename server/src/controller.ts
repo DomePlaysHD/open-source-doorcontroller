@@ -1,12 +1,13 @@
 import * as alt from 'alt-server';
-import { Athena } from '../../../../../server/api/athena';
-import { ServerTextLabelController } from '../../../../../server/streamers/textlabel';
-import { InteractionController } from '../../../../../server/systems/interaction';
-import { StreamerService } from '../../../../../server/systems/streamer';
-import { sha256Random } from '../../../../../server/utility/encryption';
-import { ITEM_TYPE } from '../../../../../shared/enums/itemTypes';
-import { ANIMATION_FLAGS } from '../../../../../shared/flags/animationFlags';
-import { Item } from '../../../../../shared/interfaces/item';
+import { Athena } from '../../../../server/api/athena';
+import { ServerTextLabelController } from '../../../../server/streamers/textlabel';
+import { InteractionController } from '../../../../server/systems/interaction';
+import { StreamerService } from '../../../../server/systems/streamer';
+import { sha256Random } from '../../../../server/utility/encryption';
+import { ITEM_TYPE } from '../../../../shared/enums/itemTypes';
+import { ANIMATION_FLAGS } from '../../../../shared/flags/animationFlags';
+import { Item } from '../../../../shared/interfaces/item';
+
 import { config } from '../../shared/config/index';
 import { doorsPropsDefaults } from '../../shared/defaults/doors-props';
 import { DoorControllerEvents } from '../../shared/enums/events';
@@ -134,7 +135,7 @@ export class DoorController {
                 ServerTextLabelController.append({
                     pos: { x: door.center.x, y: door.center.y, z: door.center.z },
                     data: translatedLockstate,
-                    uid: door._id.toString(),
+                  uid: door._id.toString(),
                     maxDistance: config.textLabelRange,
                 });
             }

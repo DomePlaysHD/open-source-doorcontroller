@@ -1,6 +1,7 @@
 import alt from 'alt-client';
 import natives from 'natives';
-import { WebViewController } from '../../../../../client/extensions/view2';
+
+import { WebViewController } from '../../../../client/extensions/view2';
 import { DoorControllerEvents } from '../../shared/enums/events';
 import IDoorObjects from '../../shared/interfaces/IDoorObjects';
 import { IDoorOld } from '../../shared/interfaces/IDoorOld';

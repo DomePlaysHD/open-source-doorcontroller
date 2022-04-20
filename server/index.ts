@@ -1,6 +1,6 @@
 import * as alt from 'alt-server';
-import { Athena } from '../../../../server/api/athena';
-import { PluginSystem } from '../../../../server/systems/plugins';
+import { Athena } from '../../../server/api/athena';
+import { PluginSystem } from '../../../server/systems/plugins';
 import { config } from '../shared/config/index';
 import './src/controller';
 import { DoorController } from './src/controller';

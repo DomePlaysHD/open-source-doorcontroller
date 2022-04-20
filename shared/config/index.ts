@@ -1,4 +1,4 @@
-import { PERMISSIONS } from "../../../../../shared/flags/permissionFlags";
+import { PERMISSIONS } from "../../../../shared/flags/permissionFlags";
 
 export const config = {
     pluginName: 'Athena-OSDoorController',
