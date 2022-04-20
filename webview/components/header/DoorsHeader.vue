@@ -1,7 +1,7 @@
 <template>
     <div class="doors-header">
         <div class="header-close-bar">
-            <button class="close">Close Manager <Icon icon="icon-exit" :size="14" /></button>
+            <button class="close">Close Manager</button>
         </div>
 
         <div class="header-title">
@@ -11,6 +11,7 @@
 </template>
 
 <script lang="ts" setup>
+// @ts-ignore
 import Icon from '@components/Icon.vue';
 defineProps({
     firstLine: {
@@ -28,12 +29,8 @@ defineProps({
 
     height: 200px;
     width: 100%;
-    background-color: #000000;
+    background: linear-gradient(rgb(90, 172, 223), rgb(15, 50, 147, 0.7));
     border-radius: 15px 15px 0 0;
-    & > p {
-        display: inline-flex;
-        align-self: center;
-    }
 }
 
 .header-close-bar {
@@ -47,6 +44,7 @@ defineProps({
     height: 50px;
     background-color: variables.$bar-color;
     border-radius: 15px 15px 0 0;
+
     & .close {
         height: 40px;
         width: 160px;
@@ -54,7 +52,9 @@ defineProps({
         border: 0px;
         color: white;
         transition: 0.5s !important;
+        font-family: variables.$font-stack;
     }
+
     & .close:hover {
         background: variables.$button-color-hover;
         transition: 0.5s !important;

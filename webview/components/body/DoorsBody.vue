@@ -4,18 +4,23 @@
             <button>Default Door</button>
             <button>Custom Door</button>
             <button>Remove Door</button>
-            <button>Button 4</button>
+            <button>N/A</button>
         </div>
 
         <div class="info-wrapper">
-            <p v-if="selection == 'default'">Hello World</p>
+            <span v-if="selection == 'default'">
+                {{ door.name.value }}<br />
+                {{ door.keyName.value }}<br />
+                {{ door.keyDescription.value }}<br />
+                {{ door.faction.value }}
+            </span>
         </div>
 
         <div class="input-wrapper" v-if="inputIsActive">
-            <input placeholder="Hello World" />
-            <input placeholder="Hello World" />
-            <input placeholder="Hello World" />
-            <input placeholder="Hello World" />
+            <input type="text" placeholder="<Door Name>" v-model="door.name.value"/>
+            <input type="text" placeholder="<Door Keyname>" v-model="door.keyName.value" />
+            <input type="text" placeholder="<Door Keydescription>" v-model="door.keyDescription.value" />
+            <input type="text" placeholder="<Faction>" v-model="door.faction.value" />
         </div>
 
         <div class="execute-button-wrapper">
@@ -25,10 +30,17 @@
 </template>
 
 <script lang="ts" setup>
+import { ref } from "vue";
 
 let selection = 'default';
 let inputIsActive = true;
 
+const door = {
+    name: ref(),
+    keyName: ref(),
+    keyDescription: ref(),
+    faction: ref()
+}
 </script>
 
 <style lang="scss" scoped>
@@ -42,7 +54,7 @@ let inputIsActive = true;
     height: 100%;
     width: 100%;
 
-    background-color: rgb(35, 153, 81);
+    background-color: rgb(0, 0, 0);
 
     & > p {
         text-align: center;
@@ -65,9 +77,10 @@ let inputIsActive = true;
         margin-bottom: 10px;
 
         border: 0px;
-        background: black;
+        background: rgb(0, 111, 175);
         color: white;
 
+        font-size: 1.1rem;
         font-family: variables.$font-stack;
 
         transition: 0.5s !important;
@@ -80,17 +93,38 @@ let inputIsActive = true;
     }
 }
 
+.info-wrapper {
+    display: flex;
+    align-self: center;
+    justify-content: center;
+    
+    & > span {
+        font-family: variables.$font-stack;
+    }
+}
 .input-wrapper {
     display: grid;
     grid-template-columns: 2fr 2fr;
 
     & > input {
         height: 35px;
+
         margin-left: 10px;
         margin-right: 10px;
         margin-bottom: 5px;
+
         border: 0px;
+        border-radius: 5px;
         background: variables.$input-background;
+
+        font-family: variables.$font-stack;
+        text-align: center;
+
+        color: white;
+    }
+
+    & > ::placeholder {
+        color: rgb(148, 133, 133);
     }
 }
 </style>
