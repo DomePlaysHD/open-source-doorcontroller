@@ -17,18 +17,22 @@
             <input placeholder="Hello World" />
             <input placeholder="Hello World" />
         </div>
+
+        <div class="execute-button-wrapper">
+            <p>Hello World!</p>
+        </div>
     </div>
 </template>
 
 <script lang="ts" setup>
 
-const selection = 'default';
-const inputIsActive = true;
+let selection = 'default';
+let inputIsActive = true;
 
 </script>
 
 <style lang="scss" scoped>
-@use '../config/variables.scss';
+@use '../../config/variables.scss';
 .doors-body {
     display: flex;
     flex-direction: column;

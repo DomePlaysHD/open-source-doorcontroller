@@ -21,7 +21,7 @@ defineProps({
 </script>
 
 <style lang="scss" scoped>
-@use '../config/variables.scss';
+@use '../../config/variables.scss';
 .doors-header {
     display: flex;
     flex-direction: column;

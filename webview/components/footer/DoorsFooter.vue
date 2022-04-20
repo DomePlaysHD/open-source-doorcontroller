@@ -9,7 +9,7 @@
 <script lang="ts" setup></script>
 
 <style lang="scss" scoped>
-@use '../config/variables.scss';
+@use '../../config/variables.scss';
 .doors-footer {
     display: flex;
     flex-direction: column;
