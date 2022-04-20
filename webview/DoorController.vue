@@ -18,7 +18,14 @@ import { defineComponent, onMounted, onUnmounted } from 'vue';
 import { DoorControllerEvents } from '../shared/enums/events';
 
 defineComponent({
-    name: 'DoorController'
+    name: 'DoorController',
+});
+
+defineProps({
+    doorProp: {
+        type: String,
+        required: false,
+    },
 });
 
 onMounted(() => {
@@ -41,12 +48,12 @@ onUnmounted(() => {
 let models: Object = {
     name: '',
     faction: '',
-    
+
     keyDescription: '',
     keyName: '',
 
     prop: '',
-}
+};
 
 function pushDefaultDoor() {}
 function handleKeyPress(e: { keyCode: number }) {
