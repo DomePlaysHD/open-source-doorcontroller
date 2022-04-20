@@ -1,7 +1,7 @@
 <template>
     <div class="doors-footer">
         <div class="footer-title">
-            <p>&copy; Created with ❤️ by Lord Development</p>
+            <p>&copy; Created with ❤️ by Der Lord!</p>
         </div>
     </div>
 </template>

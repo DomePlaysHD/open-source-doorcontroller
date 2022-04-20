@@ -17,20 +17,20 @@
         </div>
 
         <div class="input-wrapper" v-if="inputIsActive">
-            <input type="text" placeholder="<Door Name>" v-model="door.name.value"/>
+            <input type="text" placeholder="<Door Name>" v-model="door.name.value" />
             <input type="text" placeholder="<Door Keyname>" v-model="door.keyName.value" />
             <input type="text" placeholder="<Door Keydescription>" v-model="door.keyDescription.value" />
             <input type="text" placeholder="<Faction>" v-model="door.faction.value" />
         </div>
 
         <div class="execute-button-wrapper">
-            <p>Hello World!</p>
+            <button>Save</button>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref } from 'vue';
 
 let selection = 'default';
 let inputIsActive = true;
@@ -39,8 +39,8 @@ const door = {
     name: ref(),
     keyName: ref(),
     keyDescription: ref(),
-    faction: ref()
-}
+    faction: ref(),
+};
 </script>
 
 <style lang="scss" scoped>
@@ -97,7 +97,9 @@ const door = {
     display: flex;
     align-self: center;
     justify-content: center;
-    
+    flex-direction: column;
+    max-width: 70%;
+    margin-top: 10px;
     & > span {
         font-family: variables.$font-stack;
     }
@@ -106,6 +108,7 @@ const door = {
     display: grid;
     grid-template-columns: 2fr 2fr;
 
+    margin-top: 10px;
     & > input {
         height: 35px;
 
@@ -125,6 +128,30 @@ const door = {
 
     & > ::placeholder {
         color: rgb(148, 133, 133);
+    }
+}
+
+.execute-button-wrapper {
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 10px;
+
+    & > button {
+        width: 150px;
+        height: 35px;
+
+        border: 0px;
+        background: variables.$button-color;
+        color: white;
+
+        font-family: variables.$font-stack;
+        transition: 0.5s !important;
+    }
+
+    & > button:hover {
+        transition: 0.5s !important;
+        background: variables.$button-color-hover;
+        cursor: pointer;
     }
 }
 </style>
