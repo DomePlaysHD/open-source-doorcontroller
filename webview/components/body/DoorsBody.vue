@@ -24,10 +24,10 @@
         </div>
 
         <div class="input-wrapper" v-if="inputIsActive">
-            <input type="text" placeholder="<Door Name>" v-model="door.name.value" />
-            <input type="text" placeholder="<Door Keyname>" v-model="door.keyName.value" />
-            <input type="text" placeholder="<Door Keydescription>" v-model="door.keyDescription.value" />
-            <input type="text" placeholder="<Faction>" v-model="door.faction.value" />
+            <input type="text" placeholder="<Door Name>" v-model="door.name" />
+            <input type="text" placeholder="<Door Keyname>" v-model="door.keyName" />
+            <input type="text" placeholder="<Door Keydescription>" v-model="door.keyDescription" />
+            <input type="text" placeholder="<Faction>" v-model="door.faction" />
         </div>
 
         <div class="execute-button-wrapper">

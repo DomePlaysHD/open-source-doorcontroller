@@ -10,7 +10,8 @@ export const config = {
 
     dbCollectionProps: 'doors-props',
     dbCollection: 'doors',
-
+    doorDetectionRange: 1,
+    
     keyToOpenUi: 37,
     
     useAnimation: true,

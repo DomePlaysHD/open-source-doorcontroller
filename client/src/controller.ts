@@ -1,5 +1,6 @@
 import alt from 'alt-client';
 import natives from 'natives';
+import { config } from '../../shared/config';
 import { clientDoorArray } from './client-events';
 import { getEntityCenter } from './client-functions';
 
@@ -16,7 +17,7 @@ export class DoorController {
                 pos.x,
                 pos.y,
                 pos.z,
-                0.5,
+                config.doorDetectionRange,
                 alt.hash(obj.name),
                 false,
                 false,
@@ -27,7 +28,7 @@ export class DoorController {
                 player.pos.x,
                 player.pos.y,
                 player.pos.z,
-                0.5,
+                config.doorDetectionRange,
                 alt.hash(obj.name),
                 null,
                 null,

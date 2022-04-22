@@ -56,8 +56,9 @@ class InternalFunctions implements ViewModel {
 alt.on('keydown', (key) => {
     if (key == config.keyToOpenUi) {
         if (alt.getLocalMeta('permissionLevel') >= config.permissionsRequired) {
-            InternalFunctions.open();
             door = DoorController.checkNearDoors();
+            alt.logError(JSON.stringify(door));
+            InternalFunctions.open();
         }
     }
 });
