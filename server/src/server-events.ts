@@ -10,12 +10,12 @@ import { DoorControllerEvents } from '../../shared/enums/events';
 import { IDoorOld } from '../../shared/interfaces/IDoorOld';
 import { DoorController } from './controller';
 
-alt.onClient(DoorControllerEvents.createDoor, async (player: alt.Player, prop: string, data) => {
+alt.onClient(DoorControllerEvents.createDoor, async (player: alt.Player, data) => {
     const door: IDoorOld = {
-        name: data.doorName,
+        name: data.name,
         data: {
-            prop: prop,
-            hash: alt.hash(prop),
+            prop: data.prop,
+            hash: alt.hash(data.prop),
             isLocked: false,
             faction: data.faction,
         },
@@ -27,26 +27,26 @@ alt.onClient(DoorControllerEvents.createDoor, async (player: alt.Player, prop: s
                 lockHash: sha256Random(data.keyName).substring(0, 40),
             },
         },
-        pos: data.position,
-        rotation: data.rotation,
+        pos: data.pos,
+        rotation: data.rot,
         center: data.center,
     };
 
     const dbDoor = await Athena.database.funcs.fetchData<IDoorOld>(
         'pos',
-        data.position,
+        data.pos,
         config.dbCollection,
     );
 
     if (dbDoor === null) {
         ServerTextLabelController.append({
             data: '~g~UNLOCKED',
-            pos: data.center,
+            pos: data.pos,
             maxDistance: 5,
         });
 
         InteractionController.add({
-            position: { x: data.position.x, y: data.position.y, z: data.position.z - 1 },
+            position: { x: data.pos.x, y: data.pos.y, z: data.pos.z - 1 },
             range: 3,
             description: 'Use Door',
             callback: () => DoorController.updateDoor(player, door._id)
@@ -64,6 +64,6 @@ alt.onClient(DoorControllerEvents.createDoor, async (player: alt.Player, prop: s
 
 PlayerEvents.on(ATHENA_EVENTS_PLAYER.SELECTED_CHARACTER, async (player: alt.Player) => {
     player.setLocalMeta('permissionLevel', player.accountData.permissionLevel);
-    const allDoors = await DoorController.getAll();
-    DoorController.update(player, allDoors as IDoorOld[]);
+    const dbDoors = await DoorController.getAll();
+    DoorController.update(player, dbDoors as IDoorOld[]);
 });

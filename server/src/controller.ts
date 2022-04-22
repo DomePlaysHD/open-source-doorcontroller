@@ -135,7 +135,7 @@ export class DoorController {
                 ServerTextLabelController.append({
                     pos: { x: door.center.x, y: door.center.y, z: door.center.z },
                     data: translatedLockstate,
-                  uid: door._id.toString(),
+                    uid: door._id.toString(),
                     maxDistance: config.textLabelRange,
                 });
             }

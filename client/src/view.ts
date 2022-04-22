@@ -49,7 +49,7 @@ class InternalFunctions implements ViewModel {
 
     static async ready() {
         const view = await WebViewController.get();
-        view.emit(DoorControllerEvents.pushDefaultDoor, door);
+        view.emit(DoorControllerEvents.setDefaultDoor, door);
     }
 }
 

@@ -13,49 +13,28 @@ import DoorsHeader from './components/header/DoorsHeader.vue';
 import DoorsBody from './components/body/DoorsBody.vue';
 // @ts-ignore
 import DoorsFooter from './components/footer/DoorsFooter.vue';
-
 import { defineComponent, onMounted, onUnmounted } from 'vue';
-import { DoorControllerEvents } from '../shared/enums/events';
 
+/* VueJS - Composition API */
 defineComponent({
     name: 'DoorController',
 });
 
-defineProps({
-    doorProp: {
-        type: String,
-        required: false,
-    },
-});
-
 onMounted(() => {
     if ('alt' in window) {
-        if ('alt' in window) {
-            alt.emit(`DoorController:Ready`);
-            alt.on(DoorControllerEvents.pushDefaultDoor, pushDefaultDoor);
-        }
+        alt.emit(`DoorController:Ready`);
         document.addEventListener('keyup', handleKeyPress);
     }
 });
 
 onUnmounted(() => {
     if ('alt' in window) {
-        alt.off(DoorControllerEvents.pushDefaultDoor, pushDefaultDoor);
+        /* */
     }
     document.removeEventListener('keyup', handleKeyPress);
 });
 
-let models: Object = {
-    name: '',
-    faction: '',
-
-    keyDescription: '',
-    keyName: '',
-
-    prop: '',
-};
-
-function pushDefaultDoor() {}
+/* Functions */
 function handleKeyPress(e: { keyCode: number }) {
     if (e.keyCode === 27 && 'alt' in window) {
         alt.emit(`DoorController:Close`);
@@ -66,11 +45,14 @@ function handleKeyPress(e: { keyCode: number }) {
 <style lang="scss" scoped>
 .flex-container {
     position: absolute;
-    left: 2.5%;
+
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+
+    left: 2.5%;
     width: 400px;
-    height: 600px;
+    height: 800px;
 }
 </style>

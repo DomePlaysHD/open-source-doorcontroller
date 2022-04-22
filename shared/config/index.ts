@@ -13,7 +13,7 @@ export const config = {
 
     keyToOpenUi: 37,
     
-    useAnimation: false,
+    useAnimation: true,
     useTextLabels: true,
 
     textLabelRange: 25,

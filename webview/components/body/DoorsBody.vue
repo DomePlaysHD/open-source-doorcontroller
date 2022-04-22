@@ -1,18 +1,25 @@
 <template>
     <div class="doors-body">
         <div class="button-wrapper">
-            <button>Default Door</button>
-            <button>Custom Door</button>
-            <button>Remove Door</button>
-            <button>N/A</button>
+            <button disabled>DISABLED</button>
+            <button disabled>DISABLED</button>
+            <button disabled>DISABLED</button>
+            <button disabled>DISABLED</button>
         </div>
 
         <div class="info-wrapper">
             <span v-if="selection == 'default'">
-                {{ door.name.value }}<br />
-                {{ door.keyName.value }}<br />
-                {{ door.keyDescription.value }}<br />
-                {{ door.faction.value }}
+                <span>Current Selection => default</span><br />
+                <span>Current Prop => {{ door.prop }}</span>
+                <hr />
+                {{ door.name }}<br />
+                <hr />
+                {{ door.keyName }}<br />
+                <hr />
+                {{ door.keyDescription }}<br />
+                <hr />
+                {{ door.faction }}
+                <hr />
             </span>
         </div>
 
@@ -24,23 +31,61 @@
         </div>
 
         <div class="execute-button-wrapper">
-            <button>Save</button>
+            <button @click="addDoor">Save</button>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
+import { DoorControllerEvents } from '../../../shared/enums/events';
 
 let selection = 'default';
 let inputIsActive = true;
 
-const door = {
-    name: ref(),
-    keyName: ref(),
-    keyDescription: ref(),
-    faction: ref(),
-};
+onMounted(() => {
+    alt.on(DoorControllerEvents.setDefaultDoor, setDefaultDoor);
+});
+
+function setDefaultDoor(clientDoor: Object) {
+    if (clientDoor[0]) door.value.prop = clientDoor[0];
+    else door.value.prop = 'no prop found.';
+
+    if (clientDoor[1]) door.value.center = clientDoor[1];
+    if (clientDoor[2]) door.value.rot = clientDoor[2];
+    if (clientDoor[3]) door.value.pos = clientDoor[3];
+}
+
+const door = ref({
+    name: '<Door Name>',
+    keyName: '<Key Name>',
+    keyDescription: '<Key Description>',
+    faction: '<Faction>',
+    prop: 'Fallback',
+    pos: {
+        x: 0,
+        y: 0,
+        z: 0,
+    },
+    rot: {
+        x: 0,
+        y: 0,
+        z: 0,
+    },
+    center: {
+        x: 0,
+        y: 0,
+        z: 0,
+    },
+});
+
+function addDoor() {
+    if ('alt' in window) {
+        alt.emit(DoorControllerEvents.createDoor, door.value);
+    } else {
+        console.log({ ...door.value });
+    }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -63,7 +108,7 @@ const door = {
 
 .button-wrapper {
     display: grid;
-    grid-template-columns: 2fr 2fr;
+    grid-template-columns: 1fr 1fr;
 
     & > button {
         display: grid;
@@ -72,9 +117,6 @@ const door = {
         height: 35px;
 
         margin-top: 15px;
-        margin-left: 10px;
-        margin-right: 10px;
-        margin-bottom: 10px;
 
         border: 0px;
         background: rgb(0, 111, 175);
@@ -98,12 +140,16 @@ const door = {
     align-self: center;
     justify-content: center;
     flex-direction: column;
-    max-width: 70%;
-    margin-top: 10px;
+
+    flex-grow: 1;
+    width: 100%;
+
     & > span {
         font-family: variables.$font-stack;
+        text-align: center;
     }
 }
+
 .input-wrapper {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -153,5 +199,14 @@ const door = {
         background: variables.$button-color-hover;
         cursor: pointer;
     }
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid lighten(variables.$button-color, 25%);
+    margin: 1em 0;
+    padding: 0;
 }
 </style>

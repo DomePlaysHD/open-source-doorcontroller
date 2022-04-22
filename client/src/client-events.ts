@@ -7,16 +7,12 @@ import IDoorObjects from '../../shared/interfaces/IDoorObjects';
 import { IDoorOld } from '../../shared/interfaces/IDoorOld';
 import { waitUntilDoorIsClosed } from './client-functions';
 
-
 const view = await WebViewController.get();
-export let clientDoorArray: IDoorObjects [] = [];
+export let clientDoorArray: IDoorObjects[] = [];
 
-view.on(
-    DoorControllerEvents.createDoor,
-    (name, data) => {
-        alt.emitServer(DoorControllerEvents.createDoor, name, data);
-    },
-);
+view.on(DoorControllerEvents.createDoor, (data) => {
+    alt.emitServer(DoorControllerEvents.createDoor, data);
+});
 
 alt.onServer(DoorControllerEvents.fillArray, (dbDoors: Array<IDoorObjects>) => {
     clientDoorArray = dbDoors;
