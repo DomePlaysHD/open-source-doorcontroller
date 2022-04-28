@@ -1,40 +1,67 @@
 <template>
-    <div class="flex-container">
-        <DoorsHeader />
-        <DoorsBody />
-        <DoorsFooter />
+    <div class="wrapper">
+        <Toolbar pageName="DoorController">OS - DoorController</Toolbar>
+        <div class="doors-header">
+            <p class="header-text">Door Manager</p>
+        </div>
+        <div class="content-wrapper">
+            <div class="prop-wrapper">
+                <p>{{ currentProp }}</p>
+            </div>
+            <div class="input">
+                <input class="door-input" placeholder="Hello World" />
+                <input class="door-input" placeholder="Hello World" />
+                <input class="door-input" placeholder="Hello World" />
+                <input class="door-input" placeholder="Hello World" />
+            </div>
+
+            <div class="buttons">
+                <button class="door-button">Save Door</button>
+                <button class="door-button">Disabled</button>
+                <button class="door-button">Remove Door</button>
+                <button class="door-button">Toggle Mode</button>
+            </div>
+        </div>
+        <div class="footer-wrapper">
+            <div class="footer-content">
+                <p>Powerd by Open Source Development</p>
+            </div>
+        </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-// @ts-ignore
-import DoorsHeader from './components/header/DoorsHeader.vue';
-// @ts-ignore
-import DoorsBody from './components/body/DoorsBody.vue';
-// @ts-ignore
-import DoorsFooter from './components/footer/DoorsFooter.vue';
-import { defineComponent, onMounted, onUnmounted } from 'vue';
+import { defineComponent, onMounted, onUnmounted, ref } from 'vue';
+import Toolbar from '@components/Toolbar.vue';
+import { DoorControllerEvents } from '../shared/enums/events';
+import { Vector3 } from 'alt-server';
 
-/* VueJS - Composition API */
 defineComponent({
     name: 'DoorController',
 });
-
+let currentProp = ref('');
 onMounted(() => {
     if ('alt' in window) {
         alt.emit(`DoorController:Ready`);
+        if ('alt' in window) {
+            alt.on(DoorControllerEvents.setDefaultDoor, setDefaultDoor);
+        }
         document.addEventListener('keyup', handleKeyPress);
     }
 });
 
 onUnmounted(() => {
     if ('alt' in window) {
-        /* */
+        alt.on(DoorControllerEvents.setDefaultDoor, setDefaultDoor);
     }
     document.removeEventListener('keyup', handleKeyPress);
 });
 
-/* Functions */
+function setDefaultDoor(data: [string, Vector3, Vector3, Vector3]) {
+    currentProp.value = data[0];
+    console.log(currentProp.value);
+}
+
 function handleKeyPress(e: { keyCode: number }) {
     if (e.keyCode === 27 && 'alt' in window) {
         alt.emit(`DoorController:Close`);
@@ -42,17 +69,126 @@ function handleKeyPress(e: { keyCode: number }) {
 }
 </script>
 
-<style lang="scss" scoped>
-.flex-container {
+<style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&display=swap');
+.wrapper {
     position: absolute;
+    left: 2%;
+    height: 750px;
+    width: 450px;
 
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
 
-    left: 2.5%;
-    width: 400px;
-    height: 800px;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.doors-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-image: url(./assets/images/banner.png);
+    background-position: 1100px 415px;
+    border-bottom: 2px inset rgb(40, 154, 253);
+}
+
+.header-text {
+    text-align: center;
+    font-size: 3em;
+    font-family: 'Inter', sans-serif;
+    font-weight: bold;
+    color: rgba(236, 236, 236, 0.75);
+    text-shadow: rgb(0, 0, 0) 1px 0 5px;
+}
+
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    background: rgb(0, 0, 0);
+}
+.prop-wrapper {
+    width: 100%;
+    margin: 0px;
+    text-align: center;
+    border-bottom: 2px inset rgb(40, 154, 253);
+}
+.input {
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+
+    height: 100%;
+    width: 100%;
+    border-bottom: 2px inset rgb(40, 154, 253);
+}
+
+.door-input {
+    align-self: center;
+    text-align: center;
+
+    border: 0;
+    border-radius: 5px;
+    height: 40px;
+    width: 70%;
+    margin: 10px;
+    background: rgba(120, 120, 120, 0.5);
+}
+
+.door-input::placeholder {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.2em;
+    text-align: center;
+    color: rgba(236, 236, 236, 0.5);
+}
+
+.buttons {
+    display: inline-flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    height: 35%;
+    width: 100%;
+    margin: 25px;
+}
+
+.door-button {
+    text-align: center;
+    width: 35%;
+    height: 30%;
+    margin: 10px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    border-radius: 5px;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    background: rgb(0, 128, 255);
+    border: 0px;
+}
+
+.door-button:hover {
+    cursor: pointer;
+    transition: 0.5s !important;
+    background: rgb(58, 64, 70);
+}
+
+.footer-wrapper {
+    display: flex;
+    margin-top: auto;
+    align-self: center;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    background-color: rgb(0, 0, 0);
+    border-top: 2px inset rgb(40, 154, 253);
 }
 </style>

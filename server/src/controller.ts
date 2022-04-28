@@ -9,13 +9,10 @@ import { ANIMATION_FLAGS } from '../../../../shared/flags/animationFlags';
 import { Item } from '../../../../shared/interfaces/item';
 
 import { config } from '../../shared/config/index';
-import { doorsPropsDefaults } from '../../shared/defaults/doors-props';
 import { DoorControllerEvents } from '../../shared/enums/events';
 import { Translations } from '../../shared/enums/translations';
 import IDoor from '../../shared/interfaces/IDoor';
-import IDoorObjects from '../../shared/interfaces/IDoorObjects';
 import { IDoorOld } from '../../shared/interfaces/IDoorOld';
-import { dbDoorArray } from './server-functions';
 
 const globalDoors: Array<IDoorOld> = [];
 const STREAM_RANGE = 25;
@@ -112,20 +109,6 @@ export class DoorController {
     }
 
     static async loadDoors() {
-        let doorProps = await DoorController.getProps();
-
-        if (!doorProps || doorProps.length <= 0) {
-            for (let i = 0; i < doorsPropsDefaults.length; i++) {
-                const doorprop: IDoorObjects = {
-                    name: doorsPropsDefaults[i].name,
-                    hash: doorsPropsDefaults[i].hash,
-                };
-
-                await Athena.database.funcs.insertData<IDoorObjects>(doorprop, config.dbCollectionProps, false);
-            }
-            doorProps = await DoorController.getProps();
-        }
-
         const dbDoors = await DoorController.getAll();
         for (let x = 0; x < dbDoors.length; x++) {
             const door = dbDoors[x] as IDoorOld;
@@ -154,8 +137,6 @@ export class DoorController {
             DoorController.append(door);
             DoorController.refresh();
         }
-
-        alt.log(`~lg~${config.pluginName} ${config.pluginVersion} | DATABASE | Loaded ${dbDoors.length} Doors & ${dbDoorArray.length} GTA:V default door props!`);
     }
 
     static async convertInterface() {
@@ -199,10 +180,6 @@ export class DoorController {
 
     static async getAll() {
         return Athena.database.funcs.fetchAllData<Partial<IDoorOld> | Partial<IDoor>>(config.dbCollection);
-    }
-
-    static async getProps() {
-        return Athena.database.funcs.fetchAllData<IDoorObjects>(config.dbCollectionProps);
     }
 }
 DoorController.init();

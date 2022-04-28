@@ -3,19 +3,12 @@ import natives from 'natives';
 
 import { WebViewController } from '../../../../client/extensions/view2';
 import { DoorControllerEvents } from '../../shared/enums/events';
-import IDoorObjects from '../../shared/interfaces/IDoorObjects';
 import { IDoorOld } from '../../shared/interfaces/IDoorOld';
 import { waitUntilDoorIsClosed } from './client-functions';
 
 const view = await WebViewController.get();
-export let clientDoorArray: IDoorObjects[] = [];
-
 view.on(DoorControllerEvents.createDoor, (data) => {
     alt.emitServer(DoorControllerEvents.createDoor, data);
-});
-
-alt.onServer(DoorControllerEvents.fillArray, (dbDoors: Array<IDoorObjects>) => {
-    clientDoorArray = dbDoors;
 });
 
 alt.onServer(DoorControllerEvents.populateDoors, async (doors: Array<IDoorOld>) => {

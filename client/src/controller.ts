@@ -1,24 +1,25 @@
 import alt from 'alt-client';
 import natives from 'natives';
 import { config } from '../../shared/config';
-import { clientDoorArray } from './client-events';
+import { doorProps } from '../../shared/defaults/door-props';
 import { getEntityCenter } from './client-functions';
 
 export class DoorController {
-    static checkNearDoors() {
+    static async checkNearDoors() {
+        const startTime = Date.now();
         const player = alt.Player.local;
         const pos = player.pos;
 
         let closeDoor: [any, alt.Vector3, alt.Vector3];
-
-        for (let x = 0; x < clientDoorArray.length; x++) {
-            const obj = clientDoorArray[x];
+        for(let x = 0; x < doorProps.length; x++) {
+            const obj = doorProps[x];
+            const hash = alt.hash(obj);
             const foundObject = natives.getClosestObjectOfType(
                 pos.x,
                 pos.y,
                 pos.z,
                 config.doorDetectionRange,
-                alt.hash(obj.name),
+                hash,
                 false,
                 false,
                 false,
@@ -29,20 +30,20 @@ export class DoorController {
                 player.pos.y,
                 player.pos.z,
                 config.doorDetectionRange,
-                alt.hash(obj.name),
+                hash,
                 null,
                 null,
                 2,
             );
 
             if (foundObject) {
-                const name = obj.name;
+                const name = obj;
                 const center = getEntityCenter(foundObject);
                 const rotation = natives.getEntityRotation(foundObject, 2);
                 const position = closeDoor[1];
                 return [name, center, rotation, position];
             }
-        }
+        };
         return [];
     }
 }

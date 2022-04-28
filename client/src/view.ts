@@ -6,7 +6,6 @@ import { config } from '../../shared/config/index';
 import { DoorControllerEvents } from '../../shared/enums/events';
 import { DoorController } from './controller';
 
-
 const PAGE_NAME = 'DoorController';
 let door: (string | alt.Vector3)[];
 
@@ -53,12 +52,14 @@ class InternalFunctions implements ViewModel {
     }
 }
 
-alt.on('keydown', (key) => {
+alt.on('keydown', async (key) => {
     if (key == config.keyToOpenUi) {
         if (alt.getLocalMeta('permissionLevel') >= config.permissionsRequired) {
-            door = DoorController.checkNearDoors();
-            alt.logError(JSON.stringify(door));
-            InternalFunctions.open();
+            door = await DoorController.checkNearDoors();
+            if (door) {
+                InternalFunctions.open();
+                return;
+            }
         }
     }
 });
