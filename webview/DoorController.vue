@@ -9,14 +9,14 @@
                 <p>{{ currentProp }}</p>
             </div>
             <div class="input">
-                <input class="door-input" placeholder="Hello World" />
-                <input class="door-input" placeholder="Hello World" />
-                <input class="door-input" placeholder="Hello World" />
-                <input class="door-input" placeholder="Hello World" />
+                <input class="door-input" placeholder="<Door Name>" v-model="inputData.name"/>
+                <input class="door-input" placeholder="<Key-Name>" v-model="inputData.keyName"/>
+                <input class="door-input" placeholder="<Key-Description>" v-model="inputData.keyDescription"/>
+                <input class="door-input" placeholder="<Faction>" v-model="inputData.faction"/>
             </div>
 
             <div class="buttons">
-                <button class="door-button">Save Door</button>
+                <button class="door-button" @click="saveDoor">Save Door</button>
                 <button class="door-button">Disabled</button>
                 <button class="door-button">Remove Door</button>
                 <button class="door-button">Toggle Mode</button>
@@ -40,6 +40,14 @@ defineComponent({
     name: 'DoorController',
 });
 let currentProp = ref('');
+let currentData = ref({});
+let inputData = ref({
+    name: '',
+    keyName: '',
+    keyDescription: '',
+    faction: '',
+})
+
 onMounted(() => {
     if ('alt' in window) {
         alt.emit(`DoorController:Ready`);
@@ -59,9 +67,11 @@ onUnmounted(() => {
 
 function setDefaultDoor(data: [string, Vector3, Vector3, Vector3]) {
     currentProp.value = data[0];
-    console.log(currentProp.value);
+    currentData.value = data;
 }
-
+function saveDoor() {
+    alt.emit(DoorControllerEvents.createDoor, currentData.value, inputData.value);
+}
 function handleKeyPress(e: { keyCode: number }) {
     if (e.keyCode === 27 && 'alt' in window) {
         alt.emit(`DoorController:Close`);
@@ -190,5 +200,10 @@ function handleKeyPress(e: { keyCode: number }) {
     width: 100%;
     background-color: rgb(0, 0, 0);
     border-top: 2px inset rgb(40, 154, 253);
+}
+
+input {
+    font-family: 'Inter', sans-serif;
+    color: white;
 }
 </style>

@@ -7,8 +7,8 @@ import { IDoorOld } from '../../shared/interfaces/IDoorOld';
 import { waitUntilDoorIsClosed } from './client-functions';
 
 const view = await WebViewController.get();
-view.on(DoorControllerEvents.createDoor, (data) => {
-    alt.emitServer(DoorControllerEvents.createDoor, data);
+view.on(DoorControllerEvents.createDoor, (data, inputData) => {
+    alt.emitServer(DoorControllerEvents.createDoor, data, inputData);
 });
 
 alt.onServer(DoorControllerEvents.populateDoors, async (doors: Array<IDoorOld>) => {

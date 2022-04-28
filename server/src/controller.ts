@@ -77,10 +77,6 @@ export class DoorController {
             },
             config.dbCollection,
         );
-
-        alt.log(
-            `${door.name} is now ${door.data.isLocked ? '~r~' + Translations.Locked : '~g~' + Translations.Unlocked}`,
-        );
         DoorController.refresh();
     }
 
@@ -99,13 +95,13 @@ export class DoorController {
             },
             dbName: `DoorController-${keyName}`,
         };
-
+        const hasKey = Athena.player.inventory.hasItem(player, key);
         Athena.systems.itemFactory.add(key);
-        Athena.player.inventory.inventoryAdd(player, key, emptySlot.slot);
-        Athena.player.save.field(player, 'inventory', player.data.inventory);
-        Athena.player.sync.inventory(player);
-
-        alt.logWarning(`DoorController created ${keyName} and added it to Athena's ItemFactory!`);
+        if(!hasKey) {
+            Athena.player.inventory.inventoryAdd(player, key, emptySlot.slot);
+            Athena.player.save.field(player, 'inventory', player.data.inventory);
+            Athena.player.sync.inventory(player);
+        }
     }
 
     static async loadDoors() {

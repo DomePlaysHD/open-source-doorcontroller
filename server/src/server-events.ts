@@ -10,52 +10,52 @@ import { DoorControllerEvents } from '../../shared/enums/events';
 import { IDoorOld } from '../../shared/interfaces/IDoorOld';
 import { DoorController } from './controller';
 
-alt.onClient(DoorControllerEvents.createDoor, async (player: alt.Player, data) => {
+alt.onClient(DoorControllerEvents.createDoor, async (player: alt.Player, data, inputData) => {
     const door: IDoorOld = {
-        name: data.name,
+        name: inputData.name,
         data: {
-            prop: data.prop,
-            hash: alt.hash(data.prop),
+            prop: data[0],
+            hash: alt.hash(data[0]),
             isLocked: false,
-            faction: data.faction,
+            faction: inputData.faction,
         },
         keyData: {
-            keyName: data.keyName,
-            keyDescription: data.keyDescription,
+            keyName: inputData.keyName,
+            keyDescription: inputData.keyDescription,
             data: {
-                faction: data.faction,
-                lockHash: sha256Random(data.keyName).substring(0, 40),
+                faction: inputData.faction,
+                lockHash: sha256Random(inputData.keyName).substring(0, 40),
             },
         },
-        pos: data.pos,
-        rotation: data.rot,
-        center: data.center,
+        pos: data[3],
+        rotation: data[2],
+        center: data[1],
     };
 
     const dbDoor = await Athena.database.funcs.fetchData<IDoorOld>(
         'pos',
-        data.pos,
+        data[3],
         config.dbCollection,
     );
 
     if (dbDoor === null) {
+        const insertedDoor = await Athena.database.funcs.insertData(door, config.dbCollection, true);
         ServerTextLabelController.append({
             data: '~g~UNLOCKED',
-            pos: data.pos,
+            pos: data[1],
             maxDistance: 5,
+            uid: insertedDoor._id.toString(),
         });
 
         InteractionController.add({
-            position: { x: data.pos.x, y: data.pos.y, z: data.pos.z - 1 },
+            position: { x: data[3].x, y: data[3].y, z: data[3].z - 1 },
             range: 3,
             description: 'Use Door',
-            callback: () => DoorController.updateDoor(player, door._id)
+            callback: () => DoorController.updateDoor(player, insertedDoor._id)
         });
 
-        await Athena.database.funcs.insertData(door, config.dbCollection, false);
-        
         DoorController.createKey(player, door.keyData.keyName, door.keyData.keyDescription, door.keyData.data.faction);
-        DoorController.append(door);
+        DoorController.append(insertedDoor);
     } else if (dbDoor !== null) {
         alt.logError('Door already exists!');
         return;
