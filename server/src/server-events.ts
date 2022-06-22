@@ -56,6 +56,7 @@ alt.onClient(DoorControllerEvents.createDoor, async (player: alt.Player, data, i
 
         DoorController.createKey(player, door.keyData.keyName, door.keyData.keyDescription, door.keyData.data.faction);
         DoorController.append(insertedDoor);
+        DoorController.refresh();
     } else if (dbDoor !== null) {
         alt.logError('Door already exists!');
         return;

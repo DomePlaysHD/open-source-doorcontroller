@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <Toolbar pageName="DoorController">OS - DoorController</Toolbar>
+        <Toolbar pageName="DoorController" @click="closePage">OS - DoorController</Toolbar>
         <div class="doors-header">
             <p class="header-text">Door Manager</p>
         </div>
@@ -34,7 +34,7 @@
 import { defineComponent, onMounted, onUnmounted, ref } from 'vue';
 import Toolbar from '@components/Toolbar.vue';
 import { DoorControllerEvents } from '../shared/enums/events';
-import { Vector3 } from 'alt-server';
+import { Vector3 } from 'alt-shared';
 
 defineComponent({
     name: 'DoorController',
@@ -76,6 +76,9 @@ function handleKeyPress(e: { keyCode: number }) {
     if (e.keyCode === 27 && 'alt' in window) {
         alt.emit(`DoorController:Close`);
     }
+}
+function closePage() {
+    'alt' in window ? alt.emit(`DoorController:Close`) : console.log("Closing (alt not in focus.)");
 }
 </script>
 
