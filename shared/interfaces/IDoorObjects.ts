@@ -1,4 +1,4 @@
 export default interface IDoorObjects {
-    name?: string;
-    hash?: number;
+    name: string;
+    hash: number;
 }
