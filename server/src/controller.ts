@@ -43,9 +43,15 @@ export class DoorController {
 
     static async updateDoor(player: alt.Player, id: string) {
         const door = await Athena.database.funcs.fetchData<IDoorOld>('_id', id, config.dbCollection);
+        const hasKey = Athena.player.inventory.hasItem(player, { name: door.keyData.keyName });
 
         let translatedLockstate = door.data.isLocked ? `~r~` + Translations.Locked : `~g~` + Translations.Unlocked;
 
+        if (!hasKey) {
+            Athena.player.emit.notification(player, `No key for this door.`);
+            return;
+        }
+        
         door.data.isLocked = !door.data.isLocked;
 
         if (config.useTextLabels) {
@@ -97,7 +103,7 @@ export class DoorController {
         };
         const hasKey = Athena.player.inventory.hasItem(player, key);
         Athena.systems.itemFactory.add(key);
-        if(!hasKey) {
+        if (!hasKey) {
             Athena.player.inventory.inventoryAdd(player, key, emptySlot.slot);
             Athena.player.save.field(player, 'inventory', player.data.inventory);
             Athena.player.sync.inventory(player);
@@ -158,7 +164,7 @@ export class DoorController {
                 pos: door.pos,
                 rot: door.rotation,
                 center: door.center,
-                version: null
+                version: null,
             };
             alt.log(JSON.stringify(updatedDoor));
             if (updatedDoor.version !== null) {
@@ -166,7 +172,7 @@ export class DoorController {
                     updatedDoor._id.toString(),
                     updatedDoor,
                     config.dbCollection,
-                    { data: '', keyData: '', name: '', rotation: '' }
+                    { data: '', keyData: '', name: '', rotation: '' },
                 );
                 alt.log('DoorController: Converting door interface...');
                 alt.log(`Updated ${dbDoors.length} doors!`);

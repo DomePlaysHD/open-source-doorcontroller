@@ -39,7 +39,7 @@ import { Vector3 } from 'alt-server';
 defineComponent({
     name: 'DoorController',
 });
-let currentProp = ref('');
+let currentProp = ref('v_ilev_vh_door02');
 let currentData = ref({});
 let inputData = ref({
     name: '',
