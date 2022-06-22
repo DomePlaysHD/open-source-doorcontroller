@@ -12,9 +12,10 @@ export const config = {
 
     dbCollection: 'doors',
     doorDetectionRange: 1,
-    
+    doorStreamRange: 25,
+
     keyToOpenUi: 117,
-    
+
     useAnimation: true,
     useTextLabels: true,
 

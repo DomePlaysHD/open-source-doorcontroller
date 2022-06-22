@@ -15,19 +15,19 @@ import IDoor from '../../shared/interfaces/IDoor';
 import { IDoorOld } from '../../shared/interfaces/IDoorOld';
 
 const globalDoors: Array<IDoorOld> = [];
-const STREAM_RANGE = 25;
+const STREAM_RANGE = config.doorStreamRange;
 const KEY = 'doors';
 
 export class DoorController {
-    static init() {
+    static init(): void {
         StreamerService.registerCallback(KEY, DoorController.update, STREAM_RANGE);
     }
 
-    static update(player: alt.Player, doors: Array<IDoorOld>) {
+    static update(player: alt.Player, doors: Array<IDoorOld>): void {
         alt.emitClient(player, DoorControllerEvents.populateDoors, doors);
     }
 
-    static refresh() {
+    static refresh(): void {
         StreamerService.updateData(KEY, globalDoors);
     }
 
@@ -41,7 +41,7 @@ export class DoorController {
         return door._id;
     }
 
-    static async updateDoor(player: alt.Player, id: string) {
+    static async updateDoor(player: alt.Player, id: string): Promise<void> {
         const door = await Athena.database.funcs.fetchData<IDoorOld>('_id', id, config.dbCollection);
         const hasKey = Athena.player.inventory.hasItem(player, { name: door.keyData.keyName });
 
@@ -51,7 +51,7 @@ export class DoorController {
             Athena.player.emit.notification(player, `No key for this door.`);
             return;
         }
-        
+
         door.data.isLocked = !door.data.isLocked;
 
         if (config.useTextLabels) {
@@ -86,7 +86,7 @@ export class DoorController {
         DoorController.refresh();
     }
 
-    static async createKey(player: alt.Player, keyName: string, keyDescription: string, faction: string) {
+    static async createKey(player: alt.Player, keyName: string, keyDescription: string, faction: string): Promise<void> {
         const emptySlot = Athena.player.inventory.getFreeInventorySlot(player);
         const key: Item = {
             name: keyName,
@@ -110,7 +110,7 @@ export class DoorController {
         }
     }
 
-    static async loadDoors() {
+    static async loadDoors(): Promise<void> {
         const dbDoors = await DoorController.getAll();
         for (let x = 0; x < dbDoors.length; x++) {
             const door = dbDoors[x] as IDoorOld;
@@ -141,7 +141,7 @@ export class DoorController {
         }
     }
 
-    static async convertInterface() {
+    static async convertInterface(): Promise<void> {
         const dbDoors = await this.getAll();
         for (let x = 0; x < dbDoors.length; x++) {
             const door = dbDoors[x] as IDoorOld;

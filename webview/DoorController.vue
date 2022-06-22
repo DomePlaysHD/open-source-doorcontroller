@@ -31,14 +31,11 @@
 </template>
 
 <script lang="ts" setup>
-import { defineComponent, onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import Toolbar from '@components/Toolbar.vue';
 import { DoorControllerEvents } from '../shared/enums/events';
 import { Vector3 } from 'alt-shared';
 
-defineComponent({
-    name: 'DoorController',
-});
 let currentProp = ref('v_ilev_vh_door02');
 let currentData = ref({});
 let inputData = ref({
@@ -69,14 +66,17 @@ function setDefaultDoor(data: [string, Vector3, Vector3, Vector3]) {
     currentProp.value = data[0];
     currentData.value = data;
 }
+
 function saveDoor() {
     alt.emit(DoorControllerEvents.createDoor, currentData.value, inputData.value);
 }
+
 function handleKeyPress(e: { keyCode: number }) {
     if (e.keyCode === 27 && 'alt' in window) {
         alt.emit(`DoorController:Close`);
     }
 }
+
 function closePage() {
     'alt' in window ? alt.emit(`DoorController:Close`) : console.log("Closing (alt not in focus.)");
 }
